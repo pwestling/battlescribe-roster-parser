@@ -1,0 +1,2496 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<roster id="9a0f-5244-f37f-3e31" name="Tyranid Cheapest Brigade" battleScribeVersion="2.01" gameSystemId="28ec-711c-d87f-3aeb" gameSystemName="Warhammer 40,000 8th Edition" gameSystemRevision="40" xmlns="http://www.battlescribe.net/schema/rosterSchema">
+  <costs>
+    <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="50.0"/>
+    <cost name="pts" costTypeId="points" value="1138.0"/>
+  </costs>
+  <costLimits/>
+  <forces>
+    <force id="fc81-d494-a2bb-b38d" name="Brigade Detachment +9CP" entryId="cccd-3d99-d4af-d668" catalogueId="7150-5917-ae80-68c5" catalogueRevision="32" catalogueName="Tyranids">
+      <rules/>
+      <profiles/>
+      <selections>
+        <selection id="57d7-e09d-b873-6668" name="Neurothrope" entryId="eb51-1e71-bce8-ff4f::cd9f-f30b-27c3-2869" number="1" type="model">
+          <rules/>
+          <profiles>
+            <profile id="eb51-1e71-bce8-ff4f::91fa-c72d-ade0-0c5e" name="Neurothrope" book="Codex: Tyranids" page="87" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="5&quot;"/>
+                <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="4+"/>
+                <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="3+"/>
+                <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="4"/>
+                <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="4"/>
+                <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="5"/>
+                <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="1"/>
+                <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="9"/>
+                <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="5+/3++"/>
+              </characteristics>
+            </profile>
+            <profile id="eb51-1e71-bce8-ff4f::165e-c9ec-f532-2662" name="Spirit Leech" book="Codex: Tyranids" page="87" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Each time a Neurothrope slays a model using the Smite psychic power, you can heal a wound on a friendly &lt;HIVE FLEET&gt; ZOANTHROPE within 6&quot;."/>
+              </characteristics>
+            </profile>
+            <profile id="eb51-1e71-bce8-ff4f::ddb3-da0c-92ed-b1ca" name="Neurothrope" hidden="false" profileTypeId="bc97-dea9-9e88-bb7d" profileTypeName="Psyker">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Cast" characteristicTypeId="5afb-9914-904b-d3b3" value="2"/>
+                <characteristic name="Deny" characteristicTypeId="b5ac-9c20-5d5a-6f9b" value="1"/>
+                <characteristic name="Powers Known" characteristicTypeId="69d7-b45e-00a2-7e46" value="Smite + 1 Hive Mind"/>
+                <characteristic name="Other" characteristicTypeId="c2e2-f115-0003-5d7b" value="-"/>
+              </characteristics>
+            </profile>
+            <profile id="eb51-1e71-bce8-ff4f::0906-0e09-52f1-2159" name="Warp Siphon" book="Codex: Tyranids" page="87" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="You can re-roll rolls of 1 when taking Psychic tests for friendly &lt;HIVE FLEET&gt; ZOANTHROPE units within 6&quot; of this model."/>
+              </characteristics>
+            </profile>
+            <profile id="eb51-1e71-bce8-ff4f::6a12-8bd3-74a1-b1cd::cbdf-6ba1-d438-42d4" name="Warp Field" book="Codex: Tyranids" page="87" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Models in this unit have a 3+ invulnerable save."/>
+              </characteristics>
+            </profile>
+            <profile id="eb51-1e71-bce8-ff4f::5852-40a3-fe8a-be4a::f587-afe6-7bbe-4eac" name="Shadow in the Warp" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Enemy PSKYERS must subtract 1 from any Psychic tests they make if they are within 18&quot; of any units with this ability. TYRANID PSYKERS are not affected."/>
+              </characteristics>
+            </profile>
+            <profile id="eb51-1e71-bce8-ff4f::5a2f-c66a-73ba-906f::1f08-bd8f-43a3-ce1b" name="Synapse" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="&lt;HIVE FLEET&gt; units automatically pass Morale tests if they are within 12&quot; of any friendly &lt;HIVE FLEET&gt; uints with this ability."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="1fe3-2fc9-0740-aefe" name="Claws and Teeth" entryId="eb51-1e71-bce8-ff4f::d785-f826-2ce7-a7e0::2634-0525-7b04-6f89" number="1" type="upgrade">
+              <rules/>
+              <profiles>
+                <profile id="eb51-1e71-bce8-ff4f::d785-f826-2ce7-a7e0::37ea-8ac0-fcbf-03c8::ae8c-f20e-8126-d222" name="Claws and Teeth" book="Codex: Tyranids" page="111" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="Melee"/>
+                    <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Melee"/>
+                    <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="User"/>
+                    <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="0"/>
+                    <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="1"/>
+                    <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="-"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections/>
+              <costs>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                <cost name="pts" costTypeId="points" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+            <selection id="282c-6082-422d-8618" name="Power: Onslaught" entryId="eb51-1e71-bce8-ff4f::9ba8-8fcd-52c6-3178::34e9-5d4b-7450-3bcd::6208-036c-2a57-caed" entryGroupId="eb51-1e71-bce8-ff4f::9ba8-8fcd-52c6-3178::c2f7-de12-e2e1-bb33" number="1" type="upgrade">
+              <rules/>
+              <profiles>
+                <profile id="eb51-1e71-bce8-ff4f::9ba8-8fcd-52c6-3178::34e9-5d4b-7450-3bcd::3395-ed94-438d-ab46::1e3b-eeef-c059-088a" name="Onslaught" book="Codex: Tyranids" page="121" hidden="false" profileTypeId="ae70-4738-0161-bec0" profileTypeName="Psychic Power">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="Warp Charge" characteristicTypeId="5ffd-b800-c317-532a" value="6"/>
+                    <characteristic name="Range" characteristicTypeId="fd64-cbc4-94de-24cc" value="18&quot;"/>
+                    <characteristic name="Details" characteristicTypeId="ad96-dfa4-b4ed-656d" value="Select a friendly TYRANIDS unit within 18&quot; of the psyker. That unit can shoot this turn (even if it Advanced) without suffering any penalties to its hit rolls for moving and shooting with Heavy weapons, or Advancing and shooting with Assault weapons. In addition, that unit can charge this turn even if it Advanced (though not if it Fell Back)."/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections/>
+              <costs>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                <cost name="pts" costTypeId="points" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name="pts" costTypeId="points" value="70.0"/>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="4.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="a55f-bcaa-6f46-3fbd" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="11a3-9c20-4b80-260d" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="63d5-2838-c15e-cff3" name="New CategoryLink" hidden="false" targetId="3117-16d8-fcef-4f56" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="081c-389f-5e7c-478a" name="New CategoryLink" hidden="false" targetId="848a6ff2-0def-4c72-8433-ff7da70e6bc7" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="8200-01a3-e20f-1664" name="New CategoryLink" hidden="false" targetId="e691-aad7-d21c-1023" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="ad93-3cd8-14e7-0e33" name="New CategoryLink" hidden="false" targetId="3d52-fccf-10c0-3fae" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="4202-fc51-e737-511b" name="New CategoryLink" hidden="false" targetId="ef18-746a-369f-43a4" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="d276-e65e-e37a-146f" name="New CategoryLink" hidden="false" targetId="7b29-b270-99fe-4de7" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="185d-fb14-35ef-5c27" name="New CategoryLink" hidden="false" targetId="e73a-a897-c34f-6206" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="79c0-8737-330c-7fe6" name="Neurothrope" entryId="eb51-1e71-bce8-ff4f::cd9f-f30b-27c3-2869" number="1" type="model">
+          <rules/>
+          <profiles>
+            <profile id="eb51-1e71-bce8-ff4f::91fa-c72d-ade0-0c5e" name="Neurothrope" book="Codex: Tyranids" page="87" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="5&quot;"/>
+                <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="4+"/>
+                <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="3+"/>
+                <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="4"/>
+                <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="4"/>
+                <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="5"/>
+                <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="1"/>
+                <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="9"/>
+                <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="5+/3++"/>
+              </characteristics>
+            </profile>
+            <profile id="eb51-1e71-bce8-ff4f::165e-c9ec-f532-2662" name="Spirit Leech" book="Codex: Tyranids" page="87" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Each time a Neurothrope slays a model using the Smite psychic power, you can heal a wound on a friendly &lt;HIVE FLEET&gt; ZOANTHROPE within 6&quot;."/>
+              </characteristics>
+            </profile>
+            <profile id="eb51-1e71-bce8-ff4f::ddb3-da0c-92ed-b1ca" name="Neurothrope" hidden="false" profileTypeId="bc97-dea9-9e88-bb7d" profileTypeName="Psyker">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Cast" characteristicTypeId="5afb-9914-904b-d3b3" value="2"/>
+                <characteristic name="Deny" characteristicTypeId="b5ac-9c20-5d5a-6f9b" value="1"/>
+                <characteristic name="Powers Known" characteristicTypeId="69d7-b45e-00a2-7e46" value="Smite + 1 Hive Mind"/>
+                <characteristic name="Other" characteristicTypeId="c2e2-f115-0003-5d7b" value="-"/>
+              </characteristics>
+            </profile>
+            <profile id="eb51-1e71-bce8-ff4f::0906-0e09-52f1-2159" name="Warp Siphon" book="Codex: Tyranids" page="87" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="You can re-roll rolls of 1 when taking Psychic tests for friendly &lt;HIVE FLEET&gt; ZOANTHROPE units within 6&quot; of this model."/>
+              </characteristics>
+            </profile>
+            <profile id="eb51-1e71-bce8-ff4f::6a12-8bd3-74a1-b1cd::cbdf-6ba1-d438-42d4" name="Warp Field" book="Codex: Tyranids" page="87" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Models in this unit have a 3+ invulnerable save."/>
+              </characteristics>
+            </profile>
+            <profile id="eb51-1e71-bce8-ff4f::5852-40a3-fe8a-be4a::f587-afe6-7bbe-4eac" name="Shadow in the Warp" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Enemy PSKYERS must subtract 1 from any Psychic tests they make if they are within 18&quot; of any units with this ability. TYRANID PSYKERS are not affected."/>
+              </characteristics>
+            </profile>
+            <profile id="eb51-1e71-bce8-ff4f::5a2f-c66a-73ba-906f::1f08-bd8f-43a3-ce1b" name="Synapse" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="&lt;HIVE FLEET&gt; units automatically pass Morale tests if they are within 12&quot; of any friendly &lt;HIVE FLEET&gt; uints with this ability."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="ded6-3bec-97a5-e6e0" name="Claws and Teeth" entryId="eb51-1e71-bce8-ff4f::d785-f826-2ce7-a7e0::2634-0525-7b04-6f89" number="1" type="upgrade">
+              <rules/>
+              <profiles>
+                <profile id="eb51-1e71-bce8-ff4f::d785-f826-2ce7-a7e0::37ea-8ac0-fcbf-03c8::ae8c-f20e-8126-d222" name="Claws and Teeth" book="Codex: Tyranids" page="111" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="Melee"/>
+                    <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Melee"/>
+                    <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="User"/>
+                    <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="0"/>
+                    <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="1"/>
+                    <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="-"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections/>
+              <costs>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                <cost name="pts" costTypeId="points" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+            <selection id="5035-39d6-8ac2-536a" name="Power: The Horror" entryId="eb51-1e71-bce8-ff4f::9ba8-8fcd-52c6-3178::1330-a88c-1350-6f71::afd5-2e14-a36e-7887" entryGroupId="eb51-1e71-bce8-ff4f::9ba8-8fcd-52c6-3178::c2f7-de12-e2e1-bb33" number="1" type="upgrade">
+              <rules/>
+              <profiles>
+                <profile id="eb51-1e71-bce8-ff4f::9ba8-8fcd-52c6-3178::1330-a88c-1350-6f71::0316-c01d-5aa8-76ab::b5f8-3114-151d-1286" name="The Horror" book="Codex: Tyranids" page="121" hidden="false" profileTypeId="ae70-4738-0161-bec0" profileTypeName="Psychic Power">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="Warp Charge" characteristicTypeId="5ffd-b800-c317-532a" value="6"/>
+                    <characteristic name="Range" characteristicTypeId="fd64-cbc4-94de-24cc" value="24&quot;"/>
+                    <characteristic name="Details" characteristicTypeId="ad96-dfa4-b4ed-656d" value="Select a unit within 24&quot; that is visible to the psyker. Until the start of your next Psychic phase, that unit must subtract 1 from their hit rolls and Leadership characteristic."/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections/>
+              <costs>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                <cost name="pts" costTypeId="points" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name="pts" costTypeId="points" value="70.0"/>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="4.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="6262-9085-276f-8f82" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="0534-c45f-1a67-f089" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="c1ac-bc5e-ce6c-9c9b" name="New CategoryLink" hidden="false" targetId="3117-16d8-fcef-4f56" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="5636-184f-f3cb-3c2b" name="New CategoryLink" hidden="false" targetId="848a6ff2-0def-4c72-8433-ff7da70e6bc7" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="2b0d-7b1d-49a4-1fac" name="New CategoryLink" hidden="false" targetId="e691-aad7-d21c-1023" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="f8ed-fa48-8fc9-6f5b" name="New CategoryLink" hidden="false" targetId="3d52-fccf-10c0-3fae" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="e391-26d0-475b-c7aa" name="New CategoryLink" hidden="false" targetId="ef18-746a-369f-43a4" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="2c14-b62d-6a92-1cae" name="New CategoryLink" hidden="false" targetId="7b29-b270-99fe-4de7" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="f63f-2f84-1b4b-d02e" name="New CategoryLink" hidden="false" targetId="e73a-a897-c34f-6206" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="2a3b-c42b-7779-2075" name="Lictor" entryId="3b6c-4cbd-05b6-6761::a5e2-a0a5-57f0-27b6" number="1" type="model">
+          <rules/>
+          <profiles>
+            <profile id="3b6c-4cbd-05b6-6761::95b1-4e9f-cd16-0fad" name="Lictor" book="Codex: Tyranids" page="93" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="9&quot;"/>
+                <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="2+"/>
+                <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="4+"/>
+                <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="6"/>
+                <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="4"/>
+                <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="4"/>
+                <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="3"/>
+                <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="9"/>
+                <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="5+"/>
+              </characteristics>
+            </profile>
+            <profile id="3b6c-4cbd-05b6-6761::72c5-4977-1ccb-eb93" name="Chameleonic Skin" book="Codex: Tyranids" page="93" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Your opponent must subtract 1 from their hit rolls for attacks that target this model. In addition, add 2 instead of 1 to saving throws for this model when it is in cover."/>
+              </characteristics>
+            </profile>
+            <profile id="3b6c-4cbd-05b6-6761::b72d-d2ce-ca53-d037::0968-9abb-f742-8581" name="Hidden Hunter" book="Codex: Tyranids" page="93" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="During deployment, you can set up this model in hiding instead of placing it on the battlefield. At the end of any of your Movement phases, this model can spring from its hiding place - set it up anywhere on the battlefield that is more than 9&quot; away from enemy models. You can re-roll the this model&apos;s charge distance in the turn in which it uses this ability to arrive on the battlefield."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="0bfd-9cc9-815b-6eea" name="Flesh Hooks" entryId="3b6c-4cbd-05b6-6761::3e2a-28d0-719a-98af::e8ab-6677-781d-991b" number="1" type="upgrade">
+              <rules/>
+              <profiles>
+                <profile id="3b6c-4cbd-05b6-6761::3e2a-28d0-719a-98af::ff8e-b73e-96e1-e175::c831-57f4-c262-c123" name="Flesh Hooks" book="Codex: Tyranids" page="112" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="6&quot;"/>
+                    <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Assault 2"/>
+                    <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="User"/>
+                    <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="0"/>
+                    <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="1"/>
+                    <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="This weapon can be fired within 1&quot; of an enemy unit, and can target enemy units within 1&quot; of friendly units."/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections/>
+              <costs>
+                <cost name="pts" costTypeId="points" value="2.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+            <selection id="c184-388b-701f-3106" name="Grasping Talons" entryId="3b6c-4cbd-05b6-6761::c43f-0c64-831d-e4bb::2fca-289b-5d26-71a3" number="1" type="upgrade">
+              <rules/>
+              <profiles>
+                <profile id="3b6c-4cbd-05b6-6761::c43f-0c64-831d-e4bb::79f6-8ab4-492b-7f98::9f4a-221d-403a-bb06" name="Grasping Talons" book="Codex: Tyranids" page="111" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="Melee"/>
+                    <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Melee"/>
+                    <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="User"/>
+                    <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="-1"/>
+                    <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="2"/>
+                    <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="-"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections/>
+              <costs>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                <cost name="pts" costTypeId="points" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+            <selection id="d523-2e63-1eaa-a8b1" name="Rending Claws" entryId="3b6c-4cbd-05b6-6761::06c1-f7b4-664c-a125::a50e-4043-d535-0f3a" number="1" type="upgrade">
+              <rules/>
+              <profiles>
+                <profile id="3b6c-4cbd-05b6-6761::06c1-f7b4-664c-a125::f450-599f-a903-4bcb::0693-a634-e549-a0f7" name="Rending Claws" book="Codex: Tyranids" page="111" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="Melee"/>
+                    <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Melee"/>
+                    <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="User"/>
+                    <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="-1"/>
+                    <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="1"/>
+                    <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="Each time you make a wound roll of 6+ for this weapon, that hit is resolved with an AP of -4."/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections/>
+              <costs>
+                <cost name="pts" costTypeId="points" value="2.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name="pts" costTypeId="points" value="41.0"/>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="2.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="ae15-676b-896d-5056" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="2c1e-a537-939f-64b4" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="7dec-8e5f-8f44-1437" name="New CategoryLink" hidden="false" targetId="638d74c6-bd97-4de5-b65a-6aaa24e9f4b2" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="2080-1147-358c-1dd3" name="New CategoryLink" hidden="false" targetId="3d52-fccf-10c0-3fae" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="e30b-8edd-7bac-ae59" name="New CategoryLink" hidden="false" targetId="cc90-4ec4-47e7-6aaf" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="17b3-b067-1639-fff5" name="Lictor" entryId="3b6c-4cbd-05b6-6761::a5e2-a0a5-57f0-27b6" number="1" type="model">
+          <rules/>
+          <profiles>
+            <profile id="3b6c-4cbd-05b6-6761::95b1-4e9f-cd16-0fad" name="Lictor" book="Codex: Tyranids" page="93" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="9&quot;"/>
+                <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="2+"/>
+                <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="4+"/>
+                <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="6"/>
+                <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="4"/>
+                <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="4"/>
+                <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="3"/>
+                <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="9"/>
+                <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="5+"/>
+              </characteristics>
+            </profile>
+            <profile id="3b6c-4cbd-05b6-6761::72c5-4977-1ccb-eb93" name="Chameleonic Skin" book="Codex: Tyranids" page="93" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Your opponent must subtract 1 from their hit rolls for attacks that target this model. In addition, add 2 instead of 1 to saving throws for this model when it is in cover."/>
+              </characteristics>
+            </profile>
+            <profile id="3b6c-4cbd-05b6-6761::b72d-d2ce-ca53-d037::0968-9abb-f742-8581" name="Hidden Hunter" book="Codex: Tyranids" page="93" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="During deployment, you can set up this model in hiding instead of placing it on the battlefield. At the end of any of your Movement phases, this model can spring from its hiding place - set it up anywhere on the battlefield that is more than 9&quot; away from enemy models. You can re-roll the this model&apos;s charge distance in the turn in which it uses this ability to arrive on the battlefield."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="a3d1-db13-34d7-0a02" name="Flesh Hooks" entryId="3b6c-4cbd-05b6-6761::3e2a-28d0-719a-98af::e8ab-6677-781d-991b" number="1" type="upgrade">
+              <rules/>
+              <profiles>
+                <profile id="3b6c-4cbd-05b6-6761::3e2a-28d0-719a-98af::ff8e-b73e-96e1-e175::c831-57f4-c262-c123" name="Flesh Hooks" book="Codex: Tyranids" page="112" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="6&quot;"/>
+                    <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Assault 2"/>
+                    <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="User"/>
+                    <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="0"/>
+                    <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="1"/>
+                    <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="This weapon can be fired within 1&quot; of an enemy unit, and can target enemy units within 1&quot; of friendly units."/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections/>
+              <costs>
+                <cost name="pts" costTypeId="points" value="2.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+            <selection id="3f0e-0285-b26a-c598" name="Grasping Talons" entryId="3b6c-4cbd-05b6-6761::c43f-0c64-831d-e4bb::2fca-289b-5d26-71a3" number="1" type="upgrade">
+              <rules/>
+              <profiles>
+                <profile id="3b6c-4cbd-05b6-6761::c43f-0c64-831d-e4bb::79f6-8ab4-492b-7f98::9f4a-221d-403a-bb06" name="Grasping Talons" book="Codex: Tyranids" page="111" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="Melee"/>
+                    <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Melee"/>
+                    <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="User"/>
+                    <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="-1"/>
+                    <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="2"/>
+                    <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="-"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections/>
+              <costs>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                <cost name="pts" costTypeId="points" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+            <selection id="2b7f-b16e-f5ea-89cd" name="Rending Claws" entryId="3b6c-4cbd-05b6-6761::06c1-f7b4-664c-a125::a50e-4043-d535-0f3a" number="1" type="upgrade">
+              <rules/>
+              <profiles>
+                <profile id="3b6c-4cbd-05b6-6761::06c1-f7b4-664c-a125::f450-599f-a903-4bcb::0693-a634-e549-a0f7" name="Rending Claws" book="Codex: Tyranids" page="111" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="Melee"/>
+                    <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Melee"/>
+                    <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="User"/>
+                    <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="-1"/>
+                    <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="1"/>
+                    <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="Each time you make a wound roll of 6+ for this weapon, that hit is resolved with an AP of -4."/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections/>
+              <costs>
+                <cost name="pts" costTypeId="points" value="2.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name="pts" costTypeId="points" value="41.0"/>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="2.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="a4c1-242f-81ae-ed37" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="b7ec-c8d3-3e5d-4784" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="21df-b6bc-edb4-f141" name="New CategoryLink" hidden="false" targetId="638d74c6-bd97-4de5-b65a-6aaa24e9f4b2" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="e27a-5a48-ea1c-d00f" name="New CategoryLink" hidden="false" targetId="3d52-fccf-10c0-3fae" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="499c-a020-b60b-1582" name="New CategoryLink" hidden="false" targetId="cc90-4ec4-47e7-6aaf" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="fbd3-144a-b75b-9466" name="Mucolid Spores" entryId="1399-daca-8214-fb2f::9773-03e8-68e5-8ea1" number="1" type="unit">
+          <rules/>
+          <profiles>
+            <profile id="1399-daca-8214-fb2f::d1da-8c6c-1ae7-4a71::b830-920a-231b-073d" name="Instinctive Behaviour" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Unless a &lt;HIVE FLEET&gt; unit with this ability is within 24&quot; of any friendly &lt;HIVE FLEET&gt; Synapse unit, you must subtract 1 from any hit rolls made for it when shooting any target other than the nearest visible enemy unit, and you must subtract 2 from its charge roll if it declares a charge against any unit other than the nearest enemy unit."/>
+              </characteristics>
+            </profile>
+            <profile id="1399-daca-8214-fb2f::4000-fbb8-8e11-bb48::fcc8-7f26-c77a-041a" name="Float Down" book="Codex: Tyranids" page="99" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="During deployment, you can set up this unit in the upper atmosphere instead of on the battlefield. At the end of any of your Movement phases, it can float down to the battlefield - set it up anywhere that is more than 12&quot; from any enemy models."/>
+              </characteristics>
+            </profile>
+            <profile id="1399-daca-8214-fb2f::5ae1-3cf4-6bf3-3f76::b799-796a-b062-5dc6" name="Living Bombs" book="Codex: Tyranids" page="99" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="This unit automatically passes Morale tests. Furthermore, this unit is discounted for the purposes of any victory conditions - their destruction never awards any victory points, they do not count towards the number of models controlling an objective, and they do not count when determining if a player has any models left on the battlefield. If you are playing a matched game, the creation of these units by another unit (eg. from a Sporocyst&apos;s Spore Node ability) is free, and the unit&apos;s points cost does not come out of your pool of reinforcement points."/>
+              </characteristics>
+            </profile>
+            <profile id="1399-daca-8214-fb2f::d38d-eb0e-4242-491a::90c1-637d-0a42-dcf4" name="Floating Death (Mucolid Spore)" book="Codex: Tyranids" page="99" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="A Mucolid Spore explodes if it is within 3&quot; of any enemy units at the end of any Charge phase. Each time a Mucolid Spore explodes, roll a D6; on a 1 it fails to inflict an harm, on a 2-5 it inflicts D3 mortal wounds on the nearest enemy unit, and on a 6 it inflicts D6 mortal wounds on that unit. The Mucolid Spore is then destroyed."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="d763-4393-7dbd-8d67" name="Mucolid Spore" entryId="1399-daca-8214-fb2f::8fdc-34a7-9856-f2e6" number="1" type="model">
+              <rules/>
+              <profiles>
+                <profile id="1399-daca-8214-fb2f::50c6-01b0-c963-a003::4fed-d3da-008a-a905" name="Mucolid Spore" book="Codex: Tyranids" page="99" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="3&quot;"/>
+                    <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="-"/>
+                    <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="-"/>
+                    <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="1"/>
+                    <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="3"/>
+                    <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="3"/>
+                    <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="1"/>
+                    <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="10"/>
+                    <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="6+"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections/>
+              <costs>
+                <cost name="pts" costTypeId="points" value="20.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="1.0"/>
+            <cost name="pts" costTypeId="points" value="0.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="7c84-8047-db87-e947" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="340a-ec7d-8788-1989" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="6dd3-fa68-994a-51e9" name="New CategoryLink" hidden="false" targetId="c274d0b0-5866-44bc-9810-91c136ae7438" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="f9ba-11cf-4644-93aa" name="New CategoryLink" hidden="false" targetId="3117-16d8-fcef-4f56" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="5be9-25c0-4d44-4bc5" name="Mucolid Spores" entryId="1399-daca-8214-fb2f::9773-03e8-68e5-8ea1" number="1" type="unit">
+          <rules/>
+          <profiles>
+            <profile id="1399-daca-8214-fb2f::d1da-8c6c-1ae7-4a71::b830-920a-231b-073d" name="Instinctive Behaviour" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Unless a &lt;HIVE FLEET&gt; unit with this ability is within 24&quot; of any friendly &lt;HIVE FLEET&gt; Synapse unit, you must subtract 1 from any hit rolls made for it when shooting any target other than the nearest visible enemy unit, and you must subtract 2 from its charge roll if it declares a charge against any unit other than the nearest enemy unit."/>
+              </characteristics>
+            </profile>
+            <profile id="1399-daca-8214-fb2f::4000-fbb8-8e11-bb48::fcc8-7f26-c77a-041a" name="Float Down" book="Codex: Tyranids" page="99" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="During deployment, you can set up this unit in the upper atmosphere instead of on the battlefield. At the end of any of your Movement phases, it can float down to the battlefield - set it up anywhere that is more than 12&quot; from any enemy models."/>
+              </characteristics>
+            </profile>
+            <profile id="1399-daca-8214-fb2f::5ae1-3cf4-6bf3-3f76::b799-796a-b062-5dc6" name="Living Bombs" book="Codex: Tyranids" page="99" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="This unit automatically passes Morale tests. Furthermore, this unit is discounted for the purposes of any victory conditions - their destruction never awards any victory points, they do not count towards the number of models controlling an objective, and they do not count when determining if a player has any models left on the battlefield. If you are playing a matched game, the creation of these units by another unit (eg. from a Sporocyst&apos;s Spore Node ability) is free, and the unit&apos;s points cost does not come out of your pool of reinforcement points."/>
+              </characteristics>
+            </profile>
+            <profile id="1399-daca-8214-fb2f::d38d-eb0e-4242-491a::90c1-637d-0a42-dcf4" name="Floating Death (Mucolid Spore)" book="Codex: Tyranids" page="99" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="A Mucolid Spore explodes if it is within 3&quot; of any enemy units at the end of any Charge phase. Each time a Mucolid Spore explodes, roll a D6; on a 1 it fails to inflict an harm, on a 2-5 it inflicts D3 mortal wounds on the nearest enemy unit, and on a 6 it inflicts D6 mortal wounds on that unit. The Mucolid Spore is then destroyed."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="bad5-2f34-90a9-ae15" name="Mucolid Spore" entryId="1399-daca-8214-fb2f::8fdc-34a7-9856-f2e6" number="1" type="model">
+              <rules/>
+              <profiles>
+                <profile id="1399-daca-8214-fb2f::50c6-01b0-c963-a003::4fed-d3da-008a-a905" name="Mucolid Spore" book="Codex: Tyranids" page="99" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="3&quot;"/>
+                    <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="-"/>
+                    <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="-"/>
+                    <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="1"/>
+                    <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="3"/>
+                    <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="3"/>
+                    <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="1"/>
+                    <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="10"/>
+                    <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="6+"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections/>
+              <costs>
+                <cost name="pts" costTypeId="points" value="20.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="1.0"/>
+            <cost name="pts" costTypeId="points" value="0.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="20a0-caff-8ca4-d49a" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="f5e2-db54-e42d-c9bc" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="8883-2c38-f253-ff59" name="New CategoryLink" hidden="false" targetId="c274d0b0-5866-44bc-9810-91c136ae7438" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="1f3d-e5d7-4f00-c5fc" name="New CategoryLink" hidden="false" targetId="3117-16d8-fcef-4f56" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="ad14-ddd8-95ab-c468" name="Mucolid Spores" entryId="1399-daca-8214-fb2f::9773-03e8-68e5-8ea1" number="1" type="unit">
+          <rules/>
+          <profiles>
+            <profile id="1399-daca-8214-fb2f::d1da-8c6c-1ae7-4a71::b830-920a-231b-073d" name="Instinctive Behaviour" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Unless a &lt;HIVE FLEET&gt; unit with this ability is within 24&quot; of any friendly &lt;HIVE FLEET&gt; Synapse unit, you must subtract 1 from any hit rolls made for it when shooting any target other than the nearest visible enemy unit, and you must subtract 2 from its charge roll if it declares a charge against any unit other than the nearest enemy unit."/>
+              </characteristics>
+            </profile>
+            <profile id="1399-daca-8214-fb2f::4000-fbb8-8e11-bb48::fcc8-7f26-c77a-041a" name="Float Down" book="Codex: Tyranids" page="99" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="During deployment, you can set up this unit in the upper atmosphere instead of on the battlefield. At the end of any of your Movement phases, it can float down to the battlefield - set it up anywhere that is more than 12&quot; from any enemy models."/>
+              </characteristics>
+            </profile>
+            <profile id="1399-daca-8214-fb2f::5ae1-3cf4-6bf3-3f76::b799-796a-b062-5dc6" name="Living Bombs" book="Codex: Tyranids" page="99" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="This unit automatically passes Morale tests. Furthermore, this unit is discounted for the purposes of any victory conditions - their destruction never awards any victory points, they do not count towards the number of models controlling an objective, and they do not count when determining if a player has any models left on the battlefield. If you are playing a matched game, the creation of these units by another unit (eg. from a Sporocyst&apos;s Spore Node ability) is free, and the unit&apos;s points cost does not come out of your pool of reinforcement points."/>
+              </characteristics>
+            </profile>
+            <profile id="1399-daca-8214-fb2f::d38d-eb0e-4242-491a::90c1-637d-0a42-dcf4" name="Floating Death (Mucolid Spore)" book="Codex: Tyranids" page="99" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="A Mucolid Spore explodes if it is within 3&quot; of any enemy units at the end of any Charge phase. Each time a Mucolid Spore explodes, roll a D6; on a 1 it fails to inflict an harm, on a 2-5 it inflicts D3 mortal wounds on the nearest enemy unit, and on a 6 it inflicts D6 mortal wounds on that unit. The Mucolid Spore is then destroyed."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="b28c-114a-ddd0-afd6" name="Mucolid Spore" entryId="1399-daca-8214-fb2f::8fdc-34a7-9856-f2e6" number="1" type="model">
+              <rules/>
+              <profiles>
+                <profile id="1399-daca-8214-fb2f::50c6-01b0-c963-a003::4fed-d3da-008a-a905" name="Mucolid Spore" book="Codex: Tyranids" page="99" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="3&quot;"/>
+                    <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="-"/>
+                    <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="-"/>
+                    <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="1"/>
+                    <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="3"/>
+                    <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="3"/>
+                    <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="1"/>
+                    <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="10"/>
+                    <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="6+"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections/>
+              <costs>
+                <cost name="pts" costTypeId="points" value="20.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="1.0"/>
+            <cost name="pts" costTypeId="points" value="0.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="eb15-989a-8d33-fb45" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="517a-b17f-faa3-e280" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="b8dd-53b7-b54b-b453" name="New CategoryLink" hidden="false" targetId="c274d0b0-5866-44bc-9810-91c136ae7438" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="f474-8001-7227-21fa" name="New CategoryLink" hidden="false" targetId="3117-16d8-fcef-4f56" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="b6aa-d9ad-ffa7-7c80" name="Biovores" entryId="ba4a-0459-81d7-3d4c::d957-0f84-bce5-1298" number="1" type="unit">
+          <rules/>
+          <profiles>
+            <profile id="ba4a-0459-81d7-3d4c::70fc-ef2b-db93-f698::b830-920a-231b-073d" name="Instinctive Behaviour" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Unless a &lt;HIVE FLEET&gt; unit with this ability is within 24&quot; of any friendly &lt;HIVE FLEET&gt; Synapse unit, you must subtract 1 from any hit rolls made for it when shooting any target other than the nearest visible enemy unit, and you must subtract 2 from its charge roll if it declares a charge against any unit other than the nearest enemy unit."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="05db-798c-cf87-ca3e" name="Biovore" entryId="ba4a-0459-81d7-3d4c::3b18-3102-34b0-465f" number="1" type="model">
+              <rules/>
+              <profiles>
+                <profile id="ba4a-0459-81d7-3d4c::e0c6-7c38-33ec-b989" name="Biovore" book="Codex: Tyranids" page="101" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="5&quot;"/>
+                    <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="4+"/>
+                    <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="4+"/>
+                    <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="4"/>
+                    <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="4"/>
+                    <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="4"/>
+                    <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="2"/>
+                    <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="5"/>
+                    <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="4+"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections>
+                <selection id="c29e-4352-30f4-cbd4" name="Spore Mine Launcher" entryId="ba4a-0459-81d7-3d4c::5af9-d99a-5a8f-a998::f2f0-5874-f1e1-1dd5" number="1" type="upgrade">
+                  <rules/>
+                  <profiles>
+                    <profile id="ba4a-0459-81d7-3d4c::5af9-d99a-5a8f-a998::3c33-26f2-c26f-f461" name="Spore Mine Launcher" book="Codex: Tyranids" page="101" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+                      <profiles/>
+                      <rules/>
+                      <infoLinks/>
+                      <modifiers/>
+                      <characteristics>
+                        <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Each time a spore mine launcher hits the target, roll a D6 to find out how much damage is inflicted on the target; on a 1 the Spore Mine fails to inflict any harm, on a 2-5 it inflicts 1 mortal wound, and on a 6 it inflicts D3 mortal wounds. Each time a spore mine launcher misses its target, set up a single &lt;HIVE FLEET&gt; Spore Mine model anywhere within 6&quot; of the target unit and more than 3&quot; from any enemy model (if the Spore Mine cannot be placed it is destroyed). This then follows the rules for a Spore Mine (pg 99) that is part of your army, but it cannot move or charge during the turn it was set up. This weapon can target units that are not visible to the firer, but it cannot be used to fire Overwatch."/>
+                      </characteristics>
+                    </profile>
+                    <profile id="ba4a-0459-81d7-3d4c::5af9-d99a-5a8f-a998::a5ea-a39f-5c94-0f4c::7601-c933-e6c8-1105" name="Spore Mine Launcher" book="Codex: Tyranids" page="113" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                      <profiles/>
+                      <rules/>
+                      <infoLinks/>
+                      <modifiers/>
+                      <characteristics>
+                        <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="48&quot;"/>
+                        <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Heavy 1"/>
+                        <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="-"/>
+                        <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="-"/>
+                        <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="-"/>
+                        <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="See Spore Mine Launcher"/>
+                      </characteristics>
+                    </profile>
+                  </profiles>
+                  <selections/>
+                  <costs>
+                    <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                    <cost name="pts" costTypeId="points" value="0.0"/>
+                  </costs>
+                  <categoryLinks/>
+                </selection>
+              </selections>
+              <costs>
+                <cost name="pts" costTypeId="points" value="36.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="2.0"/>
+            <cost name="pts" costTypeId="points" value="0.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="4c46-f60e-56fb-20b7" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="2990-705e-a6d6-10ad" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="93b4-1d57-577d-e015" name="New CategoryLink" hidden="false" targetId="abf5fd55-9ac7-4263-8bc1-a9fb0a8fa6a6" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="8af3-8b85-6a1e-94d5" name="New CategoryLink" hidden="false" targetId="3d52-fccf-10c0-3fae" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="3a0a-3218-7808-b299" name="Biovores" entryId="ba4a-0459-81d7-3d4c::d957-0f84-bce5-1298" number="1" type="unit">
+          <rules/>
+          <profiles>
+            <profile id="ba4a-0459-81d7-3d4c::70fc-ef2b-db93-f698::b830-920a-231b-073d" name="Instinctive Behaviour" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Unless a &lt;HIVE FLEET&gt; unit with this ability is within 24&quot; of any friendly &lt;HIVE FLEET&gt; Synapse unit, you must subtract 1 from any hit rolls made for it when shooting any target other than the nearest visible enemy unit, and you must subtract 2 from its charge roll if it declares a charge against any unit other than the nearest enemy unit."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="3401-b237-5d9f-12a8" name="Biovore" entryId="ba4a-0459-81d7-3d4c::3b18-3102-34b0-465f" number="1" type="model">
+              <rules/>
+              <profiles>
+                <profile id="ba4a-0459-81d7-3d4c::e0c6-7c38-33ec-b989" name="Biovore" book="Codex: Tyranids" page="101" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="5&quot;"/>
+                    <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="4+"/>
+                    <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="4+"/>
+                    <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="4"/>
+                    <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="4"/>
+                    <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="4"/>
+                    <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="2"/>
+                    <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="5"/>
+                    <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="4+"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections>
+                <selection id="04c1-e0a7-e995-38c0" name="Spore Mine Launcher" entryId="ba4a-0459-81d7-3d4c::5af9-d99a-5a8f-a998::f2f0-5874-f1e1-1dd5" number="1" type="upgrade">
+                  <rules/>
+                  <profiles>
+                    <profile id="ba4a-0459-81d7-3d4c::5af9-d99a-5a8f-a998::3c33-26f2-c26f-f461" name="Spore Mine Launcher" book="Codex: Tyranids" page="101" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+                      <profiles/>
+                      <rules/>
+                      <infoLinks/>
+                      <modifiers/>
+                      <characteristics>
+                        <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Each time a spore mine launcher hits the target, roll a D6 to find out how much damage is inflicted on the target; on a 1 the Spore Mine fails to inflict any harm, on a 2-5 it inflicts 1 mortal wound, and on a 6 it inflicts D3 mortal wounds. Each time a spore mine launcher misses its target, set up a single &lt;HIVE FLEET&gt; Spore Mine model anywhere within 6&quot; of the target unit and more than 3&quot; from any enemy model (if the Spore Mine cannot be placed it is destroyed). This then follows the rules for a Spore Mine (pg 99) that is part of your army, but it cannot move or charge during the turn it was set up. This weapon can target units that are not visible to the firer, but it cannot be used to fire Overwatch."/>
+                      </characteristics>
+                    </profile>
+                    <profile id="ba4a-0459-81d7-3d4c::5af9-d99a-5a8f-a998::a5ea-a39f-5c94-0f4c::7601-c933-e6c8-1105" name="Spore Mine Launcher" book="Codex: Tyranids" page="113" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                      <profiles/>
+                      <rules/>
+                      <infoLinks/>
+                      <modifiers/>
+                      <characteristics>
+                        <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="48&quot;"/>
+                        <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Heavy 1"/>
+                        <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="-"/>
+                        <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="-"/>
+                        <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="-"/>
+                        <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="See Spore Mine Launcher"/>
+                      </characteristics>
+                    </profile>
+                  </profiles>
+                  <selections/>
+                  <costs>
+                    <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                    <cost name="pts" costTypeId="points" value="0.0"/>
+                  </costs>
+                  <categoryLinks/>
+                </selection>
+              </selections>
+              <costs>
+                <cost name="pts" costTypeId="points" value="36.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="2.0"/>
+            <cost name="pts" costTypeId="points" value="0.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="82f7-88ca-9d16-9ad7" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="9379-bf85-9c40-09eb" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="a7ae-9711-aa77-822b" name="New CategoryLink" hidden="false" targetId="abf5fd55-9ac7-4263-8bc1-a9fb0a8fa6a6" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="f994-192d-1f0f-3e73" name="New CategoryLink" hidden="false" targetId="3d52-fccf-10c0-3fae" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="47f9-f96a-89aa-d2db" name="Biovores" entryId="ba4a-0459-81d7-3d4c::d957-0f84-bce5-1298" number="1" type="unit">
+          <rules/>
+          <profiles>
+            <profile id="ba4a-0459-81d7-3d4c::70fc-ef2b-db93-f698::b830-920a-231b-073d" name="Instinctive Behaviour" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Unless a &lt;HIVE FLEET&gt; unit with this ability is within 24&quot; of any friendly &lt;HIVE FLEET&gt; Synapse unit, you must subtract 1 from any hit rolls made for it when shooting any target other than the nearest visible enemy unit, and you must subtract 2 from its charge roll if it declares a charge against any unit other than the nearest enemy unit."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="ce84-5c12-1be8-4029" name="Biovore" entryId="ba4a-0459-81d7-3d4c::3b18-3102-34b0-465f" number="1" type="model">
+              <rules/>
+              <profiles>
+                <profile id="ba4a-0459-81d7-3d4c::e0c6-7c38-33ec-b989" name="Biovore" book="Codex: Tyranids" page="101" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="5&quot;"/>
+                    <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="4+"/>
+                    <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="4+"/>
+                    <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="4"/>
+                    <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="4"/>
+                    <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="4"/>
+                    <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="2"/>
+                    <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="5"/>
+                    <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="4+"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections>
+                <selection id="1a29-88a0-7b5f-d7ee" name="Spore Mine Launcher" entryId="ba4a-0459-81d7-3d4c::5af9-d99a-5a8f-a998::f2f0-5874-f1e1-1dd5" number="1" type="upgrade">
+                  <rules/>
+                  <profiles>
+                    <profile id="ba4a-0459-81d7-3d4c::5af9-d99a-5a8f-a998::3c33-26f2-c26f-f461" name="Spore Mine Launcher" book="Codex: Tyranids" page="101" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+                      <profiles/>
+                      <rules/>
+                      <infoLinks/>
+                      <modifiers/>
+                      <characteristics>
+                        <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Each time a spore mine launcher hits the target, roll a D6 to find out how much damage is inflicted on the target; on a 1 the Spore Mine fails to inflict any harm, on a 2-5 it inflicts 1 mortal wound, and on a 6 it inflicts D3 mortal wounds. Each time a spore mine launcher misses its target, set up a single &lt;HIVE FLEET&gt; Spore Mine model anywhere within 6&quot; of the target unit and more than 3&quot; from any enemy model (if the Spore Mine cannot be placed it is destroyed). This then follows the rules for a Spore Mine (pg 99) that is part of your army, but it cannot move or charge during the turn it was set up. This weapon can target units that are not visible to the firer, but it cannot be used to fire Overwatch."/>
+                      </characteristics>
+                    </profile>
+                    <profile id="ba4a-0459-81d7-3d4c::5af9-d99a-5a8f-a998::a5ea-a39f-5c94-0f4c::7601-c933-e6c8-1105" name="Spore Mine Launcher" book="Codex: Tyranids" page="113" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                      <profiles/>
+                      <rules/>
+                      <infoLinks/>
+                      <modifiers/>
+                      <characteristics>
+                        <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="48&quot;"/>
+                        <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Heavy 1"/>
+                        <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="-"/>
+                        <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="-"/>
+                        <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="-"/>
+                        <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="See Spore Mine Launcher"/>
+                      </characteristics>
+                    </profile>
+                  </profiles>
+                  <selections/>
+                  <costs>
+                    <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                    <cost name="pts" costTypeId="points" value="0.0"/>
+                  </costs>
+                  <categoryLinks/>
+                </selection>
+              </selections>
+              <costs>
+                <cost name="pts" costTypeId="points" value="36.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="2.0"/>
+            <cost name="pts" costTypeId="points" value="0.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="635b-51f9-564b-1186" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="a281-e633-8924-7057" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="1d44-f217-a8f0-babb" name="New CategoryLink" hidden="false" targetId="abf5fd55-9ac7-4263-8bc1-a9fb0a8fa6a6" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="5674-cc5c-eb53-2fef" name="New CategoryLink" hidden="false" targetId="3d52-fccf-10c0-3fae" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="a1b9-a77b-836d-66dd" name="Zoanthropes" entryId="090e-2089-1990-29d4::c1b3-01e5-3175-3107" number="1" type="unit">
+          <rules/>
+          <profiles>
+            <profile id="090e-2089-1990-29d4::6453-af1e-39b0-3c17" name="Zoanthropes" hidden="false" profileTypeId="bc97-dea9-9e88-bb7d" profileTypeName="Psyker">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Cast" characteristicTypeId="5afb-9914-904b-d3b3" value="1"/>
+                <characteristic name="Deny" characteristicTypeId="b5ac-9c20-5d5a-6f9b" value="1"/>
+                <characteristic name="Powers Known" characteristicTypeId="69d7-b45e-00a2-7e46" value="Smite + 1 Hive Mind"/>
+                <characteristic name="Other" characteristicTypeId="c2e2-f115-0003-5d7b" value="A Zoanthrope unit of 4 or more models can instead attempt to manifest two psychic powers in each friendly Psychic phase, and attempt to deny one psychic power in each enemy Psychic phase. When manifesting or denying a psychic power with a Zoanthrope unit, first select a model in the unit - measure range, visibility, etc. from this model. If this unit suffers Perils of the Warp, it suffers D3 mortal wounds as described in the core rules, but units within 6&quot; will only suffer damage if the Perils of the Warp causes the last model in the Zoanthrope unit to be slain."/>
+              </characteristics>
+            </profile>
+            <profile id="090e-2089-1990-29d4::f2c4-071f-98a8-66e1" name="Warp Blast" book="Codex: Tyranids" page="94" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="When this unit manifests the Smite psychic power, it affects the closest enemy unit within 24&quot;, instead of within 18&quot;. In addition, it inflicts an additional D3 mortal wounds on that enemy unit if this unit contains 4 or 5 Zoanthropes, or an additonal 3 mortal wounds if it contains 6 Zoanthropes."/>
+              </characteristics>
+            </profile>
+            <profile id="090e-2089-1990-29d4::4aec-9cb1-b382-9531::f587-afe6-7bbe-4eac" name="Shadow in the Warp" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Enemy PSKYERS must subtract 1 from any Psychic tests they make if they are within 18&quot; of any units with this ability. TYRANID PSYKERS are not affected."/>
+              </characteristics>
+            </profile>
+            <profile id="090e-2089-1990-29d4::75e9-da90-c49d-8cd3::1f08-bd8f-43a3-ce1b" name="Synapse" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="&lt;HIVE FLEET&gt; units automatically pass Morale tests if they are within 12&quot; of any friendly &lt;HIVE FLEET&gt; uints with this ability."/>
+              </characteristics>
+            </profile>
+            <profile id="090e-2089-1990-29d4::1869-dbc6-a52c-91dc::cbdf-6ba1-d438-42d4" name="Warp Field" book="Codex: Tyranids" page="94" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Models in this unit have a 3+ invulnerable save."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="e434-19a9-72b4-6843" name="Zoanthrope" entryId="090e-2089-1990-29d4::08fa-c524-ddfa-299b" number="3" type="model">
+              <rules/>
+              <profiles>
+                <profile id="090e-2089-1990-29d4::e8a5-728c-15ee-22fb" name="Zoanthrope" book="Codex: Tyranids" page="94" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="5&quot;"/>
+                    <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="4+"/>
+                    <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="3+"/>
+                    <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="4"/>
+                    <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="4"/>
+                    <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="3"/>
+                    <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="1"/>
+                    <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="9"/>
+                    <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="5+/3++"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections>
+                <selection id="edd5-f9b8-1f12-e536" name="Claws and Teeth" entryId="090e-2089-1990-29d4::0f65-cb1c-1917-3825::2634-0525-7b04-6f89" number="3" type="upgrade">
+                  <rules/>
+                  <profiles>
+                    <profile id="090e-2089-1990-29d4::0f65-cb1c-1917-3825::37ea-8ac0-fcbf-03c8::ae8c-f20e-8126-d222" name="Claws and Teeth" book="Codex: Tyranids" page="111" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                      <profiles/>
+                      <rules/>
+                      <infoLinks/>
+                      <modifiers/>
+                      <characteristics>
+                        <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="Melee"/>
+                        <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Melee"/>
+                        <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="User"/>
+                        <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="0"/>
+                        <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="1"/>
+                        <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="-"/>
+                      </characteristics>
+                    </profile>
+                  </profiles>
+                  <selections/>
+                  <costs>
+                    <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                    <cost name="pts" costTypeId="points" value="0.0"/>
+                  </costs>
+                  <categoryLinks/>
+                </selection>
+              </selections>
+              <costs>
+                <cost name="pts" costTypeId="points" value="120.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="6.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+            <selection id="2c56-3dc4-69b2-9398" name="Power: The Horror" entryId="090e-2089-1990-29d4::c9c8-ad34-e2fc-07b5::1330-a88c-1350-6f71::afd5-2e14-a36e-7887" entryGroupId="090e-2089-1990-29d4::c9c8-ad34-e2fc-07b5::c2f7-de12-e2e1-bb33" number="1" type="upgrade">
+              <rules/>
+              <profiles>
+                <profile id="090e-2089-1990-29d4::c9c8-ad34-e2fc-07b5::1330-a88c-1350-6f71::0316-c01d-5aa8-76ab::b5f8-3114-151d-1286" name="The Horror" book="Codex: Tyranids" page="121" hidden="false" profileTypeId="ae70-4738-0161-bec0" profileTypeName="Psychic Power">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="Warp Charge" characteristicTypeId="5ffd-b800-c317-532a" value="6"/>
+                    <characteristic name="Range" characteristicTypeId="fd64-cbc4-94de-24cc" value="24&quot;"/>
+                    <characteristic name="Details" characteristicTypeId="ad96-dfa4-b4ed-656d" value="Select a unit within 24&quot; that is visible to the psyker. Until the start of your next Psychic phase, that unit must subtract 1 from their hit rolls and Leadership characteristic."/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections/>
+              <costs>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                <cost name="pts" costTypeId="points" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name="pts" costTypeId="points" value="0.0"/>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="354e-0aea-53c0-75f3" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="09ba-4c26-b755-262d" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="a07f-5e35-8686-471c" name="New CategoryLink" hidden="false" targetId="3117-16d8-fcef-4f56" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="61dc-97f9-fbdf-16a8" name="New CategoryLink" hidden="false" targetId="638d74c6-bd97-4de5-b65a-6aaa24e9f4b2" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="decc-ab9e-20f6-aaaa" name="New CategoryLink" hidden="false" targetId="3d52-fccf-10c0-3fae" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="1949-22dd-b79c-1a6d" name="New CategoryLink" hidden="false" targetId="e691-aad7-d21c-1023" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="6962-afc8-5f42-83a4" name="New CategoryLink" hidden="false" targetId="e73a-a897-c34f-6206" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="0724-cc3d-f9d4-fccb" name="New CategoryLink" hidden="false" targetId="7b29-b270-99fe-4de7" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="1096-bfd3-4da3-465b" name="Termagants" entryId="d850-00d4-a2fd-cfb6::2e2b-aedb-e20b-9c8b" number="1" type="unit">
+          <rules/>
+          <profiles>
+            <profile id="d850-00d4-a2fd-cfb6::c6e3-fe23-15be-c661::b830-920a-231b-073d" name="Instinctive Behaviour" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Unless a &lt;HIVE FLEET&gt; unit with this ability is within 24&quot; of any friendly &lt;HIVE FLEET&gt; Synapse unit, you must subtract 1 from any hit rolls made for it when shooting any target other than the nearest visible enemy unit, and you must subtract 2 from its charge roll if it declares a charge against any unit other than the nearest enemy unit."/>
+              </characteristics>
+            </profile>
+            <profile id="d850-00d4-a2fd-cfb6::91f1-22c4-9ef7-5be1::d1fe-35b9-7009-518f" name="Hail of Living Ammunition" book="Codex: Tyranids" page="90" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="If this unit contains 20 or more models, you can re-roll wound rolls of 1 when it shoots."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="96a6-bfd5-cb02-d2d4" name="Termagant (Devourer)" entryId="d850-00d4-a2fd-cfb6::9b89-fdb1-c35e-a671" entryGroupId="d850-00d4-a2fd-cfb6::52d8-3ab7-fff1-1be1" number="10" type="model">
+              <rules/>
+              <profiles>
+                <profile id="d850-00d4-a2fd-cfb6::440c-476d-236a-d4f8::3e97-1173-dc2a-49e6" name="Termagant" book="Codex: Tyranids" page="90" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="6&quot;"/>
+                    <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="4+"/>
+                    <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="4+"/>
+                    <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="3"/>
+                    <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="3"/>
+                    <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="1"/>
+                    <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="1"/>
+                    <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="5"/>
+                    <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="6+"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections>
+                <selection id="04ea-2d80-dce9-0134" name="Devourer" entryId="d850-00d4-a2fd-cfb6::dc6a-3bfa-212d-08d6" number="10" type="upgrade">
+                  <rules/>
+                  <profiles>
+                    <profile id="d850-00d4-a2fd-cfb6::6aab-ac51-e1cc-e41b::3491-c732-c485-8732" name="Devourer" book="Codex: Tyranids" page="112" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                      <profiles/>
+                      <rules/>
+                      <infoLinks/>
+                      <modifiers/>
+                      <characteristics>
+                        <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="18&quot;"/>
+                        <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Assault 3"/>
+                        <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="4"/>
+                        <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="0"/>
+                        <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="1"/>
+                        <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="-"/>
+                      </characteristics>
+                    </profile>
+                  </profiles>
+                  <selections/>
+                  <costs>
+                    <cost name="pts" costTypeId="points" value="40.0"/>
+                    <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                  </costs>
+                  <categoryLinks/>
+                </selection>
+              </selections>
+              <costs>
+                <cost name="pts" costTypeId="points" value="40.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="3.0"/>
+            <cost name="pts" costTypeId="points" value="0.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="cf93-ec73-2a25-956d" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="dc1e-1836-e4a6-d790" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="7809-c162-2400-cbc3" name="New CategoryLink" hidden="false" targetId="3d52-fccf-10c0-3fae" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="188c-766a-6a1c-8865" name="New CategoryLink" hidden="false" targetId="5d76b6f5-20ae-4d70-8f59-ade72a2add3a" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="ca9c-c69d-97f3-9f4a" name="Termagants" entryId="d850-00d4-a2fd-cfb6::2e2b-aedb-e20b-9c8b" number="1" type="unit">
+          <rules/>
+          <profiles>
+            <profile id="d850-00d4-a2fd-cfb6::c6e3-fe23-15be-c661::b830-920a-231b-073d" name="Instinctive Behaviour" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Unless a &lt;HIVE FLEET&gt; unit with this ability is within 24&quot; of any friendly &lt;HIVE FLEET&gt; Synapse unit, you must subtract 1 from any hit rolls made for it when shooting any target other than the nearest visible enemy unit, and you must subtract 2 from its charge roll if it declares a charge against any unit other than the nearest enemy unit."/>
+              </characteristics>
+            </profile>
+            <profile id="d850-00d4-a2fd-cfb6::91f1-22c4-9ef7-5be1::d1fe-35b9-7009-518f" name="Hail of Living Ammunition" book="Codex: Tyranids" page="90" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="If this unit contains 20 or more models, you can re-roll wound rolls of 1 when it shoots."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="ad67-90b6-a091-3103" name="Termagant (Devourer)" entryId="d850-00d4-a2fd-cfb6::9b89-fdb1-c35e-a671" entryGroupId="d850-00d4-a2fd-cfb6::52d8-3ab7-fff1-1be1" number="10" type="model">
+              <rules/>
+              <profiles>
+                <profile id="d850-00d4-a2fd-cfb6::440c-476d-236a-d4f8::3e97-1173-dc2a-49e6" name="Termagant" book="Codex: Tyranids" page="90" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="6&quot;"/>
+                    <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="4+"/>
+                    <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="4+"/>
+                    <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="3"/>
+                    <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="3"/>
+                    <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="1"/>
+                    <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="1"/>
+                    <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="5"/>
+                    <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="6+"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections>
+                <selection id="bc38-cfd2-24c4-dcc1" name="Devourer" entryId="d850-00d4-a2fd-cfb6::dc6a-3bfa-212d-08d6" number="10" type="upgrade">
+                  <rules/>
+                  <profiles>
+                    <profile id="d850-00d4-a2fd-cfb6::6aab-ac51-e1cc-e41b::3491-c732-c485-8732" name="Devourer" book="Codex: Tyranids" page="112" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                      <profiles/>
+                      <rules/>
+                      <infoLinks/>
+                      <modifiers/>
+                      <characteristics>
+                        <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="18&quot;"/>
+                        <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Assault 3"/>
+                        <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="4"/>
+                        <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="0"/>
+                        <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="1"/>
+                        <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="-"/>
+                      </characteristics>
+                    </profile>
+                  </profiles>
+                  <selections/>
+                  <costs>
+                    <cost name="pts" costTypeId="points" value="40.0"/>
+                    <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                  </costs>
+                  <categoryLinks/>
+                </selection>
+              </selections>
+              <costs>
+                <cost name="pts" costTypeId="points" value="40.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="3.0"/>
+            <cost name="pts" costTypeId="points" value="0.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="62ff-d400-65e5-93cf" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="5b23-3374-ca90-5d3b" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="5983-c214-a0a2-515f" name="New CategoryLink" hidden="false" targetId="3d52-fccf-10c0-3fae" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="eafe-535b-7018-61fc" name="New CategoryLink" hidden="false" targetId="5d76b6f5-20ae-4d70-8f59-ade72a2add3a" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="a14f-4676-b85a-8e3f" name="Termagants" entryId="d850-00d4-a2fd-cfb6::2e2b-aedb-e20b-9c8b" number="1" type="unit">
+          <rules/>
+          <profiles>
+            <profile id="d850-00d4-a2fd-cfb6::c6e3-fe23-15be-c661::b830-920a-231b-073d" name="Instinctive Behaviour" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Unless a &lt;HIVE FLEET&gt; unit with this ability is within 24&quot; of any friendly &lt;HIVE FLEET&gt; Synapse unit, you must subtract 1 from any hit rolls made for it when shooting any target other than the nearest visible enemy unit, and you must subtract 2 from its charge roll if it declares a charge against any unit other than the nearest enemy unit."/>
+              </characteristics>
+            </profile>
+            <profile id="d850-00d4-a2fd-cfb6::91f1-22c4-9ef7-5be1::d1fe-35b9-7009-518f" name="Hail of Living Ammunition" book="Codex: Tyranids" page="90" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="If this unit contains 20 or more models, you can re-roll wound rolls of 1 when it shoots."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="5555-398a-d16f-d40e" name="Termagant (Devourer)" entryId="d850-00d4-a2fd-cfb6::9b89-fdb1-c35e-a671" entryGroupId="d850-00d4-a2fd-cfb6::52d8-3ab7-fff1-1be1" number="10" type="model">
+              <rules/>
+              <profiles>
+                <profile id="d850-00d4-a2fd-cfb6::440c-476d-236a-d4f8::3e97-1173-dc2a-49e6" name="Termagant" book="Codex: Tyranids" page="90" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="6&quot;"/>
+                    <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="4+"/>
+                    <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="4+"/>
+                    <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="3"/>
+                    <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="3"/>
+                    <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="1"/>
+                    <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="1"/>
+                    <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="5"/>
+                    <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="6+"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections>
+                <selection id="01b3-46c9-d70a-3832" name="Devourer" entryId="d850-00d4-a2fd-cfb6::dc6a-3bfa-212d-08d6" number="10" type="upgrade">
+                  <rules/>
+                  <profiles>
+                    <profile id="d850-00d4-a2fd-cfb6::6aab-ac51-e1cc-e41b::3491-c732-c485-8732" name="Devourer" book="Codex: Tyranids" page="112" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                      <profiles/>
+                      <rules/>
+                      <infoLinks/>
+                      <modifiers/>
+                      <characteristics>
+                        <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="18&quot;"/>
+                        <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Assault 3"/>
+                        <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="4"/>
+                        <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="0"/>
+                        <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="1"/>
+                        <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="-"/>
+                      </characteristics>
+                    </profile>
+                  </profiles>
+                  <selections/>
+                  <costs>
+                    <cost name="pts" costTypeId="points" value="40.0"/>
+                    <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                  </costs>
+                  <categoryLinks/>
+                </selection>
+              </selections>
+              <costs>
+                <cost name="pts" costTypeId="points" value="40.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="3.0"/>
+            <cost name="pts" costTypeId="points" value="0.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="ad1b-a203-ff2f-8b8f" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="4ae0-3da8-bffe-0df5" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="0a50-e153-b917-c477" name="New CategoryLink" hidden="false" targetId="3d52-fccf-10c0-3fae" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="b6d3-d605-e06b-aba3" name="New CategoryLink" hidden="false" targetId="5d76b6f5-20ae-4d70-8f59-ade72a2add3a" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="479b-0f8f-35f9-9095" name="Termagants" entryId="d850-00d4-a2fd-cfb6::2e2b-aedb-e20b-9c8b" number="1" type="unit">
+          <rules/>
+          <profiles>
+            <profile id="d850-00d4-a2fd-cfb6::c6e3-fe23-15be-c661::b830-920a-231b-073d" name="Instinctive Behaviour" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Unless a &lt;HIVE FLEET&gt; unit with this ability is within 24&quot; of any friendly &lt;HIVE FLEET&gt; Synapse unit, you must subtract 1 from any hit rolls made for it when shooting any target other than the nearest visible enemy unit, and you must subtract 2 from its charge roll if it declares a charge against any unit other than the nearest enemy unit."/>
+              </characteristics>
+            </profile>
+            <profile id="d850-00d4-a2fd-cfb6::91f1-22c4-9ef7-5be1::d1fe-35b9-7009-518f" name="Hail of Living Ammunition" book="Codex: Tyranids" page="90" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="If this unit contains 20 or more models, you can re-roll wound rolls of 1 when it shoots."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="db10-9bfa-15d3-dc32" name="Termagant (Devourer)" entryId="d850-00d4-a2fd-cfb6::9b89-fdb1-c35e-a671" entryGroupId="d850-00d4-a2fd-cfb6::52d8-3ab7-fff1-1be1" number="10" type="model">
+              <rules/>
+              <profiles>
+                <profile id="d850-00d4-a2fd-cfb6::440c-476d-236a-d4f8::3e97-1173-dc2a-49e6" name="Termagant" book="Codex: Tyranids" page="90" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="6&quot;"/>
+                    <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="4+"/>
+                    <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="4+"/>
+                    <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="3"/>
+                    <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="3"/>
+                    <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="1"/>
+                    <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="1"/>
+                    <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="5"/>
+                    <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="6+"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections>
+                <selection id="12b8-4b98-bd76-fc81" name="Devourer" entryId="d850-00d4-a2fd-cfb6::dc6a-3bfa-212d-08d6" number="10" type="upgrade">
+                  <rules/>
+                  <profiles>
+                    <profile id="d850-00d4-a2fd-cfb6::6aab-ac51-e1cc-e41b::3491-c732-c485-8732" name="Devourer" book="Codex: Tyranids" page="112" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                      <profiles/>
+                      <rules/>
+                      <infoLinks/>
+                      <modifiers/>
+                      <characteristics>
+                        <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="18&quot;"/>
+                        <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Assault 3"/>
+                        <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="4"/>
+                        <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="0"/>
+                        <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="1"/>
+                        <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="-"/>
+                      </characteristics>
+                    </profile>
+                  </profiles>
+                  <selections/>
+                  <costs>
+                    <cost name="pts" costTypeId="points" value="40.0"/>
+                    <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                  </costs>
+                  <categoryLinks/>
+                </selection>
+              </selections>
+              <costs>
+                <cost name="pts" costTypeId="points" value="40.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="3.0"/>
+            <cost name="pts" costTypeId="points" value="0.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="e7df-a888-bcad-0fbd" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="a895-567f-3dd2-b9e2" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="cbaa-0989-3a39-6405" name="New CategoryLink" hidden="false" targetId="3d52-fccf-10c0-3fae" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="e27f-02d6-d0cf-b19c" name="New CategoryLink" hidden="false" targetId="5d76b6f5-20ae-4d70-8f59-ade72a2add3a" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="06e8-f01f-043f-8063" name="Termagants" entryId="d850-00d4-a2fd-cfb6::2e2b-aedb-e20b-9c8b" number="1" type="unit">
+          <rules/>
+          <profiles>
+            <profile id="d850-00d4-a2fd-cfb6::c6e3-fe23-15be-c661::b830-920a-231b-073d" name="Instinctive Behaviour" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Unless a &lt;HIVE FLEET&gt; unit with this ability is within 24&quot; of any friendly &lt;HIVE FLEET&gt; Synapse unit, you must subtract 1 from any hit rolls made for it when shooting any target other than the nearest visible enemy unit, and you must subtract 2 from its charge roll if it declares a charge against any unit other than the nearest enemy unit."/>
+              </characteristics>
+            </profile>
+            <profile id="d850-00d4-a2fd-cfb6::91f1-22c4-9ef7-5be1::d1fe-35b9-7009-518f" name="Hail of Living Ammunition" book="Codex: Tyranids" page="90" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="If this unit contains 20 or more models, you can re-roll wound rolls of 1 when it shoots."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="e62e-6922-de44-aeb2" name="Termagant (Devourer)" entryId="d850-00d4-a2fd-cfb6::9b89-fdb1-c35e-a671" entryGroupId="d850-00d4-a2fd-cfb6::52d8-3ab7-fff1-1be1" number="10" type="model">
+              <rules/>
+              <profiles>
+                <profile id="d850-00d4-a2fd-cfb6::440c-476d-236a-d4f8::3e97-1173-dc2a-49e6" name="Termagant" book="Codex: Tyranids" page="90" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="6&quot;"/>
+                    <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="4+"/>
+                    <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="4+"/>
+                    <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="3"/>
+                    <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="3"/>
+                    <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="1"/>
+                    <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="1"/>
+                    <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="5"/>
+                    <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="6+"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections>
+                <selection id="b07e-94df-3571-f277" name="Devourer" entryId="d850-00d4-a2fd-cfb6::dc6a-3bfa-212d-08d6" number="10" type="upgrade">
+                  <rules/>
+                  <profiles>
+                    <profile id="d850-00d4-a2fd-cfb6::6aab-ac51-e1cc-e41b::3491-c732-c485-8732" name="Devourer" book="Codex: Tyranids" page="112" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                      <profiles/>
+                      <rules/>
+                      <infoLinks/>
+                      <modifiers/>
+                      <characteristics>
+                        <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="18&quot;"/>
+                        <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Assault 3"/>
+                        <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="4"/>
+                        <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="0"/>
+                        <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="1"/>
+                        <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="-"/>
+                      </characteristics>
+                    </profile>
+                  </profiles>
+                  <selections/>
+                  <costs>
+                    <cost name="pts" costTypeId="points" value="40.0"/>
+                    <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                  </costs>
+                  <categoryLinks/>
+                </selection>
+              </selections>
+              <costs>
+                <cost name="pts" costTypeId="points" value="40.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="3.0"/>
+            <cost name="pts" costTypeId="points" value="0.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="f5a9-e41f-2261-53a3" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="0bc1-9673-c269-0f84" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="006a-9a45-db7e-5124" name="New CategoryLink" hidden="false" targetId="3d52-fccf-10c0-3fae" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="9c37-20f3-1207-3d77" name="New CategoryLink" hidden="false" targetId="5d76b6f5-20ae-4d70-8f59-ade72a2add3a" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="a119-0dfb-f7ac-8e54" name="Termagants" entryId="d850-00d4-a2fd-cfb6::2e2b-aedb-e20b-9c8b" number="1" type="unit">
+          <rules/>
+          <profiles>
+            <profile id="d850-00d4-a2fd-cfb6::c6e3-fe23-15be-c661::b830-920a-231b-073d" name="Instinctive Behaviour" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Unless a &lt;HIVE FLEET&gt; unit with this ability is within 24&quot; of any friendly &lt;HIVE FLEET&gt; Synapse unit, you must subtract 1 from any hit rolls made for it when shooting any target other than the nearest visible enemy unit, and you must subtract 2 from its charge roll if it declares a charge against any unit other than the nearest enemy unit."/>
+              </characteristics>
+            </profile>
+            <profile id="d850-00d4-a2fd-cfb6::91f1-22c4-9ef7-5be1::d1fe-35b9-7009-518f" name="Hail of Living Ammunition" book="Codex: Tyranids" page="90" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="If this unit contains 20 or more models, you can re-roll wound rolls of 1 when it shoots."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="4cb0-50ef-c5db-2c90" name="Termagant (Devourer)" entryId="d850-00d4-a2fd-cfb6::9b89-fdb1-c35e-a671" entryGroupId="d850-00d4-a2fd-cfb6::52d8-3ab7-fff1-1be1" number="10" type="model">
+              <rules/>
+              <profiles>
+                <profile id="d850-00d4-a2fd-cfb6::440c-476d-236a-d4f8::3e97-1173-dc2a-49e6" name="Termagant" book="Codex: Tyranids" page="90" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="6&quot;"/>
+                    <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="4+"/>
+                    <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="4+"/>
+                    <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="3"/>
+                    <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="3"/>
+                    <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="1"/>
+                    <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="1"/>
+                    <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="5"/>
+                    <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="6+"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections>
+                <selection id="f929-711b-9f83-bc0c" name="Devourer" entryId="d850-00d4-a2fd-cfb6::dc6a-3bfa-212d-08d6" number="10" type="upgrade">
+                  <rules/>
+                  <profiles>
+                    <profile id="d850-00d4-a2fd-cfb6::6aab-ac51-e1cc-e41b::3491-c732-c485-8732" name="Devourer" book="Codex: Tyranids" page="112" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                      <profiles/>
+                      <rules/>
+                      <infoLinks/>
+                      <modifiers/>
+                      <characteristics>
+                        <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="18&quot;"/>
+                        <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Assault 3"/>
+                        <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="4"/>
+                        <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="0"/>
+                        <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="1"/>
+                        <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="-"/>
+                      </characteristics>
+                    </profile>
+                  </profiles>
+                  <selections/>
+                  <costs>
+                    <cost name="pts" costTypeId="points" value="40.0"/>
+                    <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                  </costs>
+                  <categoryLinks/>
+                </selection>
+              </selections>
+              <costs>
+                <cost name="pts" costTypeId="points" value="40.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="3.0"/>
+            <cost name="pts" costTypeId="points" value="0.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="ade5-6449-8aa2-e46b" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="b123-df5c-4d77-fb80" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="66b3-5312-4e7c-3d86" name="New CategoryLink" hidden="false" targetId="3d52-fccf-10c0-3fae" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="678e-8265-40de-34b8" name="New CategoryLink" hidden="false" targetId="5d76b6f5-20ae-4d70-8f59-ade72a2add3a" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="aa9f-fbbf-c6f3-bc53" name="Malanthropes" entryId="de12-9bf9-c22b-4e97::fb84-bb9f-5abe-be3f" number="1" type="unit">
+          <rules/>
+          <profiles>
+            <profile id="de12-9bf9-c22b-4e97::c3a7-e443-af13-d6c2" name="Shrouding Spores (Malanthrope)" book="Imperial Armour - Index: Xenos" page="17" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Your opponent must subtract 1 from hit rolls for ranged weapons that target &lt;HIVE FLEET&gt; units within 3&quot; of any friendly &lt;HIVE FLEET&gt; Malanthropes. This penalty is not cumulative with the same penalty from VENOMTHROPES."/>
+              </characteristics>
+            </profile>
+            <profile id="de12-9bf9-c22b-4e97::8e02-bdab-c2bb-700f" name="Prey Adaption" book="Imperial Armour - Index: Xenos" page="17" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="If the last model in an enemy unit is slain within 1&quot; of a Malanthrope n the Fight phase, all models in your army with the same &lt;HIVE FLEET&gt; keyword as the Malanthrope may re-roll hit rolls of 1 against all models with any of the same Faction keywords as the slain enemy."/>
+              </characteristics>
+            </profile>
+            <profile id="de12-9bf9-c22b-4e97::3449-4605-b24b-61ce" name="Enhanced Toxic Miasma" book="Imperial Armour - Index: Xenos" page="17" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="At the end of the Fight phase, roll a D6 for each enemy unit within 1&quot; of any Malanthropes. On a 4+, that unit suffers a mortal wound."/>
+              </characteristics>
+            </profile>
+            <profile id="de12-9bf9-c22b-4e97::0f09-ab01-057f-eaf2::f6a4-e2dd-1a97-c642" name="Monstrous Brood" book="Codex: Tyranids" page="102" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="The first time this unit is set up on the battlefield, all of its models must be placed within 6&quot; of at least one other model in their unit. From that point onwards, each operates independently and is treated as a separate unit."/>
+              </characteristics>
+            </profile>
+            <profile id="de12-9bf9-c22b-4e97::327b-487b-e7bf-3657::1f08-bd8f-43a3-ce1b" name="Synapse" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="&lt;HIVE FLEET&gt; units automatically pass Morale tests if they are within 12&quot; of any friendly &lt;HIVE FLEET&gt; uints with this ability."/>
+              </characteristics>
+            </profile>
+            <profile id="de12-9bf9-c22b-4e97::9147-ac58-3786-bb70::f587-afe6-7bbe-4eac" name="Shadow in the Warp" book="Codex: Tyranids" page="82" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <characteristics>
+                <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="Enemy PSKYERS must subtract 1 from any Psychic tests they make if they are within 18&quot; of any units with this ability. TYRANID PSYKERS are not affected."/>
+              </characteristics>
+            </profile>
+          </profiles>
+          <selections>
+            <selection id="5f01-3ac0-e51a-3a68" name="Malanthrope" entryId="de12-9bf9-c22b-4e97::dd3e-7e18-299e-3b40" number="1" type="model">
+              <rules/>
+              <profiles>
+                <profile id="de12-9bf9-c22b-4e97::1d55-bc11-fbbd-d629" name="Malanthrope" book="Imperial Armour - Index: Xenos" page="17" hidden="false" profileTypeId="800f-21d0-4387-c943" profileTypeName="Unit">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="M" characteristicTypeId="0bdf-a96e-9e38-7779" value="5&quot;"/>
+                    <characteristic name="WS" characteristicTypeId="e7f0-1278-0250-df0c" value="4+"/>
+                    <characteristic name="BS" characteristicTypeId="381b-eb28-74c3-df5f" value="4+"/>
+                    <characteristic name="S" characteristicTypeId="2218-aa3c-265f-2939" value="4"/>
+                    <characteristic name="T" characteristicTypeId="9c9f-9774-a358-3a39" value="5"/>
+                    <characteristic name="W" characteristicTypeId="f330-5e6e-4110-0978" value="9"/>
+                    <characteristic name="A" characteristicTypeId="13fc-b29b-31f2-ab9f" value="4"/>
+                    <characteristic name="Ld" characteristicTypeId="00ca-f8b8-876d-b705" value="9"/>
+                    <characteristic name="Save" characteristicTypeId="c0df-df94-abd7-e8d3" value="5+"/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections>
+                <selection id="be7b-2c62-a108-278c" name="Grasping Tail" entryId="de12-9bf9-c22b-4e97::d64c-4344-26a7-e6d8::a477-c4f7-3478-8670" number="1" type="upgrade">
+                  <rules/>
+                  <profiles>
+                    <profile id="de12-9bf9-c22b-4e97::d64c-4344-26a7-e6d8::1074-6a5b-034b-6bf9::c4df-752f-d415-9f56" name="Grasping Tail" book="Imperial Armour - Index: Xenos" page="83" hidden="false" profileTypeId="d5f97c0b-9fc9-478d-aa34-a7c414d3ea48" profileTypeName="Weapon">
+                      <profiles/>
+                      <rules/>
+                      <infoLinks/>
+                      <modifiers/>
+                      <characteristics>
+                        <characteristic name="Range" characteristicTypeId="6fa97fa8-ea74-4a27-a0fb-bc4e5f367464" value="Melee"/>
+                        <characteristic name="Type" characteristicTypeId="077c342f-d7b9-45c6-b8af-88e97cafd3a2" value="Melee"/>
+                        <characteristic name="S" characteristicTypeId="59b1-319e-ec13-d466" value="User"/>
+                        <characteristic name="AP" characteristicTypeId="75aa-a838-b675-6484" value="-1"/>
+                        <characteristic name="D" characteristicTypeId="ae8a-3137-d65b-4ca7" value="D3"/>
+                        <characteristic name="Abilities" characteristicTypeId="837d-5e63-aeb7-1410" value="-"/>
+                      </characteristics>
+                    </profile>
+                  </profiles>
+                  <selections/>
+                  <costs>
+                    <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                    <cost name="pts" costTypeId="points" value="0.0"/>
+                  </costs>
+                  <categoryLinks/>
+                </selection>
+              </selections>
+              <costs>
+                <cost name="pts" costTypeId="points" value="140.0"/>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="5.0"/>
+            <cost name="pts" costTypeId="points" value="0.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="e8ee-d4f8-b368-628e" name="New CategoryLink" hidden="false" targetId="dc2c-fdd5-528b-e9ad" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="842e-3c70-c170-c062" name="New CategoryLink" hidden="false" targetId="a367-fb78-5192-96eb" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="4349-dff5-7944-ce17" name="New CategoryLink" hidden="false" targetId="848a6ff2-0def-4c72-8433-ff7da70e6bc7" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="83fe-e41f-5b3e-6c04" name="New CategoryLink" hidden="false" targetId="3b77-decb-d468-6bcc" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="8020-ba40-7cf2-b40b" name="New CategoryLink" hidden="false" targetId="ef18-746a-369f-43a4" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+            <categoryLink id="abf1-729b-b789-cf6a" name="New CategoryLink" hidden="false" targetId="3117-16d8-fcef-4f56" primary="false">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+        <selection id="98b0-d1e6-0079-3b2b" name="Hive Fleet" entryId="9e04-2019-313e-0259::1e74-63b9-9478-0dc8" number="1" type="upgrade">
+          <rules/>
+          <profiles/>
+          <selections>
+            <selection id="9498-8858-7cf3-1766" name="Jormungandr" entryId="9e04-2019-313e-0259::6ee0-91dd-71bf-d44f" entryGroupId="9e04-2019-313e-0259::ec82-1589-1447-8f75" number="1" type="upgrade">
+              <rules/>
+              <profiles>
+                <profile id="9e04-2019-313e-0259::1f9c-460b-2991-af9d" name="Tunnel Networks" book="Codex: Tyranids" page="117" hidden="false" profileTypeId="72c5eafc-75bf-4ed9-b425-78009f1efe82" profileTypeName="Abilities">
+                  <profiles/>
+                  <rules/>
+                  <infoLinks/>
+                  <modifiers/>
+                  <characteristics>
+                    <characteristic name="Description" characteristicTypeId="21befb24-fc85-4f52-a745-64b2e48f8228" value="A unit with this adaption (other than units that can FLY) always has the benefit of cover for the purposes of shooting. If the unit Advances or declares a charge, however, it loses the benefit of this adaptation until the start of your next Movement phase."/>
+                  </characteristics>
+                </profile>
+              </profiles>
+              <selections/>
+              <costs>
+                <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+                <cost name="pts" costTypeId="points" value="0.0"/>
+              </costs>
+              <categoryLinks/>
+            </selection>
+          </selections>
+          <costs>
+            <cost name=" PL" costTypeId="e356-c769-5920-6e14" value="0.0"/>
+            <cost name="pts" costTypeId="points" value="0.0"/>
+          </costs>
+          <categoryLinks>
+            <categoryLink id="539b-b881-388c-4b00" name="New CategoryLink" hidden="false" targetId="ff36a6f3-19bf-4f48-8956-adacfd28fe74" primary="true">
+              <profiles/>
+              <rules/>
+              <infoLinks/>
+              <modifiers/>
+              <constraints/>
+            </categoryLink>
+          </categoryLinks>
+        </selection>
+      </selections>
+      <categories>
+        <category id="a1be-f71f-f1b5-27d3" name="Uncategorised" entryId="(No Category)">
+          <rules/>
+          <profiles/>
+        </category>
+        <category id="2579-b759-fbd4-4488" name="No Force Org Slot" entryId="ff36a6f3-19bf-4f48-8956-adacfd28fe74">
+          <rules/>
+          <profiles/>
+        </category>
+        <category id="2cb1-b86c-cb57-3eee" name="HQ" entryId="848a6ff2-0def-4c72-8433-ff7da70e6bc7">
+          <rules/>
+          <profiles/>
+        </category>
+        <category id="bce5-ace4-a933-d0f8" name="Troops" entryId="5d76b6f5-20ae-4d70-8f59-ade72a2add3a">
+          <rules/>
+          <profiles/>
+        </category>
+        <category id="9d8c-2d0e-6c7e-f59c" name="Elites" entryId="638d74c6-bd97-4de5-b65a-6aaa24e9f4b2">
+          <rules/>
+          <profiles/>
+        </category>
+        <category id="022d-b03d-2583-d75f" name="Fast Attack" entryId="c274d0b0-5866-44bc-9810-91c136ae7438">
+          <rules/>
+          <profiles/>
+        </category>
+        <category id="3f39-2ace-c649-0d8f" name="Heavy Support" entryId="abf5fd55-9ac7-4263-8bc1-a9fb0a8fa6a6">
+          <rules/>
+          <profiles/>
+        </category>
+        <category id="a1fc-b0d2-4b13-6177" name="Flyer" entryId="e888-1504-aa61-95ff">
+          <rules/>
+          <profiles/>
+        </category>
+        <category id="ff99-98c2-0826-5a4b" name="Dedicated Transport" entryId="1b66-3f5f-6705-079a">
+          <rules/>
+          <profiles/>
+        </category>
+        <category id="863c-b41b-440d-477c" name="Warlord" entryId="ae09-117e-a6fa-316b">
+          <rules/>
+          <profiles/>
+        </category>
+      </categories>
+      <forces/>
+    </force>
+  </forces>
+</roster>
