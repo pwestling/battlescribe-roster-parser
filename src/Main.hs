@@ -9,6 +9,7 @@ import           Prelude            hiding ((.))
 import           Safe
 import           System.Environment
 import           Text.XML.HXT.Core
+import           TTSJson
 
 unsplit :: Arrow a => (b -> c -> d) ->  a (b,c) d
 unsplit = arr . uncurry
