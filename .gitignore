@@ -1,2 +1,3 @@
 tts-examples
 *.ros
+.vscode

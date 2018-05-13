@@ -1,0 +1,88 @@
+{
+  "Genestealer": {
+    "Width":1.0,
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": 1.55047226,
+      "posY": -0.0259237289,
+      "posZ": -5.838665,
+      "rotX": 2.191805E-05,
+      "rotY": -0.005129472,
+      "rotZ": -6.966505E-07,
+      "scaleX": 0.875,
+      "scaleY": 0.875,
+      "scaleZ": 0.875
+    },
+    "Nickname": "Genestealers",
+    "Description": "M: 8\nWS: 3\nBS: -\nS: 4\nT: 4\nW: 1\nA: 3\nLd: 9\nSv: 5/5\n\nRending Claw",
+    "ColorDiffuse": {
+      "r": 1.0,
+      "g": 0.996087968,
+      "b": 1.0
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://paste.ee/p/qc29I",
+      "DiffuseURL": "http://cloud-3.steamusercontent.com/ugc/782911422592300244/813D3847B06155171511A3801ECA3CB1435C895E/",
+      "NormalURL": "",
+      "ColliderURL": "https://paste.ee/p/bkFNn",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 1,
+      "CastShadows": true
+    },
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "7fbd13"
+  },
+  "Tyranid Warrior": {
+    "Width":1.8,
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -2.66919661,
+      "posY": -0.0256185532,
+      "posZ": -2.81376266,
+      "rotX": -4.10998618E-05,
+      "rotY": 0.005474396,
+      "rotZ": 3.39075041E-06,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "3/3 Tyranid Warriors",
+    "Description": "M: 6\r\nWS: 3\r\nBS: 4\r\nS: 4\r\nT: 4\r\nW: 3\r\nA: 3\r\nLd: 9\r\nSv: 4\r\n\r\r\nDeathspitter\r\nBoneswords \r\r\n\r\nAdrenal Glands \r\r\nFlesh Hooks \r\n",
+    "ColorDiffuse": {
+      "r": 1.0,
+      "g": 0.9921784,
+      "b": 1.0
+    },
+    "Locked": false,
+    "Grid": true,
+    "Snap": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://paste.ee/p/RAvLY",
+      "DiffuseURL": "http://cloud-3.steamusercontent.com/ugc/782911422592275009/5DB410CA40337A4AABF28479E5CA1B0C58D60C1A/",
+      "NormalURL": "",
+      "ColliderURL": "paste.ee/p/ZfbCg",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 1,
+      "CastShadows": true
+    },
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "1b9de4"
+  }
+}
