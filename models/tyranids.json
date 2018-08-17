@@ -1,4 +1,433 @@
 {
+  "The Swarmlord" : {
+    "Width" : 2.2,
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -40.98281,
+      "posY": 1.16500056,
+      "posZ": 20.9910469,
+      "rotX": -0.0009423121,
+      "rotY": 3.436228E-06,
+      "rotZ": -0.00256996951,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "12/12 The Swarmlord",
+    "Description": "M: 9/7/5\nWS: 2\nBS: 3\nS: 8/7/6\nT: 6\nW: 12/6/3\nA: 7/6/5\nLd: 10\nSv: 3/5\n\nBone Sabres\nPrehensile Pincer Tail\n\nCatalyst\nOnslaught\nThe Horror",
+    "ColorDiffuse": {
+      "r": 0.9999992,
+      "g": 0.9960881,
+      "b": 1.0
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://pastebin.com/raw/t0P3LfXm",
+      "DiffuseURL": "http://imgur.com/NjonTH7.jpg",
+      "NormalURL": "",
+      "ColliderURL": "https://paste.ee/p/rVzFW",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 1,
+      "CastShadows": true
+    },
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "f5a703"
+  },
+  
+  "Broodlord" :  {
+    "Width":2.8,
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -32.9318657,
+      "posY": 1.189,
+      "posZ": 23.5713043,
+      "rotX": -0.0009375501,
+      "rotY": 359.9787,
+      "rotZ": -0.00256840838,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "6/6 Broodlord",
+    "Description": "M: 8\nWS: 2\nBS: -\nS: 5\nT: 5\nW: 6\nA: 6\nLd: 10\nSv: 4/5\n\nMonstrous Rending Claws\n\nCatalyst\nOnslaught\nThe Horror",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992180765,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": true,
+    "Snap": true,
+    "Autoraise": true,
+    "Sticky": true,
+    "Tooltip": true,
+    "GridProjection": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://paste.ee/p/uiyEE",
+      "DiffuseURL": "https://i.imgur.com/6f520ZE.jpg",
+      "NormalURL": "",
+      "ColliderURL": "https://paste.ee/p/3UCK0",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 1,
+      "CastShadows": true
+    },
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "19eb35"
+  },
+  "Tervigon" :  {
+    "Width" : 3.5,
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -24.9816437,
+      "posY": 1.16428328,
+      "posZ": 20.9876156,
+      "rotX": -0.000939877529,
+      "rotY": 0.009856459,
+      "rotZ": -0.00256686169,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "14/14 Tervigon",
+    "Description": "M: 8/6/4\nWS: 4/5/5\nBS: 4/5/6\nS: 7\nT: 7\nW: 14/7/3\nA: 3\nLd: 9\nSv: 3\n\nMassive Sything Talons\nStinger Salvo\nAdrenal Glands\nToxin Sacs\n\nCatalyst\nOnslaught\nThe Horror",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992178142,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://pastebin.com/raw/6pqqPPei",
+      "DiffuseURL": "http://cloud-3.steamusercontent.com/ugc/782911422592233111/A646F0746AF18594FCAAB90206194DC2F8A44134/",
+      "NormalURL": "",
+      "ColliderURL": "https://paste.ee/p/j55gf",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 1,
+      "CastShadows": true
+    },
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "482497",
+    "States": {
+      "2": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -24.9816437,
+          "posY": 1.16428328,
+          "posZ": 20.9876156,
+          "rotX": -0.000938894635,
+          "rotY": 0.009908956,
+          "rotZ": -0.00256871223,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "14/14 Tervigon",
+        "Description": "M: 8/6/4\nWS: 4/5/5\nBS: 4/5/6\nS: 7\nT: 7\nW: 14/7/3\nA: 3\nLd: 9\nSv: 3\n\nMassive Crushing Claws\nStinger Salvo\nAdrenal Glands\nToxin Sacs\n\nCatalyst\nOnslaught\nThe Horror",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921784,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": false,
+        "Autoraise": true,
+        "Sticky": false,
+        "Tooltip": true,
+        "GridProjection": false,
+        "CustomMesh": {
+          "MeshURL": "https://pastebin.com/raw/0HSVphXM",
+          "DiffuseURL": "http://cloud-3.steamusercontent.com/ugc/782911422592234575/9AF95CBFB0825203BCAC077F2A5B08E85122A8E3/",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/j55gf",
+          "Convex": true,
+          "MaterialIndex": 3,
+          "TypeIndex": 1,
+          "CastShadows": true
+        },
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "db8c3a"
+      },
+      "3": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -24.9816437,
+          "posY": 1.16428328,
+          "posZ": 20.9876156,
+          "rotX": -0.0009386472,
+          "rotY": 0.009902406,
+          "rotZ": -0.002568447,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "14/14 Tervigon",
+        "Description": "M: 8/6/4\nWS: 4/5/5\nBS: 4/5/6\nS: 7\nT: 7\nW: 14/7/3\nA: 3\nLd: 9\nSv: 3\n\nMassive Sything Talons\nStinger Salvo\nAdrenal Glands\nToxin Sacs\n\nCatalyst\nOnslaught\nThe Horror",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921784,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": false,
+        "Autoraise": true,
+        "Sticky": false,
+        "Tooltip": true,
+        "GridProjection": false,
+        "CustomMesh": {
+          "MeshURL": "https://pastebin.com/raw/guf2uE33",
+          "DiffuseURL": "http://cloud-3.steamusercontent.com/ugc/782911422592233111/A646F0746AF18594FCAAB90206194DC2F8A44134/",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/j55gf",
+          "Convex": true,
+          "MaterialIndex": 3,
+          "TypeIndex": 1,
+          "CastShadows": true
+        },
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "fac4f1"
+      }
+    }
+  },
+  "Screamer-Killer" :  {
+    "Width":2.1,
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -44.9883156,
+      "posY": 1.16445816,
+      "posZ": -23.0098267,
+      "rotX": -0.000941682956,
+      "rotY": 2.112084E-08,
+      "rotZ": -0.00257015368,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "8/8 Screamer-Killers",
+    "Description": "M: 7\r\nWS: 4\r\nBS: 4\r\nS: 6\r\nT: 7\r\nW: 8\r\nA: 4\r\nLd: 6\r\nSv: 3\r\n\r\n2 Monstrous Scything Talons\r\nMonstrous Crushing Claws\r\n\r\n2 Devourers with Brainleech Worms\r\n2 Deathspitters with Slimer Maggots\r\n\r\nHeavy Venom Cannon \r\nStranglethorn Cannon \r\n\r\nThresher Scythe \r\nBone Mace \r\n\r\nBio-plasma \r\nAdrenal Glands \r\nToxin Sacs\r\n",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.9921817,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://paste.ee/p/llY05",
+      "DiffuseURL": "http://cloud-3.steamusercontent.com/ugc/782911422592979749/A64C7560A55BA36D6C7755CE6DF5CE60506DB1F4/",
+      "NormalURL": "",
+      "ColliderURL": "https://paste.ee/p/rVzFW",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 1,
+      "CastShadows": true
+    },
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "a0b050",
+    "States": {
+      "2": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -45.0000877,
+          "posY": 1.16525912,
+          "posZ": -22.9999752,
+          "rotX": -1.1822578E-05,
+          "rotY": 179.89827,
+          "rotZ": 0.00358082633,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "8/8 Carnifexes",
+        "Description": "M: 7\r\nWS: 4\r\nBS: 4\r\nS: 6\r\nT: 7\r\nW: 8\r\nA: 4\r\nLd: 6\r\nSv: 3\r\n\r\n2 Monstrous Scything Talons\r\nMonstrous Crushing Claws\r\n\r\n2 Devourers with Brainleech Worms\r\n2 Deathspitters with Slimer Maggots\r\n\r\nHeavy Venom Cannon \r\nStranglethorn Cannon \r\n\r\nThresher Scythe \r\nBone Mace \r\n\r\nBio-plasma \r\nAdrenal Glands \r\nToxin Sacs\r\n",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.992180645,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "CustomMesh": {
+          "MeshURL": "http://cloud-3.steamusercontent.com/ugc/866229193896734659/7A516C5A95EDE8B6CAC46846BC59132C95B21CEF/",
+          "DiffuseURL": "http://imgur.com/tlyJGVW.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": true,
+          "MaterialIndex": 3,
+          "TypeIndex": 1,
+          "CastShadows": true
+        },
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "8a5372"
+      }
+    }
+  },
+  "Tyrannofex" : {
+    "Width":3.5,
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -20.999218,
+      "posY": 1.16338289,
+      "posZ": -23.0005264,
+      "rotX": -0.000939968,
+      "rotY": -0.000320670166,
+      "rotZ": -0.00256821234,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "14/14 Tyrannofex",
+    "Description": "M: 6\nWS: 4\nBS: 4/5/5\nS: 7/6/5\nT: 8\nW: 14/7/3\nA: 4/3/2\nLd: 7\nSv: 3\n\nAcid Spray\nRupture Cannon\nStinger Salvo\nPowerful Limbs",
+    "ColorDiffuse": {
+      "r": 1.0,
+      "g": 0.9921791,
+      "b": 1.0
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://paste.ee/p/iWbPb",
+      "DiffuseURL": "http://cloud-3.steamusercontent.com/ugc/782911422593088996/2D6C903EB73B583B613E5E97690164E0F74BC50A/",
+      "NormalURL": "",
+      "ColliderURL": "https://paste.ee/p/j55gf",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 1,
+      "CastShadows": true
+    },
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "18b00b",
+    "States": {
+      "2": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -21.0000019,
+          "posY": 1.16375923,
+          "posZ": -23.0,
+          "rotX": -2.19171288E-05,
+          "rotY": 180.0255,
+          "rotZ": 0.0035787106,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "14/14 Tyrannofex",
+        "Description": "M: 6\nWS: 4\nBS: 4/5/5\nS: 7/6/5\nT: 8\nW: 14/7/3\nA: 4/3/2\nLd: 7\nSv: 3\n\nAcid Spray\nFleshborer Hive\nStinger Salvo\n\nPowerful Limbs",
+        "ColorDiffuse": {
+          "r": 1.0,
+          "g": 0.99217993,
+          "b": 1.0
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/ZO0D2",
+          "DiffuseURL": "http://cloud-3.steamusercontent.com/ugc/782911422593088996/2D6C903EB73B583B613E5E97690164E0F74BC50A/",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/j55gf",
+          "Convex": true,
+          "MaterialIndex": 3,
+          "TypeIndex": 1,
+          "CastShadows": true
+        },
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "eb3c30"
+      }
+    }
+  },
+  "Hive Guard" :  {
+    "Width" : 1.8,
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -40.988163,
+      "posY": 1.18905628,
+      "posZ": 4.99371529,
+      "rotX": -0.0009404444,
+      "rotY": -0.000540662964,
+      "rotZ": -0.00256928871,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "3/3 Hive Guard",
+    "Description": "M: 5\r\nWS: 4\r\nBS: 3\r\nS: 4\r\nT: 5\r\nW: 3\r\nA: 2\r\nLd: 7\r\nSv: 4\n\nImpaler Cannon\nShockcannon\n\nAdrenal Glands\nToxin Sacs",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992180765,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "http://cloud-3.steamusercontent.com/ugc/97233690481601998/0420BC51E1E9324E53D149CF06D3CEBA5FC4CD0E/",
+      "DiffuseURL": "http://cloud-3.steamusercontent.com/ugc/782911422592413500/6B4F06F0FF93C83820FE7B4D6E51D03FAC18664D/",
+      "NormalURL": "",
+      "ColliderURL": "https://paste.ee/p/3UCK0",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 1,
+      "CastShadows": true
+    },
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "3489bf"
+  },
   "Genestealer": {
     "Width":1.0,
     "Name": "Custom_Model",
@@ -84,5 +513,90 @@
     "LuaScript": "",
     "LuaScriptState": "",
     "GUID": "1b9de4"
-  }
+  },
+  "Hormagaunt" :  {
+    "Width":1.0,
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": 22.32214,
+      "posY": 3.09471154,
+      "posZ": 17.27544,
+      "rotX": 347.4571,
+      "rotY": 0.179789424,
+      "rotZ": 358.28598,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "Hormagaunts\r\n",
+    "Description": "M: 9\nWS: 4\nBS: 4\nS: 3\nT: 3\nW: 1\nA: 2\nLd: 5\nSv: 6\n\nScything Talons\n\nAdrenal Glands (+1\" move during Advance or Charge)",
+    "ColorDiffuse": {
+      "r": 1.0,
+      "g": 1.0,
+      "b": 1.0
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://paste.ee/p/61oCD",
+      "DiffuseURL": "http://cloud-3.steamusercontent.com/ugc/782911422593198251/C5F17AF7D7501934B68477B5C605AFB129DC3588/",
+      "NormalURL": "",
+      "ColliderURL": "https://paste.ee/p/bkFNn",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 1,
+      "CastShadows": true
+    },
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "151c3e"
+  },
+  "Termagant (Devourer)" : {
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -0.9994436,
+      "posY": 1.1613754,
+      "posZ": 20.9995956,
+      "rotX": -0.0009441936,
+      "rotY": 0.00247937976,
+      "rotZ": -0.00257223216,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "Termagants",
+    "Description": "M: 6\nWS: 4\nBS: 4\nS: 3\nT: 3\nW: 1\nA: 1\nLd: 5\nSv: 6\n\nDevourer\n\nAdrenal Glands\nToxin Sacs",
+    "ColorDiffuse": {
+      "r": 1.0,
+      "g": 0.998460352,
+      "b": 1.0
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://paste.ee/p/egsfm",
+      "DiffuseURL": "http://cloud-3.steamusercontent.com/ugc/782911422592330383/61A7171DEF1CB05E2909190D93B56953EBBF0003/",
+      "NormalURL": "",
+      "ColliderURL": "https://paste.ee/p/bkFNn",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 1,
+      "CastShadows": true
+    },
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "8f5ae7"}
+  
 }

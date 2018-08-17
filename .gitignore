@@ -1,3 +1,4 @@
 tts-examples
 *.ros
 .vscode
+.stack-work

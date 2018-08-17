@@ -17,6 +17,9 @@ import           System.Environment
 import           Text.XML.HXT.Core
 import           TTSJson
 import           Types
+import Data.Fixed
+
+
 
 
 toDescription :: Stats -> T.Text
@@ -35,6 +38,10 @@ toDescription Stats{..} = T.pack $ concat statLines where
 
 findUnits :: ArrowXml a => a XmlTree XmlTree
 findUnits = multi (isElem >>> hasName "selection" >>> hasAttrValue "type" (== "unit"))
+
+findNonUnitSelections :: ArrowXml a => a XmlTree XmlTree
+findNonUnitSelections = getChildren >>> getChildren >>> getChildren >>> getChildren >>> getChildren >>> 
+    hasName "selection"  >>> hasAttrValue "type" (/= "unit")
 
 findModels :: ArrowXml a => a XmlTree XmlTree
 findModels = multi (isElem >>> hasName "selection" >>> hasAttrValue "type" (== "model"))
@@ -66,8 +73,9 @@ getModelGroup = proc el -> do
   stats <- getStats -< el
   returnA -< ModelGroup (T.pack name) (read count) stats
 
-modelsPerRow = 5
-unitSpacer = 1.5
+modelsPerRow = 10
+maxRankXDistance = 22
+unitSpacer = 1.2
 
 assignPositionsToModels :: Pos -> Double -> Int -> [Value] -> [Value]
 assignPositionsToModels _ _ _ []       = []
@@ -85,8 +93,9 @@ assignPositionsToUnits pos@Pos{..} (u : us) = models : assignPositionsToUnits ne
   models = assignPositionsToModels pos width 0 u
   numModels = length models
   maxXOfUnit = fromIntegral (min numModels modelsPerRow) * width
-  nextX = posX + (maxXOfUnit + unitSpacer)
-  nextPos = Pos nextX posY posZ
+  nextX = (posX + (maxXOfUnit + unitSpacer)) `mod'` maxRankXDistance
+  nextZ = if nextX < posX then posZ + 5.5 else posZ
+  nextPos = Pos nextX posY nextZ
 
 
 retrieveAndModifyUnitJSON :: HM.HashMap T.Text Value -> [Unit] -> [[Maybe Value]]
@@ -125,11 +134,10 @@ main = do
   html <- readFile "test.ros"
   let doc = readString [withParseHTML yes, withWarnings no] html
   units <- runX $ doc >>> findUnits >>> listA (findModels >>> getModelGroup) >>> arr Unit
---  print $ length units
-  -- mapM_ print units
+  nonUnitSelections <- runX $ doc >>> findNonUnitSelections >>> listA getModelGroup >>> arr Unit  
   modelData <- loadModels
   let process = assignPositionsToUnits zeroPos . filter (/= []) . fmap catMaybes . retrieveAndModifyUnitJSON modelData
-  let correctedModelJsons = concat $ process units
+  let correctedModelJsons = concat $ process (units ++ nonUnitSelections)
   let output = encode (object ["ObjectStates" .= correctedModelJsons])
   B.putStr output
   return ()
