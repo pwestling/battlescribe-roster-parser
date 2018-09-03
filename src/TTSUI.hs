@@ -1,27 +1,28 @@
 {-# LANGUAGE Arrows            #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE QuasiQuotes       #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module TTSUI where
 
 import           Control.Arrow
+import           Data.List
+import           Data.Monoid
+import qualified Data.Text         as T
+import qualified Data.Text.Encoding         as E
+
+import qualified Data.Text.IO
+import           Debug.Trace       as Debug
+import qualified NeatInterpolation as NI
+import           Text.XML.HXT.Core
 import           TTSJson
 import           Types
-import           Text.XML.HXT.Core
-import qualified Data.Text            as T
-import Data.Monoid
-import qualified NeatInterpolation as NI
-import qualified Data.Text.IO
-import Debug.Trace as Debug
-import Data.List
+import Crypto.Hash.MD5
+import Data.HexString
 
 
 scriptFromXml :: ArrowXml a => String -> a XmlTree String
-scriptFromXml name = proc el -> do
-    ui <- uiFromXML name -< el
-    let script = asScript ui
-    returnA -< T.unpack script
+scriptFromXml name = uiFromXML name >>> arr asScript >>> arr T.unpack
 
 uiFromXML :: ArrowXml a => String -> a XmlTree T.Text
 uiFromXML name = listA (deep (hasName "profile")) >>> profilesToXML name
@@ -29,52 +30,22 @@ uiFromXML name = listA (deep (hasName "profile")) >>> profilesToXML name
 mapA :: ArrowXml a => a b c -> a [b] [c]
 mapA a = listA (unlistA >>> a)
 
-tables :: ArrowXml a => [a [XmlTree] Table]
-tables = [getUnitsTable, getWeaponsTable, getPsykerTable,getPowerTable, getAbilitiesTable]
-
 profilesToXML :: ArrowXml a => String -> a [XmlTree] T.Text
 profilesToXML name = proc el -> do
-    --tabs <- listA (catA tables) -< el
     tabs <- inferTables -< el
     returnA -< masterPanel (T.pack name) (filter tableNotEmpty tabs)
 
 tableNotEmpty :: Table -> Bool
 tableNotEmpty Table{..} = not (null rows)
 
-toTable :: ArrowXml a => String -> [T.Text] -> [Double] -> [a XmlTree T.Text] -> a [XmlTree] Table
-toTable profileTypeName header widths rowArr = 
-    mapA (hasAttrValue "profiletypename" (== profileTypeName)) >>>
-    mapA (rowFetcher rowArr) >>>
-    arr (\rows -> normalTable header rows widths )
+stat :: ArrowXml a => String -> a XmlTree T.Text
+stat statName = child "characteristics" /> hasAttrValue "name" (== statName) >>> getAttrValue "value" >>> arr T.pack
 
 rowFetcher :: ArrowXml a => [a XmlTree T.Text] -> a XmlTree [T.Text]
 rowFetcher = catA >>> listA
 
 fetchStats :: ArrowXml a => [String] -> [a XmlTree T.Text]
 fetchStats names = getAttrValueT "name" : map stat names
-
-getAbilitiesTable :: ArrowXml a => a [XmlTree] Table
-getAbilitiesTable = toTable "Abilities" ["Ability", "Description"] [0.33, 0.66] (fetchStats ["Description"])
-    
-getWeaponsTable :: ArrowXml a => a [XmlTree] Table
-getWeaponsTable = toTable "Weapon" ["Weapon", "Range", "Type", "S", "AP", "D", "Abilities"]
-                                   [0.19, 0.10, 0.14, 0.03, 0.04, 0.03, 0.43] 
-                                   (fetchStats ["Range", "Type", "S", "AP", "D", "Abilities"])
-
-getUnitsTable :: ArrowXml a => a [XmlTree] Table
-getUnitsTable = toTable "Unit" ["Unit", "M", "WS", "BS", "S", "T", "W", "A", "Ld", "Save"]
-                               [0.3, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.2]
-                               (fetchStats ["M", "WS", "BS", "S", "T", "W", "A", "Ld", "Save"])
-
-getPsykerTable :: ArrowXml a => a [XmlTree] Table
-getPsykerTable = toTable "Psyker" ["Psyker", "Cast", "Deny", "Powers Known", "Other"]
-                                [0.3, 0.05, 0.05, 0.3, 0.3]
-                                (fetchStats ["Cast", "Deny", "Powers Known", "Other"])
-
-getPowerTable :: ArrowXml a => a [XmlTree] Table
-getPowerTable = toTable "Psychic Power" ["Power", "Warp Charge", "Range", "Details"]
-                                [0.3, 0.1, 0.1, 0.5]
-                                (fetchStats ["Warp Charge", "Range", "Details"])
 
 inferTables :: ArrowXml a => a [XmlTree] [Table]
 inferTables = proc profiles -> do
@@ -89,26 +60,14 @@ inferTable profileType = proc profiles -> do
     let header = map T.pack (profileType : characteristics)
     rows <- mapA (rowFetcher (fetchStats characteristics)) -<< matchingProfiles
     let widths = computeWidths (header : rows)
-    returnA -< normalTable header (sort (nubBy (\o t -> head o == head t ) rows)) widths
-
-average :: [Int] -> Double
-average i = fromIntegral (sum i) / fromIntegral (length i)
+    let sortedUniqueRows = sort (nubBy (\o t -> head o == head t ) rows)
+    returnA -< normalTable header sortedUniqueRows widths
 
 bound :: Double -> Double
 bound i =  result where
     thresh = 10
     mult = 0.2
-    histo = if i < thresh then i * 1.4 else thresh + ((i-thresh) * mult)
-    result = histo
-
--- computeWidths :: [[T.Text]] -> [Double]
--- computeWidths vals = widths where
---     asLengths = map (map (bound . T.length)) vals :: [[Int]]
---     asLineLengths = map sum asLengths :: [Int]
---     avg = average asLineLengths
---     transposed = transpose vals
---     avgColSize = map (average . map (bound . T.length)) transposed
---     widths = map (/ avg) avgColSize
+    result = if i < thresh then i * 1.4 else thresh + ((i-thresh) * mult)
 
 computeWidths :: [[T.Text]] -> [Double]
 computeWidths vals = widths where
@@ -116,55 +75,84 @@ computeWidths vals = widths where
     asLineLengths = map maximum (transpose asLengths) :: [Double]
     avg = sum asLineLengths
     widths = map (/ avg) asLineLengths
-    
-
-stat :: ArrowXml a => String -> a XmlTree T.Text
-stat statName = child "characteristics" /> hasAttrValue "name" (== statName) >>> getAttrValue "value" >>> arr T.pack
 
 asScript :: T.Text -> T.Text
 asScript uiRaw = [NI.text|
 
-function createUI(color)
-  local id = self.getGUID()
-  local buttonId = id .. "-" .. color
+function createUI()
+  local id = [[$id]]
+  local buttonId = id 
   local panelId = "panel-" .. buttonId
-  local uiString1 = string.gsub([[ $ui ]], "theclosefunction", id .. "/closeUI")
-  local uiString2 = string.gsub(uiString1, "thebuttonid", buttonId)
-  local uiString3 = string.gsub(uiString2, "thevisibility", color)
-  local uiString = string.gsub(uiString3, "thepanelid", panelId)
-  local globalXml = UI.getXml()
-  if globalXml then
-    UI.setXml(globalXml ..  uiString)
+  local guid = self.getGUID()
+  if not UI.getAttribute(panelId, "visibility") then
+    local uiString1 = string.gsub([[ $ui ]], "theclosefunction", guid .. "/closeUI")
+    local uiString2 = string.gsub(uiString1, "thebuttonid", buttonId)
+    local uiString3 = string.gsub(uiString2, "thevisibility", "")
+    local uiString = string.gsub(uiString3, "thepanelid", panelId)
+    return uiString
   else
-    UI.setXml(uiString)
+    return ""
+  end  
+end
+
+function onLoad()
+  self.setTable("vis",{})
+  local counter = Global.getVar("frameCounter")
+  if not counter then
+    counter = 1
   end
+  Global.setVar("frameCounter", counter+1)
+  local name = self.getName()
+  local update = function ()
+    local totalUI = createUI()
+    if totalUI ~= "" then  
+      UI.setXml(UI.getXml() .. totalUI)
+    end
+  end
+  Wait.frames(update, counter*10)  
 end
 
 function onScriptingButtonDown(index, peekerColor)
-  print("Player hit " .. tostring(index))
   local player = Player[peekerColor]
   if index == 1 and player.getHoverObject() and player.getHoverObject().getGUID() == self.getGUID() then
-    print("Making UI visible")
-    local id = self.getGUID()
-    local buttonId = id .. "-" .. peekerColor
+    local id = [[$id]]
+    local buttonId = id
     local panelId = "panel-" .. buttonId
-    local exists = UI.getAttribute(panelId, "active")
-    if not exists then
-        createUI(peekerColor)
-    else
-      UI.setAttribute(panelId, "active", "true")
-    end
+    local vis = self.getTable("vis")
+    vis[player.color] = player.color
+    setVis(panelId, vis)
   end
 end
 
 function closeUI(player, val, id)
-  print("Closed")
   local panelId = "panel-"..id
-  UI.setAttribute(panelId, "active", "false")
+  local vis = UI.getAttribute(panelId, "visibility")
+  local peekerColor = player.color 
+  local vis = self.getTable("vis")
+  vis[player.color] = nil
+  setVis(panelId, vis)
+end
+
+function setVis(panelId, vis)
+  local vistable = {}
+  for k,v in pairs(vis) do
+    if v then
+        table.insert(vistable, v)
+    end
+  end
+  if #vistable > 0 then
+    local visstring = table.concat(vistable, "|")
+    UI.setAttribute(panelId, "visibility", visstring)  
+    UI.setAttribute(panelId, "active", "true")
+  else
+    UI.setAttribute(panelId, "active", "false")
+  end
+  self.setTable("vis", vis)
 end
 
 |] where
     ui = uiRaw
+    id = toText (fromBytes (hash (E.encodeUtf8 ui)))
 
 escapeQuotes :: String -> String
 escapeQuotes (c : s) = if c == '"' then "&quot;" ++ escapeQuotes s else c : escapeQuotes s
@@ -173,55 +161,16 @@ escapeQuotes [] = []
 escapeQuotesT :: T.Text -> T.Text
 escapeQuotesT = T.pack . escapeQuotes . T.unpack
 
-wrapTag :: T.Text -> T.Text -> T.Text
-wrapTag t v = "<" <> t <> ">" <> v <> "</" <> t <> ">" 
-
-alternate :: (a -> c) -> (a -> c) -> [a] -> [c]
-alternate = alternateEven where
-    alternateEven f1 f2 (h : l) = f1 h : alternateOdd f1 f2 l
-    alternateEven _ _ [] = []
-    alternateOdd f1 f2 (h : l) = f2 h : alternateEven f1 f2 l
-    alternateOdd _ _ [] = []
-
-wrapTagAttr :: T.Text -> [T.Text] -> T.Text -> T.Text
-wrapTagAttr t attrs v = "<" <> t <> mconcat (alternate (\s -> " " <> s <> "=") (\s -> "\"" <> s <>"\"") attrs) 
-  <> ">" <> v <> "</" <> t <> ">" 
-
-row :: T.Text -> T.Text
-row = wrapTag "Row"
-
-cell :: T.Text -> T.Text
-cell = wrapTag "Cell"
-
-text :: T.Text -> T.Text
-text = wrapTag "Text"
-
-str :: String -> T.Text
-str = wrapTag "Text" . T.pack
-
-panelHeader :: T.Text -> T.Text -> T.Text
-panelHeader rawName id = [NI.text| 
-  <Row>
-  <Text id="WindowTitle" text="Stats: $name" class="UIText" rectAlignment="UpperCenter" alignment="LowerCenter" width="230" />
-  <Button id="$id-closeButton" class="topButtons" rectAlignment="UpperRight" color="#990000" textColor="#FFFFFF" text="X" onClick="theclosefunction" />
-  </Row>
-
-
-  |] where name = rawName
-
-table = wrapTag "TableLayout"
-panel = wrapTag "Panel"
-                           
-masterPanel :: T.Text -> [Table] -> T.Text                                  
+masterPanel :: T.Text -> [Table] -> T.Text
 masterPanel name tables = [NI.text|
-    <Panel id="thepanelid" visibility="thevisibility" active="true" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false"> 
+    <Panel id="thepanelid" visibility="thevisibility" active="false" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false">
     <TableLayout autoCalculateHeight="true" width="$width" childForceExpandWidth="false" childForceExpandHeight="false">
     <Row preferredHeight="40">
     <Text fontSize="25" text="$name" width="$width"/>
     <Button id="thebuttonid" class="topButtons" rectAlignment="UpperRight" color="#990000" textColor="#FFFFFF" text="X" height="40" width="40" onClick="theclosefunction" />
     </Row>
     <Row preferredHeight="$scrollHeight">
-    <VerticalScrollView height="$scrollHeight" width="$width">
+    <VerticalScrollView scrollSensitivity="30" height="$scrollHeight" width="$width">
     <TableLayout padding="10" cellPadding="5" horizontalOverflow="Wrap" columnWidths="$width" autoCalculateHeight="true">
     $tableXml
     </TableLayout>
@@ -229,24 +178,24 @@ masterPanel name tables = [NI.text|
     </Row>
     </TableLayout>
     </Panel> |] where
-        heightN = 500
+        heightN = 400
         height = numToT heightN
         scrollHeight = numToT (heightN - 40)
-        widthN = 900
+        widthN = 600
         width = numToT widthN
         tableXml = mconcat $ map (tableToXml widthN) tables
 
 data Table = Table {
     columnWidthPercents :: [Double],
-    headerHeight :: Integer,
-    rowHeight :: Integer,
-    textSize :: Integer, 
-    headerTextSize :: Integer,
-    header :: [T.Text],
-    rows :: [[T.Text]]
+    headerHeight        :: Integer,
+    rowHeight           :: Integer,
+    textSize            :: Integer,
+    headerTextSize      :: Integer,
+    header              :: [T.Text],
+    rows                :: [[T.Text]]
 } deriving Show
 
-normalTable header rows widths = Table widths 40 80 17 20 header rows
+normalTable header rows widths = Table widths 40 80 15 20 header rows
 
 numToT :: Integer -> T.Text
 numToT = T.pack . show
@@ -269,15 +218,15 @@ tableToXml tableWidth Table{..} = [NI.text|
     headerText = tRow htSize "Bold" headHeight header
     bodyText = mconcat $ map (tRow tSize "Normal" rHeight . map escapeQuotesT) rows
 
-tCell :: T.Text -> T.Text -> T.Text -> T.Text    
-tCell fs stl val = [NI.text| <Cell><Text resizeTextForBestFit="true" resizeTextMaxSize="$fs" resizeTextMinSize="12" 
+tCell :: T.Text -> T.Text -> T.Text -> T.Text
+tCell fs stl val = [NI.text| <Cell><Text resizeTextForBestFit="true" resizeTextMaxSize="$fs" resizeTextMinSize="12"
   text="$val" fontStyle="$stl" fontSize="$fs"/></Cell> |]
 
-tRow :: T.Text -> T.Text -> T.Text -> [T.Text] -> T.Text 
+tRow :: T.Text -> T.Text -> T.Text -> [T.Text] -> T.Text
 tRow fs stl h vals = "<Row preferredHeight=\"" <> h <> "\">" <> mconcat (map (tCell fs stl) vals) <> "</Row>"
 
 child :: ArrowXml a => String -> a XmlTree XmlTree
-child tag = getChildren >>> hasName tag 
+child tag = getChildren >>> hasName tag
 
 getAttrValueT :: ArrowXml a => String -> a XmlTree T.Text
 getAttrValueT attr = getAttrValue attr >>> arr T.pack
