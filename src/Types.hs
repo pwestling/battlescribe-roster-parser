@@ -8,7 +8,8 @@ import qualified Data.Text    as T
 data ModelGroup = ModelGroup {
     _name       :: T.Text,
     _modelCount :: Int,
-    _stats      :: Stats
+    _stats      :: Maybe Stats,
+    _weapons    :: [Weapon]
 } deriving Show
 
 data Stats = Stats {
@@ -22,7 +23,23 @@ data Stats = Stats {
     _leadership :: String,
     _save       :: String
 } deriving Show
-newtype Unit = Unit { _subGroups :: [ModelGroup]} deriving Show
+data Unit = Unit { 
+    _unitName :: String, 
+    _unitDefaultStats :: Stats,
+    _subGroups :: [ModelGroup], 
+    _abilities :: [String],
+    _unitWeapons :: [Weapon],
+    _script :: String} deriving Show
+
+data Weapon = Weapon {
+    _weaponName :: String, 
+    _range :: String, 
+    _type :: String,
+    _weaponStrength :: String, 
+    _AP :: String, 
+    _damage :: String, 
+    _special :: String
+} deriving Show
 
 makeLenses ''Stats
 makeLenses ''ModelGroup

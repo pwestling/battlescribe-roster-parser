@@ -19,5 +19,5 @@ executable battlescribe-roster-parser
   default-language:    Haskell2010
   build-depends:       base >= 4.7 && < 5, hxt, safe, aeson, text, 
                        containers, lens, directory, lens-aeson, bytestring,
-                       unordered-containers, filepath
-  other-modules:       TTSJson, Types
+                       unordered-containers, filepath, neat-interpolation
+  other-modules:       TTSJson, Types, TTSUI
