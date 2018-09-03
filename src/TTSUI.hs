@@ -66,8 +66,8 @@ inferTable profileType = proc profiles -> do
 bound :: Double -> Double
 bound i =  result where
     thresh = 10
-    mult = 0.2
-    result = if i < thresh then i * 1.4 else thresh + ((i-thresh) * mult)
+    mult = 0.15
+    result = if i < thresh then i * 1.5 else thresh + ((i-thresh) * mult)
 
 computeWidths :: [[T.Text]] -> [Double]
 computeWidths vals = widths where
