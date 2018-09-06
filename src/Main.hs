@@ -200,9 +200,21 @@ retrieveAndModifyModelGroupJSON templateMap unit groups = do
 zeroPos :: Pos
 zeroPos = Pos 0.0 0.0 0.0
 
-
--- makeUnit :: ((String, ([String], ([Weapon], Stats))), [ModelGroup]) -> Unit
--- makeUnit ((name, (abilities, (weapons, stats))), models) = Unit name stats models abilities weapons
+addBase :: HM.HashMap T.Text Value -> [Value] -> [Value]
+addBase modelData vals = modelsAndBase where
+  maxX = maximum (concatMap (^.. key "Transform" . key "posX"._Double) vals)
+  maxZ = maximum (concatMap (^.. key "Transform" . key "posZ"._Double) vals)
+  scaleX = (maxX + 5) / 17.0 
+  scaleZ = (maxZ + 5) / 17.0 
+  base = fromJust (HM.lookup "Base" modelData)
+  setTransform trans amount val = val & key "Transform" . key trans._Double .~ amount
+  addTransform pos amount val =  val & key "Transform" . key pos._Double %~ (+ amount)
+  scaledBase = (setTransform "scaleX" scaleX . 
+                setTransform "scaleZ" scaleZ) base
+  respositionedModels = map (addTransform "posX" (maxX / (-2)) . 
+                             addTransform "posZ" (maxZ / (-2)) .
+                             setTransform "posY" 1.5) vals
+  modelsAndBase = scaledBase : respositionedModels
 
 makeUnit ::  ArrowXml a => a XmlTree ModelGroup -> a XmlTree Unit
 makeUnit modelFn = proc el -> do
@@ -238,6 +250,7 @@ main = do
   --mapM_ (hPrint stderr) units
   modelData <- loadModels
   correctedModelJsons <- concat <$> process modelData (units ++ nonUnitSelections)
-  let output = encode (object ["ObjectStates" .= correctedModelJsons])
+  let basedModelJsons = addBase modelData correctedModelJsons
+  let output = encode (object ["ObjectStates" .= basedModelJsons])
   B.putStr output
   return ()
