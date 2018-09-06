@@ -1,0 +1,224 @@
+{
+    "Helbrute" : {
+        "Width" : 3.5,
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -48.6102562,
+          "posY": 0.965223,
+          "posZ": 30.7755985,
+          "rotX": 2.694723E-06,
+          "rotY": 180.000061,
+          "rotZ": -3.41235733E-07,
+          "scaleX": 0.75,
+          "scaleY": 0.75,
+          "scaleZ": 0.75
+        },
+        "Nickname": "Hellbrute - Lascannon",
+        "Description": "",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.992160261,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://drive.google.com/uc?export=download&id=0B7parWFjzkqZeVdwZUJaejV3M3M",
+          "DiffuseURL": "https://drive.google.com/uc?export=download&id=0B7parWFjzkqZSGxVdmhtS0FEUWM",
+          "NormalURL": "",
+          "ColliderURL": "https://drive.google.com/uc?export=download&id=0B7parWFjzkqZR3B1TXJxUGkzazA",
+          "Convex": true,
+          "MaterialIndex": 1,
+          "TypeIndex": 1,
+          "CastShadows": true
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "5169f3",
+        "States": {
+          "2": {
+            "Name": "Custom_Model",
+            "Transform": {
+              "posX": -52.87186,
+              "posY": 0.965223,
+              "posZ": 35.4607239,
+              "rotX": -2.50806079E-06,
+              "rotY": 180.009933,
+              "rotZ": 1.16313629E-06,
+              "scaleX": 0.75,
+              "scaleY": 0.75,
+              "scaleZ": 0.75
+            },
+            "Nickname": "Hellbrute - Multimelta",
+            "Description": "",
+            "ColorDiffuse": {
+              "r": 0.9999998,
+              "g": 0.992160261,
+              "b": 0.9999998
+            },
+            "Locked": false,
+            "Grid": true,
+            "Snap": true,
+            "Autoraise": true,
+            "Sticky": true,
+            "Tooltip": true,
+            "GridProjection": false,
+            "HideWhenFaceDown": false,
+            "Hands": false,
+            "CustomMesh": {
+              "MeshURL": "https://drive.google.com/uc?export=download&id=0B7parWFjzkqZdEF1TlE2SHJEV1U",
+              "DiffuseURL": "https://drive.google.com/uc?export=download&id=0B7parWFjzkqZSGxVdmhtS0FEUWM",
+              "NormalURL": "",
+              "ColliderURL": "https://drive.google.com/uc?export=download&id=0B7parWFjzkqZR3B1TXJxUGkzazA",
+              "Convex": true,
+              "MaterialIndex": 1,
+              "TypeIndex": 1,
+              "CastShadows": true
+            },
+            "XmlUI": "",
+            "LuaScript": "",
+            "LuaScriptState": "",
+            "GUID": "e5f54f"
+          },
+          "3": {
+            "Name": "Custom_Model",
+            "Transform": {
+              "posX": -48.3734169,
+              "posY": 0.9652229,
+              "posZ": 35.00584,
+              "rotX": 1.62707556E-06,
+              "rotY": 179.98027,
+              "rotZ": -2.49841082E-06,
+              "scaleX": 0.75,
+              "scaleY": 0.75,
+              "scaleZ": 0.75
+            },
+            "Nickname": "Hellbrute - Autocannon",
+            "Description": "",
+            "ColorDiffuse": {
+              "r": 0.9999998,
+              "g": 0.992160261,
+              "b": 0.9999998
+            },
+            "Locked": false,
+            "Grid": true,
+            "Snap": true,
+            "Autoraise": true,
+            "Sticky": true,
+            "Tooltip": true,
+            "GridProjection": false,
+            "HideWhenFaceDown": false,
+            "Hands": false,
+            "CustomMesh": {
+              "MeshURL": "https://drive.google.com/uc?export=download&id=0B7parWFjzkqZUDROcnUwQ2tSYXc",
+              "DiffuseURL": "https://drive.google.com/uc?export=download&id=0B7parWFjzkqZSGxVdmhtS0FEUWM",
+              "NormalURL": "",
+              "ColliderURL": "https://drive.google.com/uc?export=download&id=0B7parWFjzkqZR3B1TXJxUGkzazA",
+              "Convex": true,
+              "MaterialIndex": 1,
+              "TypeIndex": 1,
+              "CastShadows": true
+            },
+            "XmlUI": "",
+            "LuaScript": "",
+            "LuaScriptState": "",
+            "GUID": "bb1c3a"
+          },
+          "4": {
+            "Name": "Custom_Model",
+            "Transform": {
+              "posX": -52.9432755,
+              "posY": 0.965222955,
+              "posZ": 30.5521259,
+              "rotX": 2.66659228E-08,
+              "rotY": 179.9983,
+              "rotZ": -9.838541E-07,
+              "scaleX": 0.75,
+              "scaleY": 0.75,
+              "scaleZ": 0.75
+            },
+            "Nickname": "Hellbrute - 2 x CF",
+            "Description": "",
+            "ColorDiffuse": {
+              "r": 0.9999998,
+              "g": 0.992160261,
+              "b": 0.9999998
+            },
+            "Locked": false,
+            "Grid": true,
+            "Snap": true,
+            "Autoraise": true,
+            "Sticky": true,
+            "Tooltip": true,
+            "GridProjection": false,
+            "HideWhenFaceDown": false,
+            "Hands": false,
+            "CustomMesh": {
+              "MeshURL": "https://drive.google.com/uc?export=download&id=0B7parWFjzkqZYzlIZWJjd3dTa1U",
+              "DiffuseURL": "https://drive.google.com/uc?export=download&id=0B7parWFjzkqZSGxVdmhtS0FEUWM",
+              "NormalURL": "",
+              "ColliderURL": "https://drive.google.com/uc?export=download&id=0B7parWFjzkqZR3B1TXJxUGkzazA",
+              "Convex": true,
+              "MaterialIndex": 1,
+              "TypeIndex": 1,
+              "CastShadows": true
+            },
+            "XmlUI": "",
+            "LuaScript": "",
+            "LuaScriptState": "",
+            "GUID": "9c9feb"
+          }
+        }
+      },
+    "Chaos Vindicator" : {
+        "Width" : 4.5,
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -6.12550974,
+          "posY": 0.9578992,
+          "posZ": 12.2172537,
+          "rotX": -6.395093E-06,
+          "rotY": 150.032684,
+          "rotZ": 7.42271641E-06,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Chaos Vindicator",
+        "Description": "",
+        "ColorDiffuse": {
+          "r": 0.9999999,
+          "g": 0.992175043,
+          "b": 0.9999999
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "CustomMesh": {
+          "MeshURL": "https://drive.google.com/uc?export=download&id=0B7parWFjzkqZcXRGc04wSllxU3M",
+          "DiffuseURL": "https://drive.google.com/uc?export=download&id=0B7parWFjzkqZQzZRNkFVU2x6Vlk",
+          "NormalURL": "",
+          "ColliderURL": "",
+          "Convex": true,
+          "MaterialIndex": 1,
+          "TypeIndex": 1,
+          "CastShadows": true
+        },
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "8b5909"
+      }
+
+}

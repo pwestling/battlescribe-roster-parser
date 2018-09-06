@@ -1,0 +1,345 @@
+{
+    "Bloodmaster" : {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": 6.9393115,
+          "posY": 0.9599999,
+          "posZ": 1.37855649,
+          "rotX": 1.49677146E-06,
+          "rotY": 210.023621,
+          "rotZ": 2.04616086E-07,
+          "scaleX": 1.14999986,
+          "scaleY": 1.14999986,
+          "scaleZ": 1.14999986
+        },
+        "Nickname": "Bloodletter",
+        "Description": "WS 5\r\nBS 5\r\nS 4\r\nT 3\r\nW 1\r\nI 4\r\nA 1\r\nLd 7\r\nSave 6+/5++\n\nHellblade\r\r User\r AP3\r \n\nDaemon, Daemon of Khorne, Daemonic Instability, Deep Strike, Fear, Furious Charge, Hatred (Daemon of Slaanesh)",
+        "ColorDiffuse": {
+          "r": 0.819138467,
+          "g": 0.1614919,
+          "b": 0.0926213339
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://www.dropbox.com/s/dgym5t5fxwxlz2f/Bloodletter.obj?dl=1",
+          "DiffuseURL": "https://www.dropbox.com/s/8tpv0q6vsppp7hk/bloodletter.jpg?dl=1",
+          "NormalURL": "",
+          "ColliderURL": "https://www.dropbox.com/s/w3vy75xqwb3ps9s/32mm_Collision_Base2.obj?dl=1",
+          "Convex": true,
+          "MaterialIndex": 1,
+          "TypeIndex": 1,
+          "CustomShader": {
+            "SpecularColor": {
+              "r": 0.801745057,
+              "g": 0.0900802538,
+              "b": 0.110306084
+            },
+            "SpecularIntensity": 0.5,
+            "SpecularSharpness": 3.0,
+            "FresnelStrength": 0.1
+          },
+          "CastShadows": true
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "3019d8"
+      },
+    "Skulltaker" : {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": 3.71172142,
+          "posY": 0.96,
+          "posZ": 2.89317131,
+          "rotX": 1.64695052E-06,
+          "rotY": 195.038239,
+          "rotZ": -4.667542E-07,
+          "scaleX": 0.55000037,
+          "scaleY": 0.55000037,
+          "scaleZ": 0.55000037
+        },
+        "Nickname": "Skulltaker",
+        "Description": "WS 9\r\nBS 5\r\nS 6\r\nT 5\r\nW 4\r\nI 8\r\nA 5\r\nLd 9\r\nSave -/5++\n\nDaemon, Daemon of Khorne, Daemonic Instability, Deep Strike, Fear, Furious Charge, Hatred (Daemon of Slaanesh)\r\n",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.992160261,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "http://cloud-3.steamusercontent.com/ugc/80340956999154309/A324B4EACE5115C2CD6C04D39F54F2470597FC05/",
+          "DiffuseURL": "http://i.imgur.com/R7PtGfz.jpg",
+          "NormalURL": "",
+          "ColliderURL": "http://pastebin.com/raw.php?i=7e2HKDbN",
+          "Convex": true,
+          "MaterialIndex": 1,
+          "TypeIndex": 0,
+          "CastShadows": true
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "e473a6"
+      },
+    "Bloodletter" : {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": 6.9393115,
+          "posY": 0.9600007,
+          "posZ": 1.37855649,
+          "rotX": -1.965762E-06,
+          "rotY": 210.023666,
+          "rotZ": -2.070427E-06,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Bloodletter",
+        "Description": "WS 5\r\nBS 5\r\nS 4\r\nT 3\r\nW 1\r\nI 4\r\nA 1\r\nLd 7\r\nSave 6+/5++\n\nHellblade\r\r User\r AP3\r \n\nDaemon, Daemon of Khorne, Daemonic Instability, Deep Strike, Fear, Furious Charge, Hatred (Daemon of Slaanesh)",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.992160261,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://www.dropbox.com/s/dgym5t5fxwxlz2f/Bloodletter.obj?dl=1",
+          "DiffuseURL": "https://www.dropbox.com/s/8tpv0q6vsppp7hk/bloodletter.jpg?dl=1",
+          "NormalURL": "",
+          "ColliderURL": "https://www.dropbox.com/s/w3vy75xqwb3ps9s/32mm_Collision_Base2.obj?dl=1",
+          "Convex": true,
+          "MaterialIndex": 1,
+          "TypeIndex": 1,
+          "CustomShader": {
+            "SpecularColor": {
+              "r": 0.8745098,
+              "g": 0.8117647,
+              "b": 0.745098054
+            },
+            "SpecularIntensity": 0.01,
+            "SpecularSharpness": 3.0,
+            "FresnelStrength": 0.1
+          },
+          "CastShadows": true
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "3019d8"
+      },
+      "Bloodreaper" : {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": 6.9393115,
+          "posY": 0.9600007,
+          "posZ": 1.37855649,
+          "rotX": -1.965762E-06,
+          "rotY": 210.023666,
+          "rotZ": -2.070427E-06,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Bloodletter",
+        "Description": "WS 5\r\nBS 5\r\nS 4\r\nT 3\r\nW 1\r\nI 4\r\nA 1\r\nLd 7\r\nSave 6+/5++\n\nHellblade\r\r User\r AP3\r \n\nDaemon, Daemon of Khorne, Daemonic Instability, Deep Strike, Fear, Furious Charge, Hatred (Daemon of Slaanesh)",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.992160261,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://www.dropbox.com/s/dgym5t5fxwxlz2f/Bloodletter.obj?dl=1",
+          "DiffuseURL": "https://www.dropbox.com/s/8tpv0q6vsppp7hk/bloodletter.jpg?dl=1",
+          "NormalURL": "",
+          "ColliderURL": "https://www.dropbox.com/s/w3vy75xqwb3ps9s/32mm_Collision_Base2.obj?dl=1",
+          "Convex": true,
+          "MaterialIndex": 1,
+          "TypeIndex": 1,
+          "CustomShader": {
+            "SpecularColor": {
+              "r": 0.8745098,
+              "g": 0.8117647,
+              "b": 0.745098054
+            },
+            "SpecularIntensity": 0.01,
+            "SpecularSharpness": 3.0,
+            "FresnelStrength": 0.1
+          },
+          "CastShadows": true
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "3019d8"
+      },
+      "Bloodthirster of Insensate Rage" : {
+        "Width" : 6,  
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -16.0869236,
+          "posY": 0.9599999,
+          "posZ": 6.89260149,
+          "rotX": 1.23721065E-07,
+          "rotY": 45.0121269,
+          "rotZ": -4.60567179E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Bloodthirster of Unfettered Fury 5/5",
+        "Description": "WS 10\r\nBS 10\r\nS 6\r\nT 6\r\nW 5\r\nI 9\r\nA 6\r\nLd 9\r\nSave 3+/5++\n\nDaemon, Daemon of Khorne, Daemonic Instability, Deep Strike, Fear, Furious Charge, Hatred (Daemon of Slaanesh)\r\n\nLash of Khorne 12\" S6 AP1  Assault 1",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.992160261,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "http://cloud-3.steamusercontent.com/ugc/80340957000199479/7949A4155CA7FE8B42ED2CA38F8B35645D6CEEA3/",
+          "DiffuseURL": "http://i.imgur.com/l7a7F2W.jpg",
+          "NormalURL": "",
+          "ColliderURL": "http://pastebin.com/raw.php?i=v8PueMN4",
+          "Convex": true,
+          "MaterialIndex": 1,
+          "TypeIndex": 0,
+          "CastShadows": true
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "9df8ef"
+      },
+      "Bloodthirster of Unfettered Fury" : {
+        "Width" : 6,  
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -16.0869236,
+          "posY": 0.9599999,
+          "posZ": 6.89260149,
+          "rotX": 1.23721065E-07,
+          "rotY": 45.0121269,
+          "rotZ": -4.60567179E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Bloodthirster of Unfettered Fury 5/5",
+        "Description": "WS 10\r\nBS 10\r\nS 6\r\nT 6\r\nW 5\r\nI 9\r\nA 6\r\nLd 9\r\nSave 3+/5++\n\nDaemon, Daemon of Khorne, Daemonic Instability, Deep Strike, Fear, Furious Charge, Hatred (Daemon of Slaanesh)\r\n\nLash of Khorne 12\" S6 AP1  Assault 1",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.992160261,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "http://cloud-3.steamusercontent.com/ugc/80340957000199479/7949A4155CA7FE8B42ED2CA38F8B35645D6CEEA3/",
+          "DiffuseURL": "http://i.imgur.com/l7a7F2W.jpg",
+          "NormalURL": "",
+          "ColliderURL": "http://pastebin.com/raw.php?i=v8PueMN4",
+          "Convex": true,
+          "MaterialIndex": 1,
+          "TypeIndex": 0,
+          "CastShadows": true
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "9df8ef"
+      },
+      "Wrath of Khorne Bloodthirster" : {
+        "Width" : 6,  
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -16.0869236,
+          "posY": 0.9599999,
+          "posZ": 6.89260149,
+          "rotX": 1.23721065E-07,
+          "rotY": 45.0121269,
+          "rotZ": -4.60567179E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Bloodthirster of Unfettered Fury 5/5",
+        "Description": "WS 10\r\nBS 10\r\nS 6\r\nT 6\r\nW 5\r\nI 9\r\nA 6\r\nLd 9\r\nSave 3+/5++\n\nDaemon, Daemon of Khorne, Daemonic Instability, Deep Strike, Fear, Furious Charge, Hatred (Daemon of Slaanesh)\r\n\nLash of Khorne 12\" S6 AP1  Assault 1",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.992160261,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "http://cloud-3.steamusercontent.com/ugc/80340957000199479/7949A4155CA7FE8B42ED2CA38F8B35645D6CEEA3/",
+          "DiffuseURL": "http://i.imgur.com/l7a7F2W.jpg",
+          "NormalURL": "",
+          "ColliderURL": "http://pastebin.com/raw.php?i=v8PueMN4",
+          "Convex": true,
+          "MaterialIndex": 1,
+          "TypeIndex": 0,
+          "CastShadows": true
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "9df8ef"
+      }
+
+
+}
