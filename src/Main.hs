@@ -24,6 +24,7 @@ import           Text.XML.HXT.Core
 import           TTSJson
 import           TTSUI
 import           Types
+import Data.Monoid
 
 textColor :: String -> String -> String
 textColor c s = "["++c++"]"++s++"[-]"
@@ -68,7 +69,7 @@ weaponStr Weapon{..} = textColor "c6c930" _weaponName ++ "\r\n"
   ++ weaponFmt _range _type _weaponStrength _AP _damage (if _special /= "-" then "*" else _special)
 
 findUnits :: ArrowXml a => a XmlTree XmlTree
-findUnits = multi (isElem >>> hasName "selection" >>> hasAttrValue "type" (== "unit"))
+findUnits = deep (isElem >>> hasName "selection" >>> hasAttrValue "type" (== "unit"))
 
 findNonUnitSelections :: ArrowXml a => a XmlTree XmlTree
 findNonUnitSelections = getChildren >>> getChildren >>> getChildren >>> getChildren >>> getChildren >>>
@@ -78,11 +79,10 @@ findModels :: ArrowXml a => a XmlTree XmlTree
 findModels = multi (isElem >>> hasName "selection" >>> hasAttrValue "type" (== "model"))
 
 getStat :: ArrowXml a => String -> a XmlTree String
-getStat statName = deep (hasName "profile" >>> hasAttrValue "profiletypename" (== "Unit")) >>>
-                         deep (
-                         hasName "characteristic" >>>
-                         hasAttrValue "name" (== statName) >>>
-                         getAttrValue "value")
+getStat statName = this />
+                  hasName "characteristic" >>>
+                  hasAttrValue "name" (== statName) >>>
+                  getAttrValue "value"
 
 getWeaponStat :: ArrowXml a => String -> a XmlTree String
 getWeaponStat statName = deep (
@@ -94,17 +94,20 @@ getAbilities :: ArrowXml a => a XmlTree String
 getAbilities = deep (hasName "profile" >>> hasAttrValue "profiletypename" (== "Abilities") >>> getAttrValue "name")
 
 getStats :: ArrowXml a => a XmlTree Stats
-getStats = proc el -> do
-  move <- getStat "M" -< el
-  ws <- getStat "WS" -< el
-  bs <- getStat "BS" -< el
-  s <- getStat "S" -< el
-  t <- getStat "T" -< el
-  w <- getStat "W" -< el
-  a <- getStat "A" -< el
-  ld <- getStat "Ld" -< el
-  sa <- getStat "Save" -< el
-  returnA -< (Stats move ws bs s t w a ld sa)
+getStats = this //> 
+           hasAttrValue "profiletypename" (== "Unit") /> 
+           hasName "characteristics" >>> 
+              proc el -> do
+              move <- getStat "M" -< el
+              ws <- getStat "WS" -< el
+              bs <- getStat "BS" -< el
+              s <- getStat "S" -< el
+              t <- getStat "T" -< el
+              w <- getStat "W" -< el
+              a <- getStat "A" -< el
+              ld <- getStat "Ld" -< el
+              sa <- getStat "Save" -< el
+              returnA -< (Stats move ws bs s t w a ld sa)
 
 getWeapon :: ArrowXml a => a XmlTree Weapon
 getWeapon = proc el -> do
@@ -127,7 +130,7 @@ getWeaponsShallow = listA $ hasAttrValue "type" (== "unit") >>> getChildren >>> 
 getModelGroup :: ArrowXml a => a XmlTree ModelGroup
 getModelGroup = proc el -> do
   name <- getAttrValue "name" -< el
-  count <- getAttrValue "number" -< el
+  count <- getAttrValue "number"  -< el
   stats <- listA getStats -< el
   weapons <- getWeapons -< el
   returnA -< ModelGroup (T.pack name) (read count) (listToMaybe stats) weapons
@@ -172,14 +175,29 @@ mapRight :: (b -> c) -> Either a b -> Either a c
 mapRight f (Left t)  = Left t
 mapRight f (Right t) = Right (f t)
 
+headMay :: [a] -> Maybe a
+headMay l = if null l then Nothing else Just (head l)
+
+lookupModel :: HM.HashMap T.Text Value -> Unit -> ModelGroup -> Maybe Value
+lookupModel templateMap unit modelGroup = 
+  result where
+    modelName =  modelGroup ^. name
+    uName = T.pack $ unit ^. unitName
+    tags = map T.pack $ map _weaponName (unit ^. unitWeapons) ++ map _weaponName (modelGroup ^. weapons) ++ unit ^. abilities
+    ap s1 s2 = s1 <> "$" <> s2 
+    unitModelTagLookups = map (ap (ap uName modelName)) tags
+    unitModelLookup  = ap uName modelName
+    modelLookup = modelName
+    lookups = unitModelTagLookups ++ [unitModelLookup, modelLookup]
+    result = headMay (mapMaybe (`HM.lookup` templateMap) lookups)
+
+
 retrieveAndModifyModelGroupJSON :: HM.HashMap T.Text Value -> Unit -> [ModelGroup] -> [Either String [Value]]
 retrieveAndModifyModelGroupJSON templateMap unit groups = do
   modelGroup <- groups
   let modelName =  modelGroup ^. name
   let uName = unit ^. unitName
-  let modelBaseJson =  HM.lookup (T.pack (uName ++ "$" ++ T.unpack modelName)) templateMap
-                       `orElseM`
-                       HM.lookup modelName templateMap
+  let modelBaseJson =  lookupModel templateMap unit modelGroup
   let theStats = fromMaybe (unit ^. unitDefaultStats) (modelGroup ^. stats)
   let description = toDescription unit modelGroup theStats
   let nameWithWounds = mconcat $ [modelName, " "] ++
@@ -216,15 +234,20 @@ addBase modelData vals = modelsAndBase where
                              setTransform "posY" 1.5) vals
   modelsAndBase = scaledBase : respositionedModels
 
+da :: (Show s, ArrowXml a) => a s s
+da = arr Debug.traceShowId
+
 makeUnit ::  ArrowXml a => a XmlTree ModelGroup -> a XmlTree Unit
 makeUnit modelFn = proc el -> do
-  name <- getAttrValue "name" -< el
+  name <- getAttrValue "name" >>> da -< el
   abilities <- listA getAbilities -< el
   weapons <- getWeaponsShallow -< el
-  stats <- listA getStats >>> arr listToMaybe >>> arr (fromMaybe zeroStats) -< el
-  models <- listA modelFn -< el
+  stats <- listA getStats >>> arr listToMaybe >>> arr (fromMaybe zeroStats)  -< el
+  models <- listA (findModels >>> getModelGroup) -< el
+  singleModelUnit <- listA getModelGroup -< el
   script <- (scriptFromXml name) -<< el
-  returnA -< Unit name stats models abilities weapons script
+  let modelsUsed = if null models then singleModelUnit else models
+  returnA -< Unit name stats modelsUsed abilities weapons script
 
 
 process :: HM.HashMap T.Text Value -> [Unit] -> IO [[Value]]
@@ -237,13 +260,12 @@ process modelData units = do
   return unstuck
 
 zeroStats :: Stats
-zeroStats = undefined
+zeroStats = Stats "" "" "" "" "" "" "" "" ""
 
 main :: IO ()
 main = do
-  -- args <- getArgs
-  -- let fileToParse = head args
   html <- getContents
+
   let doc = readString [withParseHTML yes, withWarnings no] html
   units <- runX $ doc >>> findUnits >>> makeUnit (findModels >>> getModelGroup)
   nonUnitSelections <- runX $ doc >>> findNonUnitSelections >>> makeUnit getModelGroup
@@ -251,6 +273,7 @@ main = do
   modelData <- loadModels
   correctedModelJsons <- concat <$> process modelData (units ++ nonUnitSelections)
   let basedModelJsons = addBase modelData correctedModelJsons
+
   let output = encode (object ["ObjectStates" .= basedModelJsons])
   B.putStr output
   return ()

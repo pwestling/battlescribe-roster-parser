@@ -5,8 +5,12 @@ set -euo pipefail
 
 INPUT="$1"
 OUTPUT="$2"
+
+echo "$INPUT"
+echo "$OUTPUT"
+
 BASE=$(basename "$INPUT" .rosz)
-stack build
-unzip -p "$INPUT" $BASE.ros | stack exec battlescribe-roster-parser | jq . > $OUTPUT
+stack build --profile
+unzip -p "$INPUT" "$BASE.ros" | stack exec -- battlescribe-roster-parser +RTS -p -RTS | jq . > "$OUTPUT"
 
 

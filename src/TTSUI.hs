@@ -85,6 +85,7 @@ function createUI()
   local panelId = "panel-" .. buttonId
   local guid = self.getGUID()
   if not UI.getAttribute(panelId, "visibility") then
+    print("making "..panelId)
     local uiString1 = string.gsub([[ $ui ]], "theclosefunction", guid .. "/closeUI")
     local uiString2 = string.gsub(uiString1, "thebuttonid", buttonId)
     local uiString3 = string.gsub(uiString2, "thevisibility", "")
@@ -101,23 +102,31 @@ function onLoad()
   if not counter then
     counter = 1
   end
-  Global.setVar("frameCounter", counter+1)
+  Global.setVar("frameCounter", counter+1)  
   local name = self.getName()
   local update = function ()
+    print("Creating UI for " .. self.getName())
     local totalUI = createUI()
     if totalUI ~= "" then  
+      print("Setting UI for " .. self.getName())
+      print(totalUI)
+      local start = UI.getXml()
       UI.setXml(UI.getXml() .. totalUI)
+      print(start)
     end
   end
-  Wait.frames(update, counter*10)  
+  Wait.frames(update, counter*2)  
 end
 
 function onScriptingButtonDown(index, peekerColor)
   local player = Player[peekerColor]
   if index == 1 and player.getHoverObject() and player.getHoverObject().getGUID() == self.getGUID() then
+    print("Script down on "..self.getName())
     local id = [[$id]]
     local buttonId = id
     local panelId = "panel-" .. buttonId
+    print("showing "..panelId)
+
     local vis = self.getTable("vis")
     vis[player.color] = player.color
     setVis(panelId, vis)
@@ -126,6 +135,8 @@ end
 
 function closeUI(player, val, id)
   local panelId = "panel-"..id
+  print("closing "..panelId)
+
   local vis = UI.getAttribute(panelId, "visibility")
   local peekerColor = player.color 
   local vis = self.getTable("vis")
@@ -134,6 +145,7 @@ function closeUI(player, val, id)
 end
 
 function setVis(panelId, vis)
+   print("Vis is "..UI.getAttribute(panelId, "visibility"))
   local vistable = {}
   for k,v in pairs(vis) do
     if v then
@@ -142,6 +154,7 @@ function setVis(panelId, vis)
   end
   if #vistable > 0 then
     local visstring = table.concat(vistable, "|")
+    print("setting vis to "..visstring)
     UI.setAttribute(panelId, "visibility", visstring)  
     UI.setAttribute(panelId, "active", "true")
   else
@@ -154,12 +167,17 @@ end
     ui = uiRaw
     id = toText (fromBytes (hash (E.encodeUtf8 ui)))
 
-escapeQuotes :: String -> String
-escapeQuotes (c : s) = if c == '"' then "&quot;" ++ escapeQuotes s else c : escapeQuotes s
-escapeQuotes [] = []
+escape :: Char -> String -> String -> String
+escape target replace (c : s) = if c == target then replace ++ escape target replace s else c : escape target replace s
+escape _ _ [] = []
 
-escapeQuotesT :: T.Text -> T.Text
-escapeQuotesT = T.pack . escapeQuotes . T.unpack
+escapeT :: Char -> String -> T.Text -> T.Text
+escapeT c s = T.pack . escape c s . T.unpack
+
+escapes :: T.Text -> T.Text
+escapes = escapeT '"' "&quot;" . 
+  escapeT '<' "＜" . escapeT '>' "＞" 
+  . escapeT '\'' "&apos;"
 
 masterPanel :: T.Text -> [Table] -> T.Text
 masterPanel name tables = [NI.text|
@@ -216,7 +234,7 @@ tableToXml tableWidth Table{..} = [NI.text|
     tSize = numToT textSize
     htSize = numToT headerTextSize
     headerText = tRow htSize "Bold" headHeight header
-    bodyText = mconcat $ map (tRow tSize "Normal" rHeight . map escapeQuotesT) rows
+    bodyText = mconcat $ map (tRow tSize "Normal" rHeight . map escapes) rows
 
 tCell :: T.Text -> T.Text -> T.Text -> T.Text
 tCell fs stl val = [NI.text| <Cell><Text resizeTextForBestFit="true" resizeTextMaxSize="$fs" resizeTextMinSize="12"
