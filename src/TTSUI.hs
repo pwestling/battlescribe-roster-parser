@@ -176,7 +176,7 @@ escapeT c s = T.pack . escape c s . T.unpack
 
 escapes :: T.Text -> T.Text
 escapes = escapeT '"' "&quot;" . 
-  escapeT '<' "＜" . escapeT '>' "＞" 
+  escapeT '<' "＜" . escapeT '>' "＞" --These are unicode
   . escapeT '\'' "&apos;"
 
 masterPanel :: T.Text -> [Table] -> T.Text
