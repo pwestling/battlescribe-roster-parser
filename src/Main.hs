@@ -16,6 +16,7 @@ import           Data.Fixed
 import qualified Data.HashMap.Strict  as HM
 import           Data.List
 import           Data.Maybe
+import           Data.Monoid
 import qualified Data.Text            as T
 import qualified Debug.Trace          as Debug
 import           System.Environment
@@ -24,7 +25,6 @@ import           Text.XML.HXT.Core
 import           TTSJson
 import           TTSUI
 import           Types
-import Data.Monoid
 
 textColor :: String -> String -> String
 textColor c s = "["++c++"]"++s++"[-]"
@@ -94,9 +94,9 @@ getAbilities :: ArrowXml a => a XmlTree String
 getAbilities = deep (hasName "profile" >>> hasAttrValue "profiletypename" (== "Abilities") >>> getAttrValue "name")
 
 getStats :: ArrowXml a => a XmlTree Stats
-getStats = this //> 
-           hasAttrValue "profiletypename" (== "Unit") /> 
-           hasName "characteristics" >>> 
+getStats = this //>
+           hasAttrValue "profiletypename" (== "Unit") />
+           hasName "characteristics" >>>
               proc el -> do
               move <- getStat "M" -< el
               ws <- getStat "WS" -< el
@@ -179,12 +179,12 @@ headMay :: [a] -> Maybe a
 headMay l = if null l then Nothing else Just (head l)
 
 lookupModel :: HM.HashMap T.Text Value -> Unit -> ModelGroup -> Maybe Value
-lookupModel templateMap unit modelGroup = 
+lookupModel templateMap unit modelGroup =
   result where
     modelName =  modelGroup ^. name
     uName = T.pack $ unit ^. unitName
     tags = map T.pack $ map _weaponName (unit ^. unitWeapons) ++ map _weaponName (modelGroup ^. weapons) ++ unit ^. abilities
-    ap s1 s2 = s1 <> "$" <> s2 
+    ap s1 s2 = s1 <> "$" <> s2
     unitModelTagLookups = map (ap (ap uName modelName)) tags
     unitModelLookup  = ap uName modelName
     modelLookup = modelName
@@ -222,14 +222,14 @@ addBase :: HM.HashMap T.Text Value -> [Value] -> [Value]
 addBase modelData vals = modelsAndBase where
   maxX = maximum (concatMap (^.. key "Transform" . key "posX"._Double) vals)
   maxZ = maximum (concatMap (^.. key "Transform" . key "posZ"._Double) vals)
-  scaleX = (maxX + 5) / 17.0 
-  scaleZ = (maxZ + 5) / 17.0 
+  scaleX = (maxX + 5) / 17.0
+  scaleZ = (maxZ + 5) / 17.0
   base = fromJust (HM.lookup "Base" modelData)
   setTransform trans amount val = val & key "Transform" . key trans._Double .~ amount
   addTransform pos amount val =  val & key "Transform" . key pos._Double %~ (+ amount)
-  scaledBase = (setTransform "scaleX" scaleX . 
+  scaledBase = (setTransform "scaleX" scaleX .
                 setTransform "scaleZ" scaleZ) base
-  respositionedModels = map (addTransform "posX" (maxX / (-2)) . 
+  respositionedModels = map (addTransform "posX" (maxX / (-2)) .
                              addTransform "posZ" (maxZ / (-2)) .
                              setTransform "posY" 1.5) vals
   modelsAndBase = scaledBase : respositionedModels
