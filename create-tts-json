@@ -11,6 +11,6 @@ echo "$OUTPUT"
 
 BASE=$(basename "$INPUT" .rosz)
 stack build --profile
-unzip -p "$INPUT" "$BASE.ros" | stack exec -- battlescribe-roster-parser +RTS -p -RTS | jq . > "$OUTPUT"
+unzip -p "$INPUT" "$BASE.ros" | .stack-work/install/x86_64-osx/lts-9.21/8.0.2/bin/battlescribe-roster-parser | jq . > "$OUTPUT"
 
 

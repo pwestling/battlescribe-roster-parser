@@ -73,7 +73,8 @@ findUnits = deep (isElem >>> hasName "selection" >>> hasAttrValue "type" (== "un
 
 findNonUnitSelections :: ArrowXml a => a XmlTree XmlTree
 findNonUnitSelections = getChildren >>> getChildren >>> getChildren >>> getChildren >>> getChildren >>>
-    hasName "selection"  >>> hasAttrValue "type" (/= "unit")
+    hasName "selection"  >>> hasAttrValue "type" (/= "unit") >>>
+    filterA (deep (isElem >>> hasName "profile" >>> hasAttrValue "profiletypename" (== "Unit")))
 
 findModels :: ArrowXml a => a XmlTree XmlTree
 findModels = multi (isElem >>> hasName "selection" >>> hasAttrValue "type" (== "model"))
