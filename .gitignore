@@ -1,4 +1,7 @@
 tts-examples
 *.ros
+*.rosz
+*.txt
+frontend/elm-stuff/
 .vscode
 .stack-work

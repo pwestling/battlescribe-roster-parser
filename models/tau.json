@@ -1,0 +1,845 @@
+{
+  "Strike Team": {
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -17.74147,
+      "posY": 3.80836821,
+      "posZ": -10.2240477,
+      "rotX": 9.924892E-06,
+      "rotY": 180.006287,
+      "rotZ": 4.13965836E-06,
+      "scaleX": 0.375,
+      "scaleY": 0.375,
+      "scaleZ": 0.375
+    },
+    "Nickname": "Strike Team",
+    "Description": "M 6\nWS 5\nBS 4\nS 3\nT 3\nW 1\nA 1\nLD 6\nSave 4\n\nPulse rifle\nPulse carbine\nPhoton grenades",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992160261,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzalJmOXJ0MVhYeHc",
+      "DiffuseURL": "http://i.imgur.com/bMxfPRK.jpg",
+      "NormalURL": "",
+      "ColliderURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzZm54WXNJcDE1U2c",
+      "Convex": true,
+      "MaterialIndex": 2,
+      "TypeIndex": 1,
+      "CustomShader": {
+        "SpecularColor": {
+          "r": 0.7372549,
+          "g": 0.7372549,
+          "b": 0.7372549
+        },
+        "SpecularIntensity": 0.0,
+        "SpecularSharpness": 2.0,
+        "FresnelStrength": 0.0
+      },
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "94ecb8"
+  },
+  "Strike Team$Fire Warrior Shas'Ui": {
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -19.0425911,
+      "posY": 3.80836844,
+      "posZ": -11.2430372,
+      "rotX": -3.66385166E-06,
+      "rotY": 210.0001,
+      "rotZ": 4.787629E-07,
+      "scaleX": 0.375,
+      "scaleY": 0.375,
+      "scaleZ": 0.375
+    },
+    "Nickname": "Strike Team Shas'ui",
+    "Description": "M 6\nWS 5\nBS 4\nS 3\nT 3\nW 1\nA 2\nLD 7\nSave 4\n\nPulse rifle\nPulse carbine\nPulse pistol\nMarkerlight\nPhoton grenades",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992160261,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzSHoxeEVXNjZ1S1k",
+      "DiffuseURL": "http://i.imgur.com/k1oedyV.jpg",
+      "NormalURL": "",
+      "ColliderURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzZm54WXNJcDE1U2c",
+      "Convex": true,
+      "MaterialIndex": 2,
+      "TypeIndex": 1,
+      "CustomShader": {
+        "SpecularColor": {
+          "r": 0.7372549,
+          "g": 0.7372549,
+          "b": 0.7372549
+        },
+        "SpecularIntensity": 0.0,
+        "SpecularSharpness": 2.0,
+        "FresnelStrength": 0.0
+      },
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "ac7c30"
+  },
+  "Pathfinder Team$$Rail rifle": {
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -35.6400452,
+      "posY": 3.819683,
+      "posZ": 4.90227652,
+      "rotX": -7.075345E-06,
+      "rotY": 239.998962,
+      "rotZ": -2.87416424E-06,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "Pathfinder Team",
+    "Description": "M 7\nWS 5\nBS 4\nS 3\nT 3\nW 1\nA 1\nLD 6\nSave 5\n\nPulse carbine\nMarkerlight\nIon rifle\nRail rifle\nPhoton grenades",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992160261,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "http://pastebin.com/raw.php?i=wzyYUpsF",
+      "DiffuseURL": "http://i.imgur.com/sQhXxJi.jpg",
+      "NormalURL": "",
+      "ColliderURL": "http://pastebin.com/raw.php?i=ahfaXzUd",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 0,
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "428902"
+  },
+  "Pathfinder Team": {
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -34.39251,
+      "posY": 3.819683,
+      "posZ": 3.57373762,
+      "rotX": 1.175447E-05,
+      "rotY": 180.0203,
+      "rotZ": -2.34967933E-06,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "Pathfinder Team",
+    "Description": "M 7\nWS 5\nBS 4\nS 3\nT 3\nW 1\nA 1\nLD 6\nSave 5\n\nPulse carbine\nMarkerlight\nIon rifle\nRail rifle\nPhoton grenades",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992160261,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "http://pastebin.com/raw.php?i=mbLXMLBJ",
+      "DiffuseURL": "http://i.imgur.com/sQhXxJi.jpg",
+      "NormalURL": "",
+      "ColliderURL": "http://pastebin.com/raw.php?i=ahfaXzUd",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 0,
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "b16c11"
+  },
+  "Breacher Team": {
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -31.72178,
+      "posY": 3.80836821,
+      "posZ": -10.1035051,
+      "rotX": 2.66803659E-06,
+      "rotY": 179.999817,
+      "rotZ": -3.777265E-06,
+      "scaleX": 0.375,
+      "scaleY": 0.375,
+      "scaleZ": 0.375
+    },
+    "Nickname": "Breacher Team",
+    "Description": "M 6\nWS 5\nBS 4\nS 3\nT 3\nW 1\nA 1\nLD 6\nSave 4\n\nPulse blaster\nPhoton grenades",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992160261,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzWG14Qk9UX1hjdWc",
+      "DiffuseURL": "http://i.imgur.com/7UPesr6.jpg",
+      "NormalURL": "",
+      "ColliderURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzZm54WXNJcDE1U2c",
+      "Convex": true,
+      "MaterialIndex": 2,
+      "TypeIndex": 1,
+      "CustomShader": {
+        "SpecularColor": {
+          "r": 0.7372549,
+          "g": 0.7372549,
+          "b": 0.7372549
+        },
+        "SpecularIntensity": 0.0,
+        "SpecularSharpness": 2.0,
+        "FresnelStrength": 0.0
+      },
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "9f5201"
+  },
+  "Breacher Team$Fire Warrior Shas'Ui": {
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -31.594099,
+      "posY": 3.80836821,
+      "posZ": -11.3298216,
+      "rotX": 4.63503147E-06,
+      "rotY": 149.974228,
+      "rotZ": -1.11450436E-05,
+      "scaleX": 0.375,
+      "scaleY": 0.375,
+      "scaleZ": 0.375
+    },
+    "Nickname": "Breacher Team Shas'ui",
+    "Description": "M 6\nWS 5\nBS 4\nS 3\nT 3\nW 1\nA 2\nLD 7\nSave 4\n\nPulse blaster\nPulse pistol\nMarkerlight\nPhoton grenades",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992160261,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzT0c2MUIwM2RDdms",
+      "DiffuseURL": "http://i.imgur.com/Lhznz0D.jpg",
+      "NormalURL": "",
+      "ColliderURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzZm54WXNJcDE1U2c",
+      "Convex": true,
+      "MaterialIndex": 2,
+      "TypeIndex": 1,
+      "CustomShader": {
+        "SpecularColor": {
+          "r": 0.7372549,
+          "g": 0.7372549,
+          "b": 0.7372549
+        },
+        "SpecularIntensity": 0.0,
+        "SpecularSharpness": 2.0,
+        "FresnelStrength": 0.0
+      },
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "6e7d9a"
+  },
+  "Cadre Fireblade": {
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -26.7738037,
+      "posY": 3.80836844,
+      "posZ": -15.9667473,
+      "rotX": 8.176935E-06,
+      "rotY": 150.3044,
+      "rotZ": -4.1393464E-06,
+      "scaleX": 0.375,
+      "scaleY": 0.375,
+      "scaleZ": 0.375
+    },
+    "Nickname": "5/5 Cadre Fireblade",
+    "Description": "M 6\nWS 3\nBS 2\nS 3\nT 3\nW 5\nA 3\nLD 8\nSave 4\n\nMarkerlight\nPulse rifle\nPhoton grenades",
+    "ColorDiffuse": {
+      "r": 0.996078432,
+      "g": 1.0,
+      "b": 1.0
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzSWJZRDlDbWJENFU",
+      "DiffuseURL": "http://i.imgur.com/P9ierTc.jpg",
+      "NormalURL": "",
+      "ColliderURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzZm54WXNJcDE1U2c",
+      "Convex": true,
+      "MaterialIndex": 2,
+      "TypeIndex": 1,
+      "CustomShader": {
+        "SpecularColor": {
+          "r": 0.7372549,
+          "g": 0.7372549,
+          "b": 0.7372549
+        },
+        "SpecularIntensity": 0.0,
+        "SpecularSharpness": 7.0,
+        "FresnelStrength": 0.0
+      },
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "e143c2"
+  },
+  "Commander in XV8 Crisis Battlesuit": {
+    "Width": 2,
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -24.5144272,
+      "posY": 3.81118441,
+      "posZ": -15.65417,
+      "rotX": -2.49012533E-06,
+      "rotY": 270.0008,
+      "rotZ": -3.9997376E-06,
+      "scaleX": 0.37500003,
+      "scaleY": 0.37500003,
+      "scaleZ": 0.37500003
+    },
+    "Nickname": "6/6 Commander",
+    "Description": "M 8\nWS 3\nBS 2\nS 5\nT 5\nW 6\nA 4\nLD 9\nSave 3\n\nAirbursting fragmentation projector\nBurst cannon\nCyclic ion blaster\nFlamer\nFusion blaster\nMissile pod\nPlasma rifle",
+    "ColorDiffuse": {
+      "r": 1.0,
+      "g": 0.996079147,
+      "b": 1.0
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5Gzc1JNNXh4SFhXR2c",
+      "DiffuseURL": "http://i.imgur.com/Hebr1mT.jpg",
+      "NormalURL": "",
+      "ColliderURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzazgtU013MWF0Rlk",
+      "Convex": true,
+      "MaterialIndex": 2,
+      "TypeIndex": 1,
+      "CustomShader": {
+        "SpecularColor": {
+          "r": 0.7372549,
+          "g": 0.7372549,
+          "b": 0.7372549
+        },
+        "SpecularIntensity": 0.0,
+        "SpecularSharpness": 7.0,
+        "FresnelStrength": 0.0
+      },
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "c7f8a2"
+  },
+  "MV71 Sniper Drones": {
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -37.7100449,
+      "posY": 3.80836844,
+      "posZ": 10.8051338,
+      "rotX": 5.12763745E-06,
+      "rotY": 89.97022,
+      "rotZ": 5.879414E-06,
+      "scaleX": 0.37500003,
+      "scaleY": 0.37500003,
+      "scaleZ": 0.37500003
+    },
+    "Nickname": "MV71 Sniper Drones",
+    "Description": "M 8\nWS 5\nBS 5\nS 3\nT 4\nW 1\nA 1\nLD 6\nSave 4\n\nLongshot pulse rifle",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992160261,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzWm1LVTBFOVBpVmc",
+      "DiffuseURL": "http://i.imgur.com/64z7M83.jpg",
+      "NormalURL": "",
+      "ColliderURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzZm54WXNJcDE1U2c",
+      "Convex": true,
+      "MaterialIndex": 2,
+      "TypeIndex": 1,
+      "CustomShader": {
+        "SpecularColor": {
+          "r": 0.7372549,
+          "g": 0.7372549,
+          "b": 0.7372549
+        },
+        "SpecularIntensity": 0.0,
+        "SpecularSharpness": 2.0,
+        "FresnelStrength": 0.0
+      },
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "3bedb6"
+  },
+  "XV88 Broadside Battlesuits": {
+    "Width": 2,
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -21.8716583,
+      "posY": 3.8056798,
+      "posZ": 11.3736916,
+      "rotX": -1.52132839E-06,
+      "rotY": 179.987152,
+      "rotZ": 3.2967132E-06,
+      "scaleX": 0.450000077,
+      "scaleY": 0.450000077,
+      "scaleZ": 0.450000077
+    },
+    "Nickname": "6/6 XV88 Broadside Battlesuits Shas'vre",
+    "Description": "M 5\nWS 5\nBS 4\nS 5\nT 5\nW 6\nA 3\nLD 8\nSave 2\n\n2 Plasma rifle\n2 Smart missile systems\nHeavy rail rifle\n2 High-yield missile pod\nSeeker missile",
+    "ColorDiffuse": {
+      "r": 0.9960789,
+      "g": 1.0,
+      "b": 1.0
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzcWc4bXdCOW9JLUk",
+      "DiffuseURL": "http://i.imgur.com/XV3tYGW.jpg",
+      "NormalURL": "",
+      "ColliderURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzbE5uQzF3NGo4aXM",
+      "Convex": true,
+      "MaterialIndex": 2,
+      "TypeIndex": 1,
+      "CustomShader": {
+        "SpecularColor": {
+          "r": 0.7372549,
+          "g": 0.7372549,
+          "b": 0.7372549
+        },
+        "SpecularIntensity": 0.0,
+        "SpecularSharpness": 7.0,
+        "FresnelStrength": 0.0
+      },
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "fc6c32"
+  },
+  "XV88 Broadside Battlesuits$$High-yield missile pod": {
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -15.5512075,
+      "posY": 3.80251265,
+      "posZ": 8.754089,
+      "rotX": 5.336559E-07,
+      "rotY": 179.991623,
+      "rotZ": 6.47137256E-07,
+      "scaleX": 0.450000077,
+      "scaleY": 0.450000077,
+      "scaleZ": 0.450000077
+    },
+    "Nickname": "6/6 XV88 Broadside Battlesuits",
+    "Description": "M 5\nWS 5\nBS 4\nS 5\nT 5\nW 6\nA 2\nLD 7\nSave 2\n\n2 Plasma rifle\n2 Smart missile systems\nHeavy rail rifle\n2 High-yield missile pod\nSeeker missile",
+    "ColorDiffuse": {
+      "r": 0.9960789,
+      "g": 1.0,
+      "b": 1.0
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzdWJiNlpGanBPdVk",
+      "DiffuseURL": "http://i.imgur.com/ECi4lzR.jpg",
+      "NormalURL": "",
+      "ColliderURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzcGdSbkpDRzlwcTg",
+      "Convex": true,
+      "MaterialIndex": 2,
+      "TypeIndex": 1,
+      "CustomShader": {
+        "SpecularColor": {
+          "r": 0.7372549,
+          "g": 0.7372549,
+          "b": 0.7372549
+        },
+        "SpecularIntensity": 0.0,
+        "SpecularSharpness": 7.0,
+        "FresnelStrength": 0.0
+      },
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "2a12ea"
+  },
+  "Firesight Marksman": {
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -38.1735268,
+      "posY": 3.845834,
+      "posZ": -1.92284918,
+      "rotX": -8.361374E-06,
+      "rotY": 180.007568,
+      "rotZ": -2.92785785E-06,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "3/3 Firesight Marksman",
+    "Description": "M 5\nWS 5\nBS 3\nS 3\nT 3\nW 3\nA 2\nLD 7\nSave 4+\n\nMarkerlight\nPulse pistol",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992160261,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://paste.ee/r/BBgzM",
+      "DiffuseURL": "http://i.imgur.com/VzLJLij.jpg",
+      "NormalURL": "",
+      "ColliderURL": "http://pastebin.com/raw.php?i=qS125UrP",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 0,
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "dbf03b"
+  },
+  "MV4 Shield Drone": {
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -26.47642,
+      "posY": 3.80836821,
+      "posZ": 4.039211,
+      "rotX": -3.08799054E-06,
+      "rotY": 89.9810257,
+      "rotZ": 8.532506E-06,
+      "scaleX": 0.37500003,
+      "scaleY": 0.37500003,
+      "scaleZ": 0.37500003
+    },
+    "Nickname": "MV4 Shield Drone",
+    "Description": "M 8\nWS 5\nBS 5\nS 3\nT 4\nW 1\nA 1\nLD 6\nSave 4/4",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992160261,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzWHhJak9qMFNaSHc",
+      "DiffuseURL": "http://i.imgur.com/96grzlK.jpg",
+      "NormalURL": "",
+      "ColliderURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzZm54WXNJcDE1U2c",
+      "Convex": true,
+      "MaterialIndex": 2,
+      "TypeIndex": 1,
+      "CustomShader": {
+        "SpecularColor": {
+          "r": 0.7372549,
+          "g": 0.7372549,
+          "b": 0.7372549
+        },
+        "SpecularIntensity": 0.0,
+        "SpecularSharpness": 2.0,
+        "FresnelStrength": 0.0
+      },
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "dceaa4"
+  },
+  "MV7 Marker Drone": {
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -27.7835159,
+      "posY": 3.80836844,
+      "posZ": 4.00420952,
+      "rotX": -1.15044095E-05,
+      "rotY": 90.00195,
+      "rotZ": 2.07888638E-06,
+      "scaleX": 0.37500003,
+      "scaleY": 0.37500003,
+      "scaleZ": 0.37500003
+    },
+    "Nickname": "MV7 Marker Drone",
+    "Description": "M 8\nWS 5\nBS 5\nS 3\nT 4\nW 1\nA 1\nLD 6\nSave 4\n\nMarkerlight",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992160261,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzMm5PaTRVc0U0YjA",
+      "DiffuseURL": "http://i.imgur.com/5uPuiyz.jpg",
+      "NormalURL": "",
+      "ColliderURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzZm54WXNJcDE1U2c",
+      "Convex": true,
+      "MaterialIndex": 2,
+      "TypeIndex": 1,
+      "CustomShader": {
+        "SpecularColor": {
+          "r": 0.7372549,
+          "g": 0.7372549,
+          "b": 0.7372549
+        },
+        "SpecularIntensity": 0.0,
+        "SpecularSharpness": 2.0,
+        "FresnelStrength": 0.0
+      },
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "87d0e2"
+  },
+  "MV1 Gun Drone": {
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -25.127409,
+      "posY": 3.80836821,
+      "posZ": 4.10999966,
+      "rotX": -7.53353561E-06,
+      "rotY": 89.98489,
+      "rotZ": -1.344345E-06,
+      "scaleX": 0.37500003,
+      "scaleY": 0.37500003,
+      "scaleZ": 0.37500003
+    },
+    "Nickname": "MV1 Gun Drone",
+    "Description": "M 8\nWS 5\nBS 5\nS 3\nT 4\nW 1\nA 1\nLD 6\nSave 4\n\n2 Pulse carbines",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992160261,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzaGhnaE9Jc2l2cTg",
+      "DiffuseURL": "http://i.imgur.com/sRAm3Qg.jpg",
+      "NormalURL": "",
+      "ColliderURL": "https://drive.google.com/uc?export=download&id=0BwpXdiEgZ5GzZm54WXNJcDE1U2c",
+      "Convex": true,
+      "MaterialIndex": 2,
+      "TypeIndex": 1,
+      "CustomShader": {
+        "SpecularColor": {
+          "r": 0.7372549,
+          "g": 0.7372549,
+          "b": 0.7372549
+        },
+        "SpecularIntensity": 0.0,
+        "SpecularSharpness": 2.0,
+        "FresnelStrength": 0.0
+      },
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "df3f4c"
+  },
+  "XV8 Crisis Battlesuits": {
+    "Width": 2,
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": 4.372787,
+      "posY": 3.84583426,
+      "posZ": -3.94070268,
+      "rotX": 6.8786353E-06,
+      "rotY": 179.988983,
+      "rotZ": -4.261105E-06,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "3/3 Crisis Shas'ui",
+    "Description": "M 8\nWS 5\nBS 4\nS 5\nT 5\nW 3\nA 2\nLD 7\nSave 3\n\nAirbursting fragmentation projector\nBurst cannon\nCyclic ion blaster\nFlamer\nFusion blaster\nMissile pod\nPlasma rifle",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992160261,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": false,
+    "Snap": false,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": false,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://paste.ee/r/BHDdD",
+      "DiffuseURL": "http://i.imgur.com/S3QmRkM.jpg",
+      "NormalURL": "",
+      "ColliderURL": "http://pastebin.com/raw.php?i=qS125UrP",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 0,
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "a19062"
+  }
+}

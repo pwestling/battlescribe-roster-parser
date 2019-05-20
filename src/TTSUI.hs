@@ -8,18 +8,27 @@ module TTSUI where
 import           Control.Arrow
 import           Data.List
 import           Data.Monoid
-import qualified Data.Text         as T
-import qualified Data.Text.Encoding         as E
+import qualified Data.Text          as T
+import qualified Data.Text.Encoding as E
 
+import           Crypto.Hash.MD5
+import           Data.HexString
 import qualified Data.Text.IO
-import           Debug.Trace       as Debug
-import qualified NeatInterpolation as NI
+import           Debug.Trace        as Debug
+import qualified NeatInterpolation  as NI
 import           Text.XML.HXT.Core
 import           TTSJson
 import           Types
-import Crypto.Hash.MD5
-import Data.HexString
 
+
+isType :: ArrowXml a => String -> a XmlTree XmlTree
+isType t = hasAttrValue "typename" (== t) <+> hasAttrValue "profiletypename" (== t)
+
+getType :: ArrowXml a => a XmlTree String
+getType = getAttrValue "typename" <+> getAttrValue "profiletypename"
+
+getBatScribeValue :: ArrowXml a => a XmlTree String
+getBatScribeValue = single ((this /> getText) <+> getAttrValue "value")
 
 scriptFromXml :: ArrowXml a => String -> a XmlTree String
 scriptFromXml name = uiFromXML name >>> arr asScript >>> arr T.unpack
@@ -39,7 +48,7 @@ tableNotEmpty :: Table -> Bool
 tableNotEmpty Table{..} = not (null rows)
 
 stat :: ArrowXml a => String -> a XmlTree T.Text
-stat statName = child "characteristics" /> hasAttrValue "name" (== statName) >>> getAttrValue "value" >>> arr T.pack
+stat statName = child "characteristics" /> hasAttrValue "name" (== statName) >>> getBatScribeValue >>> arr T.pack
 
 rowFetcher :: ArrowXml a => [a XmlTree T.Text] -> a XmlTree [T.Text]
 rowFetcher = catA >>> listA
@@ -49,13 +58,13 @@ fetchStats names = getAttrValueT "name" : map stat names
 
 inferTables :: ArrowXml a => a [XmlTree] [Table]
 inferTables = proc profiles -> do
-    profileTypes <- mapA (getAttrValue "profiletypename") >>> arr nub -< profiles
+    profileTypes <- mapA getType >>> arr nub -< profiles
     tables <- listA (catA (map inferTable profileTypes)) -<< profiles
     returnA -< tables
 
 inferTable :: ArrowXml a => String -> a [XmlTree] Table
 inferTable profileType = proc profiles -> do
-    matchingProfiles <-  mapA (hasAttrValue "profiletypename" (== profileType)) -< profiles
+    matchingProfiles <-  mapA (isType profileType) -< profiles
     characteristics <- mapA (this /> hasName "characteristics" /> hasName "characteristic" >>> getAttrValue "name") >>> arr nub -<< matchingProfiles
     let header = map T.pack (profileType : characteristics)
     rows <- mapA (rowFetcher (fetchStats characteristics)) -<< matchingProfiles
@@ -81,7 +90,7 @@ asScript uiRaw = [NI.text|
 
 function createUI()
   local id = [[$id]]
-  local buttonId = id 
+  local buttonId = id
   local panelId = "panel-" .. buttonId
   local guid = self.getGUID()
   if not UI.getAttribute(panelId, "visibility") then
@@ -93,7 +102,7 @@ function createUI()
     return uiString
   else
     return ""
-  end  
+  end
 end
 
 function onLoad()
@@ -102,12 +111,12 @@ function onLoad()
   if not counter then
     counter = 1
   end
-  Global.setVar("frameCounter", counter+1)  
+  Global.setVar("frameCounter", counter+1)
   local name = self.getName()
   local update = function ()
     print("Creating UI for " .. self.getName())
     local totalUI = createUI()
-    if totalUI ~= "" then  
+    if totalUI ~= "" then
       print("Setting UI for " .. self.getName())
       print(totalUI)
       local start = UI.getXml()
@@ -115,7 +124,7 @@ function onLoad()
       print(start)
     end
   end
-  Wait.frames(update, counter*2)  
+  Wait.frames(update, counter*2)
 end
 
 function onScriptingButtonDown(index, peekerColor)
@@ -138,7 +147,7 @@ function closeUI(player, val, id)
   print("closing "..panelId)
 
   local vis = UI.getAttribute(panelId, "visibility")
-  local peekerColor = player.color 
+  local peekerColor = player.color
   local vis = self.getTable("vis")
   vis[player.color] = nil
   setVis(panelId, vis)
@@ -155,7 +164,7 @@ function setVis(panelId, vis)
   if #vistable > 0 then
     local visstring = table.concat(vistable, "|")
     print("setting vis to "..visstring)
-    UI.setAttribute(panelId, "visibility", visstring)  
+    UI.setAttribute(panelId, "visibility", visstring)
     UI.setAttribute(panelId, "active", "true")
   else
     UI.setAttribute(panelId, "active", "false")
@@ -175,7 +184,7 @@ escapeT :: Char -> String -> T.Text -> T.Text
 escapeT c s = T.pack . escape c s . T.unpack
 
 escapes :: T.Text -> T.Text
-escapes = escapeT '"' "&quot;" . 
+escapes = escapeT '"' "&quot;" .
   escapeT '<' "＜" . escapeT '>' "＞" --These are unicode
   . escapeT '\'' "&apos;"
 
