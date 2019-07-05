@@ -157,10 +157,10 @@ getModelGroup :: ArrowXml a => a XmlTree ModelGroup
 getModelGroup = proc el -> do
   name <- getAttrValue "name" -< el
   count <- getAttrValue "number"  -< el
-  stats <- listA getStats -< el
+  stats <- getStats -< el
   weapons <- getWeapons -< el
   abilities <- listA getAbilities -< el
-  returnA -< ModelGroup (T.pack name) (read count) (listToMaybe stats) weapons abilities
+  returnA -< ModelGroup (T.pack name) (read count) (Just stats) weapons abilities
 
 modelsPerRow = 10
 maxRankXDistance = 22

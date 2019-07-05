@@ -98,7 +98,7 @@ completeRoster conn baseData id mapping =  do
 storeInRedis :: ToJSON j => Connection -> T.Text -> j -> IO ()
 storeInRedis redisConn id struct = do
   let json = toJSON struct
-  runRedis redisConn (setnx (encodeUtf8 id) (C8.toStrict (encode json)))
+  runRedis redisConn (setex (encodeUtf8 id) 1209600 (C8.toStrict (encode json)))
   return ()
 
 retrieveFromRedis :: FromJSON j => Connection -> T.Text -> IO (Maybe j)
