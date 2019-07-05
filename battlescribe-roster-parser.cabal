@@ -15,11 +15,11 @@ extra-source-files:  README.md
 
 executable battlescribe-roster-parser
   hs-source-dirs:      src
-  main-is:             Main.hs
+  main-is:             Server.hs
   default-language:    Haskell2010
   build-depends:       base >= 4.7 && < 5, hxt, safe, aeson, text, 
                        containers, lens, directory, lens-aeson, bytestring,
                        unordered-containers, filepath, neat-interpolation, cryptohash-md5, hexstring,
                        servant-server, servant, http-api-data, wai, warp, wai-logger, zip-archive, servant-multipart,
-                       hedis, mtl, wai-cors, servant-auth, servant-auth-server
-  other-modules:       TTSJson, Types, TTSUI, Server, Databases
+                       hedis, mtl, wai-cors, servant-auth, servant-auth-server, hashable, uuid, either, wai-extra
+  other-modules:       TTSJson, Types, RosterProcessing

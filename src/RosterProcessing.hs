@@ -3,7 +3,7 @@
 {-# LANGUAGE RankNTypes        #-}
 {-# LANGUAGE RecordWildCards   #-}
 
-module Main where
+module RosterProcessing where
 
 import           Control.Arrow
 import           Control.Lens               hiding (deep, (.=))
@@ -22,17 +22,22 @@ import           Data.Maybe
 import           Data.Monoid
 import qualified Data.Text                  as T
 import           Data.Text.Encoding
-import           Database.Redis
-import           Databases
 import qualified Debug.Trace                as Debug
 import           Safe
-import           Server
 import           System.Environment
 import           System.IO
 import           Text.XML.HXT.Core
 import           TTSJson
-import           TTSUI
 import           Types
+
+isType :: ArrowXml a => String -> a XmlTree XmlTree
+isType t = hasAttrValue "typename" (== t) <+> hasAttrValue "profiletypename" (== t)
+
+getType :: ArrowXml a => a XmlTree String
+getType = getAttrValue "typename" <+> getAttrValue "profiletypename"
+
+getBatScribeValue :: ArrowXml a => a XmlTree String
+getBatScribeValue = single ((this /> getText) <+> getAttrValue "value")
 
 textColor :: String -> String -> String
 textColor c s = "["++c++"]"++s++"[-]"
@@ -161,31 +166,34 @@ modelsPerRow = 10
 maxRankXDistance = 22
 unitSpacer = 1.2
 
-assignPositionsToModels :: Pos -> Double -> Int -> [Value] -> [Value]
-assignPositionsToModels _ _ _ []       = []
-assignPositionsToModels basePos@Pos{..} width index (v : vs) = model : remainder where
-  newCol = posX + (fromIntegral (index `mod` modelsPerRow) * width)
-  newRow = posZ + (fromIntegral (index `quot` modelsPerRow) * width)
+assignPositionsToModels :: Pos -> Double -> [Double] -> [Double] -> Int -> [Value] -> ([Value], Double)
+assignPositionsToModels _ _ _ _ _ []       = ([], -100000)
+assignPositionsToModels basePos@Pos{..} maxWidth widths usedWidths index (v : vs) = (model : remainder, newWidest) where
+  widthsToUse = if index `mod` modelsPerRow == 0 then [] else usedWidths
+  newCol = posX + sum widthsToUse
+  newRow = posZ + (fromIntegral (index `quot` modelsPerRow) * maxWidth)
   nextPos = Pos newCol posY newRow
   model =  destick (setPos nextPos v)
-  remainder = assignPositionsToModels basePos width (index + 1) vs
+  (remainder, widest) = assignPositionsToModels basePos maxWidth (tail widths) (head widths : widthsToUse) (index + 1) vs
+  newWidest = maximum [widest, newCol + head widths]
 
 assignPositionsToUnits :: Pos -> [[Value]] -> [[Value]]
 assignPositionsToUnits _ [] = []
 assignPositionsToUnits pos@Pos{..} (u : us) = models : assignPositionsToUnits nextPos us where
-  width =  fromMaybe 1 (u ^?_head. key "Width"._Double)
-  models = assignPositionsToModels pos width 0 u
+  getWidth model = fromMaybe 1 (model ^? key "Width"._Double)
+  widths =  fmap getWidth u
+  maxWidth = fromMaybe 1 (maximumMay widths)
+  (models, maxXOfUnit) = assignPositionsToModels pos maxWidth widths [] 0 u
   numModels = length models
-  maxXOfUnit = fromIntegral (min numModels modelsPerRow) * width
   rawNextX = posX + (maxXOfUnit + unitSpacer)
-  nextX =  rawNextX `mod'` maxRankXDistance
-  nextZ = if rawNextX > maxRankXDistance then posZ + 7 else posZ
+  nextX =  if rawNextX > maxRankXDistance then 0 else rawNextX
+  nextZ = if rawNextX > maxRankXDistance then posZ + 6 else posZ
   nextPos = Pos nextX posY nextZ
 
-retrieveAndModifyUnitJSON :: ModelFinder -> User -> [Unit] -> IO [[Either String [Value]]]
-retrieveAndModifyUnitJSON templateMap user units = do
-  let retrieve unit = retrieveAndModifyModelGroupJSON templateMap user unit (unit ^. subGroups)
-  mapM retrieve units
+retrieveAndModifyUnitJSON :: ModelFinder -> [Unit] -> [[Either String [Value]]]
+retrieveAndModifyUnitJSON templateMap units = result where
+  retrieve unit = retrieveAndModifyModelGroupJSON templateMap unit (unit ^. subGroups)
+  result = map retrieve units
 
 orElseM :: Maybe a -> Maybe a -> Maybe a
 orElseM (Just a) _ = Just a
@@ -195,32 +203,32 @@ mapRight :: (b -> c) -> Either a b -> Either a c
 mapRight f (Left t)  = Left t
 mapRight f (Right t) = Right (f t)
 
-retrieveAndModifySingleGroupJSON :: ModelFinder -> User -> Unit -> ModelGroup -> IO [Either String [Value]]
-retrieveAndModifySingleGroupJSON modelFinder user unit modelGroup = do
-  let modelName =  modelGroup ^. name
-  let uName = unit ^. unitName
-  modelBaseJson <- modelFinder user unit modelGroup
-  let theStats =  fromMaybe (unit ^. unitDefaultStats) (modelGroup ^. stats)
-  let description = toDescription unit modelGroup theStats
-  let nameWithWounds = mconcat $ [modelName, " "] ++
+retrieveAndModifySingleGroupJSON :: ModelFinder -> Unit -> ModelGroup -> [Either String [Value]]
+retrieveAndModifySingleGroupJSON modelFinder unit modelGroup = result where
+   modelName =  modelGroup ^. name
+   uName = unit ^. unitName
+   modelBaseJson = modelFinder unit modelGroup
+   theStats =  fromMaybe (unit ^. unitDefaultStats) (modelGroup ^. stats)
+   description = toDescription unit modelGroup theStats
+   nameWithWounds = mconcat $ [modelName, " "] ++
                                 if read (theStats ^. wounds) > 1 then
                                   [T.pack (theStats ^. wounds),
                                   "/" ,
                                   T.pack (theStats ^. wounds)]
                                 else
                                   []
-  let modifiedJson = fmap
+   modifiedJson = fmap
                         (setDescription description .
                         setName nameWithWounds .
                         setScript (T.pack (unit ^. script)))
                           modelBaseJson
-  let jsonOrErr = maybe (Left (uName ++ " - " ++ T.unpack modelName)) Right modifiedJson
-  return [mapRight (replicate (modelGroup ^. modelCount)) jsonOrErr]
+   jsonOrErr = maybe (Left (uName ++ " - " ++ T.unpack modelName)) Right modifiedJson
+   result = [mapRight (replicate (modelGroup ^. modelCount)) jsonOrErr]
 
-retrieveAndModifyModelGroupJSON :: ModelFinder -> User -> Unit -> [ModelGroup] -> IO [Either String [Value]]
-retrieveAndModifyModelGroupJSON modelFinder user unit groups = do
-  results <- mapM (retrieveAndModifySingleGroupJSON modelFinder user unit) groups
-  return $ concat results
+retrieveAndModifyModelGroupJSON :: ModelFinder -> Unit -> [ModelGroup] -> [Either String [Value]]
+retrieveAndModifyModelGroupJSON modelFinder unit groups = result where
+  results = map (retrieveAndModifySingleGroupJSON modelFinder unit) groups
+  result = concat results
 
 zeroPos :: Pos
 zeroPos = Pos 0.0 0.0 0.0
@@ -228,8 +236,8 @@ zeroPos = Pos 0.0 0.0 0.0
 addBase :: Value -> [Value] -> [Value]
 addBase baseData [] = []
 addBase baseData vals = modelsAndBase where
-  maxX = maximum (concatMap (^.. key "Transform" . key "posX"._Double) vals)
-  maxZ = maximum (concatMap (^.. key "Transform" . key "posZ"._Double) vals)
+  maxX = fromMaybe 0 $ maximumMay (concatMap (^.. key "Transform" . key "posX"._Double) vals)
+  maxZ = fromMaybe 0 $ maximumMay (concatMap (^.. key "Transform" . key "posZ"._Double) vals)
   scaleX = (maxX + 5) / 17.0
   scaleZ = (maxZ + 5) / 17.0
   setTransform trans amount val = val & key "Transform" . key trans._Double .~ amount
@@ -240,8 +248,6 @@ addBase baseData vals = modelsAndBase where
                              addTransform "posZ" (maxZ / (-2)) .
                              setTransform "posY" 1.5) vals
   modelsAndBase = scaledBase : respositionedModels
-
-
 
 da :: (Show s, ArrowXml a) => a s s
 da = arr Debug.traceShowId
@@ -254,71 +260,51 @@ makeUnit modelFn = proc el -> do
   stats <- listA getStats >>> arr listToMaybe >>> arr (fromMaybe zeroStats)  -< el
   models <- listA modelFn -< el
   singleModelUnit <- listA getModelGroup -< el
-  script <- (scriptFromXml name) -<< el
   let modelsUsed = if null models then singleModelUnit else models
-  returnA -< \forceName -> Unit name forceName stats modelsUsed abilities weapons script
+  returnA -< \forceName -> Unit name forceName stats modelsUsed abilities weapons ""
 
 asRoster :: [Value] -> Value
 asRoster values = object ["ObjectStates" .= values]
 
-process :: ModelFinder -> Value -> User -> [Unit] -> IO RosterTranslation
-process modelData baseData user units = do
-  unitsAndErrors <- retrieveAndModifyUnitJSON modelData user units
-  let validUnits = filter (/= []) (fmap (join . rights) unitsAndErrors)
-  let invalidUnits = filter (/= []) $ (lefts . join) unitsAndErrors
-  mapM_ (hPutStrLn stderr) invalidUnits
-  let positioned = assignPositionsToUnits zeroPos validUnits
-  let unstuck = concatMap (map destick) positioned
-  let based = addBase baseData unstuck
-  let roster = asRoster based
-  return $ RosterTranslation (Just roster) (nub invalidUnits)
+process :: ModelFinder -> Value -> [Unit] -> RosterTranslation
+process modelData baseData units = result where
+  unitsAndErrors = retrieveAndModifyUnitJSON modelData units
+  validUnits = filter (/= []) (fmap (join . rights) unitsAndErrors)
+  invalidUnits = filter (/= []) $ (lefts . join) unitsAndErrors
+  positioned = assignPositionsToUnits zeroPos validUnits
+  unstuck = concatMap (map destick) positioned
+  based = addBase baseData unstuck
+  roster = asRoster based
+  result = RosterTranslation (Just roster) (nub invalidUnits)
 
 zeroStats :: Stats
 zeroStats = Stats "" "" "" "" "" "" "" "" ""
 
-redisModelFinder :: Connection -> ModelFinder
-redisModelFinder conn user unit modelGroup = do
-  let lookupKeys = encodeUtf8 <$> generateLookupKeys user unit modelGroup
-  runRedis conn $ do
-    found <- mapM get lookupKeys
-    let successes = rights found
-    let value = headMay (catMaybes successes)
-    return $ join $ fmap (decode' . C8.fromStrict) value
+createModelDescriptors :: Unit -> [ModelDescriptor]
+createModelDescriptors unit = fmap (createModelDescriptor unit) (unit ^. subGroups)
 
-redisModelAdder :: Connection -> T.Text -> Value -> IO ()
-redisModelAdder conn key modelData = runRedis conn $ do
-  setnx (encodeUtf8 key) (C8.toStrict (encode modelData))
-  return ()
+createModelDescriptor :: Unit -> ModelGroup -> ModelDescriptor
+createModelDescriptor unit group = ModelDescriptor
+                                   (group ^. name)
+                                   (T.pack <$> Data.List.sort (fmap _weaponName (group ^. weapons)))
 
--- commandLine :: IO ()
--- commandLine = do
---   html <- getContents
---   modelData <- loadModels
---   let baseData = fromJust $ HM.lookup "base" modelData
---   output <- processRoster (staticMapModelFinder modelData) baseData (User "") html
---   --putStr output
---   return ()
+generateRosterNames :: T.Text -> [Unit] -> RosterNamesRequest
+generateRosterNames rosterId units = RosterNamesRequest rosterId descriptors where
+  descriptors = nub $ concatMap createModelDescriptors units
 
-processRoster :: BaseData -> ModelFinder -> User -> String -> IO RosterTranslation
-processRoster  baseData modelFinder  user rosterXML = do
-  let doc = readString [withParseHTML yes, withWarnings no] rosterXML
+processRoster :: String -> T.Text -> IO [Unit]
+processRoster xml rosterId = do
+  let doc = readString [withParseHTML yes, withWarnings no] xml
   units <- runX $ doc >>> withForceName (findTopLevelUnitsAndModels >>> makeUnit (findModels >>> getModelGroup))
   nonUnitSelections <- runX $ doc >>> withForceName (findNonUnitSelections >>> makeUnit getModelGroup)
-  --mapM_ (hPrint stderr) units
-  process modelFinder baseData user (units ++ nonUnitSelections)
+  let allUnits = units ++ nonUnitSelections
+  return allUnits
 
-merge :: ModelFinder -> ModelFinder -> ModelFinder
-merge mf1 mf2 user unit modelGroup = do
-  value1 <- mf1 user unit modelGroup
-  if isJust value1 then return value1 else mf2 user unit modelGroup
+assignmentToPair :: ModelAssignment -> (ModelDescriptor, Value)
+assignmentToPair (ModelAssignment desc val) = (desc, val)
 
-server :: IO ()
-server = do
-  modelData <- loadModels
-  conn <- connect defaultConnectInfo
-  let baseData = fromJust $ HM.lookup "base" modelData
-  let modelFinder = merge (redisModelFinder conn) (staticMapModelFinder modelData)
-  startApp (processRoster  baseData ) (redisModelAdder conn) 8080
-
-main :: IO ()
-main = server
+createTTS :: BaseData -> [Unit] -> RosterNamesResponse -> RosterTranslation
+createTTS baseData units (RosterNamesResponse assignments) = result where
+  map = HM.fromList (fmap assignmentToPair assignments)
+  mf unit modelGroup = HM.lookup (createModelDescriptor unit modelGroup) map
+  result = process mf baseData units

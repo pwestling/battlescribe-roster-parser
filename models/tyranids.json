@@ -1,6 +1,6 @@
 {
-  "The Swarmlord" : {
-    "Width" : 2.2,
+  "The Swarmlord": {
+    "Width": 2.2,
     "Name": "Custom_Model",
     "Transform": {
       "posX": -40.98281,
@@ -42,9 +42,8 @@
     "LuaScriptState": "",
     "GUID": "f5a703"
   },
-  
-  "Broodlord" :  {
-    "Width":2.8,
+  "Broodlord": {
+    "Width": 2.8,
     "Name": "Custom_Model",
     "Transform": {
       "posX": -32.9318657,
@@ -86,8 +85,8 @@
     "LuaScriptState": "",
     "GUID": "19eb35"
   },
-  "Tervigon" :  {
-    "Width" : 3.5,
+  "Tervigon": {
+    "Width": 3.5,
     "Name": "Custom_Model",
     "Transform": {
       "posX": -24.9816437,
@@ -213,8 +212,1587 @@
       }
     }
   },
-  "Screamer-Killer" :  {
-    "Width":2.1,
+  "Neurothrope": {
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -21.7916527,
+      "posY": 1.18843627,
+      "posZ": 20.74379,
+      "rotX": 0.0009399993,
+      "rotY": 180.0001,
+      "rotZ": 0.002568567,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "Neurothrope",
+    "Description": "M  WS BS  S  T  W   A  LD  SV\n5\"   4+ 3+  4  4   5    1  9   5+\n[5ACFFF]Weapons[-]\n-Claws and Teeth",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.992165864,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": true,
+    "Snap": true,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": true,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "http://cloud-3.steamusercontent.com/ugc/952968258425689560/48589CD462521474D7A21AFA3342C378625E52F0/",
+      "DiffuseURL": "http://cloud-3.steamusercontent.com/ugc/782911422592456083/5A73DE16E70AAA3E541CCB7071225CE91CF2048F/",
+      "NormalURL": "",
+      "ColliderURL": "http://cloud-3.steamusercontent.com/ugc/957467519325586530/91873B66FF37122EB269D7C0D09018942A21634C/",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 1,
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "c31172"
+  },
+  "Ripper Swarms": {
+    "Width": 2,
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": 6.437857,
+      "posY": 1.16156411,
+      "posZ": 20.3320713,
+      "rotX": 0.000939990336,
+      "rotY": 179.996262,
+      "rotZ": 0.00256896019,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "Ripper Swarm",
+    "Description": "M  WS BS  S  T  W   A  LD  SV\n6\"   5+ 5+  3  3   3    4  4   6+\n[5ACFFF]Weapons[-]\n-Claws and Teeth",
+    "ColorDiffuse": {
+      "r": 1.0,
+      "g": 0.9986157,
+      "b": 0.9960881
+    },
+    "Locked": false,
+    "Grid": true,
+    "Snap": true,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": true,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "http://cloud-3.steamusercontent.com/ugc/952968258425641340/C95DCD1AE6EE0CB20B04866D8C780A46265588C6/",
+      "DiffuseURL": "http://cloud-3.steamusercontent.com/ugc/782911422592355322/D2DD328B85DDA969C17F7D4BE8DAFC6791CAB6C7/",
+      "NormalURL": "",
+      "ColliderURL": "http://cloud-3.steamusercontent.com/ugc/952968258425658249/0D29B2E033D17F0D2DA082689929C6B52922FFD9/",
+      "Convex": true,
+      "MaterialIndex": 3,
+      "TypeIndex": 1,
+      "CastShadows": true
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "2633c5"
+  },
+  "Hive Tyrant": {
+    "Width": 4,
+    "Name": "Custom_Model",
+    "Transform": {
+      "posX": -44.79253,
+      "posY": 1.165213,
+      "posZ": 23.5243874,
+      "rotX": -0.000940843136,
+      "rotY": 359.990753,
+      "rotZ": -0.00256798,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0
+    },
+    "Nickname": "Hive Tyrant With Wings",
+    "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-x2 Monstrous Scything Talons",
+    "ColorDiffuse": {
+      "r": 0.9999998,
+      "g": 0.9921842,
+      "b": 0.9999998
+    },
+    "Locked": false,
+    "Grid": true,
+    "Snap": true,
+    "IgnoreFoW": false,
+    "Autoraise": true,
+    "Sticky": true,
+    "Tooltip": true,
+    "GridProjection": false,
+    "HideWhenFaceDown": false,
+    "Hands": false,
+    "CustomMesh": {
+      "MeshURL": "https://paste.ee/p/fRnaS",
+      "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+      "NormalURL": "",
+      "ColliderURL": "https://paste.ee/p/rVzFW",
+      "Convex": false,
+      "MaterialIndex": 3,
+      "TypeIndex": 0,
+      "CastShadows": false
+    },
+    "XmlUI": "",
+    "LuaScript": "",
+    "LuaScriptState": "",
+    "GUID": "495b2b",
+    "States": {
+      "2": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -2.45759726,
+          "posY": 0.96,
+          "posZ": 17.818922,
+          "rotX": -1.79246836E-05,
+          "rotY": 359.988617,
+          "rotZ": -7.38096844E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Devourer with Brainleech Worms\n-Heavy Venom Cannon",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/d01Qk",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "2a2b66"
+      },
+      "3": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -0.05753444,
+          "posY": 0.960000336,
+          "posZ": 17.8189087,
+          "rotX": -1.22030457E-07,
+          "rotY": 0.0120535763,
+          "rotZ": -1.942081E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Deathspitter with Slimer Maggots\n-Heavy Venom Cannon",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/oiadq",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "7720ca"
+      },
+      "4": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": 2.34251213,
+          "posY": 0.959999859,
+          "posZ": 17.8189049,
+          "rotX": 1.04210756E-06,
+          "rotY": 0.000532754755,
+          "rotZ": 7.18453848E-08,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-x2 Deathspitter with Slimer Maggots",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/mBt0o",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "8499a7"
+      },
+      "5": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -9.657478,
+          "posY": 0.9600002,
+          "posZ": 17.8188915,
+          "rotX": -8.482408E-09,
+          "rotY": 0.00533608533,
+          "rotZ": -3.284743E-08,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Mounstrous Rending Claws\n-Devourer with Brainleech Worms",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/9VmZO",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "2bcdfd"
+      },
+      "6": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -7.257493,
+          "posY": 0.9600002,
+          "posZ": 17.8189049,
+          "rotX": 7.2319034E-07,
+          "rotY": 359.9783,
+          "rotZ": -8.817782E-09,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Mounstrous Rending Claws\n-Deathspitter with Slimer Maggots",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/d4rLh",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "404005"
+      },
+      "7": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -14.4574928,
+          "posY": 0.9600002,
+          "posZ": 17.8189,
+          "rotX": -1.65083486E-06,
+          "rotY": 359.9786,
+          "rotZ": -1.101699E-06,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Lash Whip & Mounstrous Bonesword\n-Devourer with Brainleech Worms",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/Ri2tL",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "bfd788"
+      },
+      "8": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -12.0574827,
+          "posY": 0.9600002,
+          "posZ": 17.8188972,
+          "rotX": -2.07955031E-09,
+          "rotY": 359.977966,
+          "rotZ": 1.51647225E-06,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Lash Whip & Mounstrous Bonesword\n-Deathspitter with Slimer Maggots",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/47LuM",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "a6c39c"
+      },
+      "9": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": 4.742512,
+          "posY": 0.959999859,
+          "posZ": 20.21889,
+          "rotX": -8.587946E-07,
+          "rotY": 0.004679533,
+          "rotZ": 9.060012E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Devourer with Brainleech Worms\n-Deathspitter with Slimer Maggots",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/mEwYK",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "83899f"
+      },
+      "10": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -19.2575111,
+          "posY": 0.9600002,
+          "posZ": 17.8188972,
+          "rotX": -5.699067E-07,
+          "rotY": 359.980377,
+          "rotZ": 5.200749E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Mounstrous Boneswords\n-Devourer with Brainleech Worms",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/jrVcL",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "ffd8e0"
+      },
+      "11": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -16.857502,
+          "posY": 0.959999859,
+          "posZ": 17.8188972,
+          "rotX": -2.35964279E-07,
+          "rotY": 359.986572,
+          "rotZ": 6.317171E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Mounstrous Boneswords\n-Deathspitter with Slimer Maggots",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/6Onkz",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "8fb757"
+      },
+      "12": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -21.6575222,
+          "posY": 0.9600002,
+          "posZ": 17.8189011,
+          "rotX": 4.2693722E-07,
+          "rotY": 359.980743,
+          "rotZ": -4.083085E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Monstrous Scything Talons\n-Deathspitter with Slimer Maggots",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/fR11V",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "41e317"
+      },
+      "13": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -21.65753,
+          "posY": 0.9599998,
+          "posZ": 22.6188984,
+          "rotX": 7.432574E-07,
+          "rotY": 0.03190723,
+          "rotZ": 6.76297063E-08,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Monstrous Scything Talons\n-Stranglethorn Cannon",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/2Cjh8",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "b35f0d"
+      },
+      "14": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -19.25751,
+          "posY": 0.959999859,
+          "posZ": 22.6189,
+          "rotX": 3.373086E-07,
+          "rotY": 0.009935364,
+          "rotZ": -3.352368E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Mounstrous Boneswords\n-Heavy Venom Cannon",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/7CFwP",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "ab8e4d"
+      },
+      "15": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -16.8574924,
+          "posY": 0.959999859,
+          "posZ": 22.61889,
+          "rotX": 3.38959154E-07,
+          "rotY": -0.00361060887,
+          "rotZ": -2.385016E-08,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Mounstrous Boneswords\n-Stranglethorn Cannon",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/83f1f",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "46611c"
+      },
+      "16": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -14.4574957,
+          "posY": 0.959999859,
+          "posZ": 22.6189022,
+          "rotX": -4.75363919E-07,
+          "rotY": 0.00018100001,
+          "rotZ": 2.80984324E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Lash Whip & Mounstrous Bonesword\n-Heavy Venom Cannon",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/ZpkdC",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "50643c"
+      },
+      "17": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -12.0575066,
+          "posY": 0.959999859,
+          "posZ": 22.6189,
+          "rotX": -5.11188E-07,
+          "rotY": 0.0128134349,
+          "rotZ": 1.81517123E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Lash Whip & Mounstrous Bonesword\n-Stranglethorn Cannon",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/SaHz5",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "74208a"
+      },
+      "18": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -9.657531,
+          "posY": 0.959999859,
+          "posZ": 22.61891,
+          "rotX": 5.60175E-07,
+          "rotY": 359.982178,
+          "rotZ": 2.15318209E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Mounstrous Rending Claws\n-Heavy Venom Cannon",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/xGV8O",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "56591c"
+      },
+      "19": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -7.257523,
+          "posY": 0.959999859,
+          "posZ": 22.6189022,
+          "rotX": -6.83328551E-07,
+          "rotY": -1.45141521E-05,
+          "rotZ": 1.3803384E-06,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Mounstrous Rending Claws\n-Stranglethorn Cannon",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/hvkcx",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "4e3634"
+      },
+      "20": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -2.45749879,
+          "posY": 0.960000336,
+          "posZ": 22.6188946,
+          "rotX": -1.49929136E-08,
+          "rotY": -0.002388005,
+          "rotZ": 4.281297E-08,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Devourer with Brainleech Worms\n-Stranglethorn Cannon",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/s8Ibn",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "913008"
+      },
+      "21": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -0.05749754,
+          "posY": 0.9600003,
+          "posZ": 22.6188984,
+          "rotX": -8.926652E-07,
+          "rotY": 0.0234386455,
+          "rotZ": 8.86504949E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Deathspitter with Slimer Maggots\n-Stranglethorn Cannon",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/j5qbU",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "5f6373"
+      },
+      "22": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": 2.34251261,
+          "posY": 0.9600002,
+          "posZ": 22.61889,
+          "rotX": -1.62154919E-07,
+          "rotY": -0.00558880251,
+          "rotZ": -1.08695031E-06,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-x2 Devourer with Brainleech Worms",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/lfFy6",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "d029ac"
+      },
+      "23": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -24.057518,
+          "posY": 0.9600002,
+          "posZ": 17.8189068,
+          "rotX": -5.66176E-07,
+          "rotY": 0.0164359976,
+          "rotZ": 3.46044658E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Monstrous Scything Talons\n-Devourer with Brainleech Worms",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/OuOmh",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "920c1a"
+      },
+      "24": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -24.0574989,
+          "posY": 0.9600003,
+          "posZ": 22.6189,
+          "rotX": -8.643809E-07,
+          "rotY": 0.00120979722,
+          "rotZ": -4.67134726E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Monstrous Scything Talons\n-Heavy Venom Cannon",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/Eo1q2",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "ee84be"
+      },
+      "25": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -28.8575134,
+          "posY": 0.9600002,
+          "posZ": 17.8188972,
+          "rotX": -1.43128645E-07,
+          "rotY": 359.984375,
+          "rotZ": 6.1663593E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-x2 Lash Whip & Mounstrous Bonesword",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/haRND",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "28e45c"
+      },
+      "26": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -28.8575058,
+          "posY": 0.9599998,
+          "posZ": 22.6188965,
+          "rotX": -3.52539558E-07,
+          "rotY": 359.980255,
+          "rotZ": -2.213844E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-x2 Mounstrous Rending Claws",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/TBtfe",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "b62d31"
+      },
+      "27": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -31.25749,
+          "posY": 0.959999859,
+          "posZ": 22.6188927,
+          "rotX": -9.810591E-07,
+          "rotY": 359.977875,
+          "rotZ": -1.87116427E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Mounstrous Rending Claws\n-Lash Whip & Mounstrous Bonesword",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/JLjzg",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "cb9334"
+      },
+      "28": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -31.2574959,
+          "posY": 0.9600002,
+          "posZ": 17.8188972,
+          "rotX": 1.13915166E-06,
+          "rotY": 0.00340484944,
+          "rotZ": 1.19828644E-06,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Mounstrous Boneswords\n-Mounstrous Rending Claws",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/HUwQQ",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "489f07"
+      },
+      "29": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -33.657505,
+          "posY": 0.9600003,
+          "posZ": 22.6189022,
+          "rotX": 1.29651539E-06,
+          "rotY": 359.9793,
+          "rotZ": 7.84787858E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Mounstrous Boneswords\n-Lash Whip & Mounstours Bonesword",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/X8RAP",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "c8483e"
+      },
+      "30": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -33.6574974,
+          "posY": 0.9600002,
+          "posZ": 17.8188972,
+          "rotX": -9.16776E-07,
+          "rotY": 0.00403920328,
+          "rotZ": -1.494505E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-x2 Mounstrous Boneswords",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/DITDv",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "84b80e"
+      },
+      "31": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -36.0574951,
+          "posY": 0.959999859,
+          "posZ": 22.6188984,
+          "rotX": 8.927099E-08,
+          "rotY": 359.9862,
+          "rotZ": 3.758025E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Mounstrous Scything Talons\n-Lash Whip & Mounstrous Bonesword",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/NQ2iD",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "ffa36d"
+      },
+      "32": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -36.0575,
+          "posY": 0.9600002,
+          "posZ": 17.8189068,
+          "rotX": 1.21242965E-06,
+          "rotY": 359.980743,
+          "rotZ": 7.325589E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Monstrous Scything Talons\n-Mounstrous Rending Claws",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/jzCO9",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "487e49"
+      },
+      "33": {
+        "Name": "Custom_Model",
+        "Transform": {
+          "posX": -38.4575081,
+          "posY": 0.9599998,
+          "posZ": 22.6188965,
+          "rotX": 2.820571E-07,
+          "rotY": 359.9942,
+          "rotZ": -8.243295E-07,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0
+        },
+        "Nickname": "Hive Tyrant With Wings",
+        "Description": "M  WS BS  S   T  W  A  LD  SV\n*    *     *   6   4  10  4  10   3+\n[B41919]Damage[-]\nW     M    WS   BS\n10-6  16\"   2+     3+ \n5-3    12\"   3+     3+\n2-1     8\"    4+     4+\n[5ACFFF]Weapons[-]\n-Mounstrous Scything Talons\n-Mounstrous Boneswords",
+        "ColorDiffuse": {
+          "r": 0.9999998,
+          "g": 0.9921842,
+          "b": 0.9999998
+        },
+        "Locked": false,
+        "Grid": true,
+        "Snap": true,
+        "IgnoreFoW": false,
+        "Autoraise": true,
+        "Sticky": true,
+        "Tooltip": true,
+        "GridProjection": false,
+        "HideWhenFaceDown": false,
+        "Hands": false,
+        "CustomMesh": {
+          "MeshURL": "https://paste.ee/p/dtoqM",
+          "DiffuseURL": "https://i.imgur.com/di67uzB.jpg",
+          "NormalURL": "",
+          "ColliderURL": "https://paste.ee/p/rVzFW",
+          "Convex": false,
+          "MaterialIndex": 3,
+          "TypeIndex": 0,
+          "CastShadows": false
+        },
+        "XmlUI": "",
+        "LuaScript": "",
+        "LuaScriptState": "",
+        "GUID": "54963b"
+      }
+    }
+  },
+  "Screamer-Killer": {
+    "Width": 2.1,
     "Name": "Custom_Model",
     "Transform": {
       "posX": -44.9883156,
@@ -299,8 +1877,8 @@
       }
     }
   },
-  "Tyrannofex" : {
-    "Width":3.5,
+  "Tyrannofex": {
+    "Width": 3.5,
     "Name": "Custom_Model",
     "Transform": {
       "posX": -20.999218,
@@ -385,8 +1963,8 @@
       }
     }
   },
-  "Hive Guard" :  {
-    "Width" : 1.8,
+  "Hive Guard": {
+    "Width": 1.8,
     "Name": "Custom_Model",
     "Transform": {
       "posX": -40.988163,
@@ -429,7 +2007,7 @@
     "GUID": "3489bf"
   },
   "Genestealer": {
-    "Width":1.0,
+    "Width": 1.0,
     "Name": "Custom_Model",
     "Transform": {
       "posX": 1.55047226,
@@ -472,7 +2050,7 @@
     "GUID": "7fbd13"
   },
   "Tyranid Warrior": {
-    "Width":1.8,
+    "Width": 1.8,
     "Name": "Custom_Model",
     "Transform": {
       "posX": -2.66919661,
@@ -514,8 +2092,8 @@
     "LuaScriptState": "",
     "GUID": "1b9de4"
   },
-  "Hormagaunt" :  {
-    "Width":1.0,
+  "Hormagaunt": {
+    "Width": 1.0,
     "Name": "Custom_Model",
     "Transform": {
       "posX": 22.32214,
@@ -557,7 +2135,7 @@
     "LuaScriptState": "",
     "GUID": "151c3e"
   },
-  "Termagant (Devourer)" : {
+  "Termagant (Devourer)": {
     "Name": "Custom_Model",
     "Transform": {
       "posX": -0.9994436,
@@ -597,6 +2175,6 @@
     },
     "LuaScript": "",
     "LuaScriptState": "",
-    "GUID": "8f5ae7"}
-  
+    "GUID": "8f5ae7"
+  }
 }
