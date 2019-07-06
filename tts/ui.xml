@@ -1,0 +1,9 @@
+<Panel width = "600" height = "600" position = "500 0 -300">
+  <VerticalLayout>
+    <Text fontSize="50" color="rgb(1,1,1)">Battlescribe Army Creator</Text>
+    <InputField onValueChanged="setCode" placeholder="code" fontSize="50" id="code-input"></InputField>
+    <Button onClick="submitCode" fontSize="50">Submit Code</Button>
+    <Button onClick="createArmy" fontSize="50">Create Army</Button>
+  </VerticalLayout>
+</Panel>
+

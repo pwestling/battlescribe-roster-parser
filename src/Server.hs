@@ -11,6 +11,7 @@ import           Codec.Archive.Zip
 import           Control.Monad
 import           Control.Monad.IO.Class
 import           Data.Aeson
+import qualified Data.ByteString                      as SBS
 import qualified Data.ByteString.Lazy                 as B
 import qualified Data.ByteString.Lazy.Char8           as C8
 import           Data.Either.Combinators
@@ -33,6 +34,7 @@ import           Safe                                 as X (headMay, headNote,
                                                             initMay, tailMay)
 import           Servant
 import           Servant.Multipart
+import           System.Environment
 import           TTSJson
 import           Types
 
@@ -114,18 +116,23 @@ app conn baseData = serve api $
   getRoster conn :<|>
   completeRoster conn baseData
 
-addContentType :: Request -> Request
-addContentType req = req { requestHeaders = header : requestHeaders req} where
-  header = ("Content-Type", "application/json")
-
 startApp :: String -> Int -> Int -> IO ()
 startApp redisHost redisPort appPort = withStdoutLogger $ \aplogger -> do
         modelData <- loadModels
-        conn <- connect defaultConnectInfo
+        conn <- connect $ defaultConnectInfo {
+          connectHost = redisHost,
+          connectPort = PortNumber (fromIntegral redisPort)}
         let baseData = fromJust $ HM.lookup "base" modelData
         let settings = setPort appPort $ setLogger aplogger defaultSettings
         putStrLn ("Starting server on port " ++ show appPort)
-        runSettings settings $ logStdoutDev (simpleCors (app conn baseData))
+        runSettings settings $  logStdoutDev (simpleCors (app conn baseData))
 
 main :: IO ()
-main = startApp "ignored" 0 8080
+main = do
+  appPortMay <- lookupEnv "PORT"
+  redisPortMay <- lookupEnv "REDIS_PORT"
+  redisHostMay <- lookupEnv "REDIS_HOST"
+  let appPort = maybe 8080 read appPortMay
+  let redisPort = maybe 6379 read redisPortMay
+  let redisHost = fromMaybe "localhost" redisHostMay
+  startApp redisHost redisPort appPort
