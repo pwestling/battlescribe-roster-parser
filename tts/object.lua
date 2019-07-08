@@ -8,6 +8,19 @@ descriptorMapping = {}
 code = ""
 rosterMapping = {}
 buttonMapping = {}
+storedDataMapping = {}
+createArmyLock = false
+
+function tempLock()
+  self.setLock(true)
+  local this = self
+  Wait.time(
+    function()
+      this.setLock(false)
+    end,
+    3
+  )
+end
 
 function onLoad()
   local contained = self.getObjects()
@@ -16,6 +29,7 @@ function onLoad()
     local data = JSON.decode(v.description)
     rosterMapping[name] = data.json
     descriptorMapping[name] = data.descriptor
+    storedDataMapping[name] = v.guid
   end
 end
 
@@ -64,6 +78,7 @@ end
 
 function onObjectLeaveContainer(thisContainer, takenObject)
   if thisContainer.getGUID() == self.getGUID() then
+    tempLock()
     local name = takenObject.getName()
     rosterMapping[name] = nil
     if buttonMapping[name] ~= nil then
@@ -74,10 +89,22 @@ end
 
 function onObjectEnterContainer(thisContainer, addedObject)
   if thisContainer.getGUID() == self.getGUID() then
+    tempLock()
     local name = addedObject.getName()
     local data = JSON.decode(addedObject.getDescription())
+    if storedDataMapping[name] ~= nil then
+      self.takeObject(
+        {
+          guid = storedDataMapping[name],
+          callback_function = function(obj)
+            obj.destruct()
+          end
+        }
+      )
+    end
     descriptorMapping[name] = data.descriptor
     rosterMapping[name] = data.json
+    storedDataMapping[name] = addedObject.guid
     if buttonMapping[name] ~= nil then
       thisContainer.UI.setAttribute(buttonMapping[name], "colors", ACTIVATED_BUTTON)
     end
@@ -108,6 +135,7 @@ function tabToS(tab)
 end
 
 function processNames(webReq)
+  tempLock()
   print("Names Retrieved")
   local response = JSON.decode(webReq.text)
   local buttonNames = {}
@@ -173,57 +201,61 @@ function processNames(webReq)
   self.setVectorLines(vectors)
 end
 
-function xzVector(xz1, xz2)
-  return {
-    points = {{xz1[1], 0.5, xz1[2]}, {xz2[1], 0.5, xz2[2]}}
-  }
-end
-
-function addXZ(xz1, xOffset, zOffset)
-  return {xz1[1] + xOffset, xz1[2] + zOffset}
-end
-
-function copyTable(tab)
-  local result = {}
-  for k, v in pairs(tab) do
-    result[k] = v
-  end
-  return result
-end
-
-function createArmy()
-  mappingResponse = {modelAssignments = {}}
-  for name, json in pairs(rosterMapping) do
-    local assignment = {
-      modelJSON = json,
-      descriptor = descriptorMapping[name]
+function spawnModelRecur(list, index)
+  if index < #list then
+    local v = list[index]
+    local relPos = v.Transform
+    local thisPos = self.getPosition()
+    local adjustedPos = {
+      x = thisPos.x + relPos.posX - 20,
+      y = thisPos.y + relPos.posY + 4,
+      z = thisPos.z + relPos.posZ
     }
-    table.insert(mappingResponse.modelAssignments, assignment)
+    local jv = JSON.encode(v)
+    spawnObjectJSON({json = jv, position = adjustedPos})
+    Wait.frames(
+      function()
+        spawnModelRecur(list, index + 1)
+      end,
+      1
+    )
   end
-  local jsonToSend = JSON.encode(mappingResponse)
-  print(jsonToSend)
-  broadcastToAll("Contacting Server...")
-  WebRequest.put(
-    serverURL .. "/roster/" .. getCode(),
-    jsonToSend,
-    function(req)
-      broadcastToAll("Loading Models...")
-      if req.is_error then
-        broadcastToAll("Error in web request: " .. req.error)
-      end
-      local response = JSON.decode(req.text)
-      local objects = response.roster.ObjectStates
-      for k, v in pairs(objects) do
-        local relPos = v.Transform
-        local thisPos = self.getPosition()
-        local adjustedPos = {
-          x = thisPos.x + relPos.posX - 20,
-          y = thisPos.y + relPos.posY + 4,
-          z = thisPos.z + relPos.posZ
-        }
-        local jv = JSON.encode(v)
-        spawnObjectJSON({json = jv, position = adjustedPos})
-      end
+end
+
+function createArmy(player, value, id)
+  if not createArmyLock then
+    tempLock()
+    createArmyLock = true
+    self.UI.setAttribute(id, "interactable", "false")
+    mappingResponse = {modelAssignments = {}}
+    for name, json in pairs(rosterMapping) do
+      local assignment = {
+        modelJSON = json,
+        descriptor = descriptorMapping[name]
+      }
+      table.insert(mappingResponse.modelAssignments, assignment)
     end
-  )
+    local jsonToSend = JSON.encode(mappingResponse)
+    broadcastToAll("Contacting Server (this may take a minute or two)...")
+    WebRequest.put(
+      serverURL .. "/roster/" .. getCode(),
+      jsonToSend,
+      function(req)
+        broadcastToAll("Loading Models...")
+        if req.is_error then
+          broadcastToAll("Error in web request: " .. req.error)
+        end
+        local response = JSON.decode(req.text)
+        local objects = response.roster.ObjectStates
+        spawnModelRecur(objects, 1)
+        Wait.time(
+          function()
+            createArmyLock = false
+            self.UI.setAttribute(id, "interactable", "true")
+          end,
+          2
+        )
+      end
+    )
+  end
 end

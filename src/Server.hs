@@ -38,11 +38,6 @@ import           System.Environment
 import           TTSJson
 import           Types
 
-
-
-
-
-
 type CreateRosterAPI = "roster" :> MultipartForm Mem (MultipartData Mem) :> Post '[JSON] RosterId
 type GetRosterAPI = "roster" :> Capture "id" T.Text :> "names" :> Get '[JSON] RosterNamesRequest
 type CompleteRosterAPI = "roster" :> Capture "id" T.Text :> ReqBody '[JSON, PlainText, OctetStream] RosterNamesResponse :> Put '[JSON] RosterTranslation

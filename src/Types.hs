@@ -18,13 +18,19 @@ import qualified Data.Text           as T
 import           GHC.Generics
 import           Servant.Auth.Server
 
+data Ability = Ability{
+    _abilityName :: String,
+    _id          :: String,
+    _description :: String
+} deriving (Show, Eq)
+
 data ModelGroup = ModelGroup {
     _name       :: T.Text,
     _modelCount :: Int,
     _stats      :: Maybe Stats,
     _weapons    :: [Weapon],
-    _abilities  :: [String]
-} deriving Show
+    _abilities  :: [Ability]
+} deriving (Show, Eq)
 
 data Stats = Stats {
     _move       :: String,
@@ -36,17 +42,17 @@ data Stats = Stats {
     _attacks    :: String,
     _leadership :: String,
     _save       :: String
-} deriving Show
+} deriving (Show, Eq)
 
 data Unit = Unit {
     _unitName         :: String,
     _forceName        :: String,
     _unitDefaultStats :: Stats,
     _subGroups        :: [ModelGroup],
-    _unitAbilities    :: [String],
+    _unitAbilities    :: [Ability],
     _unitWeapons      :: [Weapon],
     _script           :: String
-} deriving Show
+} deriving (Show, Eq)
 
 
 data Weapon = Weapon {
@@ -56,9 +62,14 @@ data Weapon = Weapon {
     _weaponStrength :: String,
     _AP             :: String,
     _damage         :: String,
-    _special        :: String
-} deriving Show
+    _special        :: String,
+    _count          :: Int,
+    _id             :: String
+} deriving (Show, Eq, Generic)
 
+instance Hashable Weapon
+
+deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''Ability
 deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''Stats
 deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''Weapon
 deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''ModelGroup

@@ -1,11 +1,14 @@
-{-# LANGUAGE Arrows            #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RankNTypes        #-}
-{-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE Arrows                #-}
+{-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE RankNTypes            #-}
+{-# LANGUAGE RecordWildCards       #-}
+
 
 module RosterProcessing where
 
 import           Control.Arrow
+import           Control.Arrow.ListArrow
 import           Control.Lens               hiding (deep, (.=))
 import           Control.Monad
 import           Control.Monad.List
@@ -31,10 +34,13 @@ import           TTSJson
 import           Types
 
 isType :: ArrowXml a => String -> a XmlTree XmlTree
-isType t = hasAttrValue "typename" (== t) <+> hasAttrValue "profiletypename" (== t)
+isType t = hasAttrValue "typename" (== t) <+> hasAttrValue "profiletypename" (== t) <+> hasAttrValue "type" (== t)
+
+isTypeF :: ArrowXml a => (String -> Bool) -> a XmlTree XmlTree
+isTypeF f = hasAttrValue "typename" f <+> hasAttrValue "profiletypename" f <+> hasAttrValue "type" f
 
 getType :: ArrowXml a => a XmlTree String
-getType = getAttrValue "typename" <+> getAttrValue "profiletypename"
+getType = getAttrValue "typename" <+> getAttrValue "profiletypename" <+> getAttrValue "type"
 
 getBatScribeValue :: ArrowXml a => a XmlTree String
 getBatScribeValue = single ((this /> getText) <+> getAttrValue "value")
@@ -53,18 +59,18 @@ statString Stats{..} = fixWidths
 
 toDescription :: Unit -> ModelGroup -> Stats -> T.Text
 toDescription unit modelGroup stats = T.pack $ concat statLines where
-  allWeapons = _weapons modelGroup ++ _unitWeapons unit
-  allAbilities = _abilities modelGroup ++ Types._unitAbilities unit
+  allWeapons = nub (_weapons modelGroup ++ _unitWeapons unit)
+  allAbilities = nub (_abilities modelGroup ++ Types._unitAbilities unit)
   statLines = map (++ "\r\n") rawStatLines
   rawStatLines = [
     statHeader,
     statString stats] ++
     (if not (null allWeapons) then
-      textColor "e85545" "Weapons" : map weaponStr allWeapons
+      textColor "e85545" "Weapons" : map weaponStr (dedupeWeapons allWeapons)
     else
       []) ++
     (if not (null allAbilities) then
-      textColor "dc61ed" "Abilities"  : allAbilities
+      textColor "dc61ed" "Abilities"  : map abilityString allAbilities
     else
       [])
 
@@ -78,9 +84,23 @@ weaponFmt range t str ap d sp  = unwords [if range /= "Melee" then range else ""
 weaponHeader :: String
 weaponHeader = weaponFmt "Range" "Type" "S" "AP" "D" "Sp"
 
+countString :: Int -> String
+countString count = if count > 1 then show count ++ "x " else ""
+
+weaponById :: Weapon -> (Weapon, Weapon)
+weaponById w = (w { _id = ""}, w)
+
+dedupeWeapons :: [Weapon] -> [Weapon]
+dedupeWeapons weapons = HM.elems grouped where
+  merge w1 w2 = w1 {_count = _count w1 +  _count w2}
+  grouped = HM.fromListWith merge (fmap weaponById weapons)
+
 weaponStr :: Weapon -> String
-weaponStr Weapon{..} = textColor "c6c930" _weaponName ++ "\r\n"
+weaponStr Weapon{..} = textColor "c6c930" (countString _count ++  _weaponName ++ "\r\n")
   ++ weaponFmt _range _type _weaponStrength _AP _damage (if _special /= "-" then "*" else _special)
+
+abilityString :: Ability -> String
+abilityString Ability{..} = _abilityName
 
 withForceName :: ArrowXml a => a XmlTree (String -> b) -> a XmlTree b
 withForceName arrow =
@@ -90,15 +110,12 @@ withForceName arrow =
     result <- arrow -< el
     returnA -< result forceName
 
-findTopLevelUnitsAndModels :: ArrowXml a => a XmlTree XmlTree
-findTopLevelUnitsAndModels = deep (isElem >>> hasName "selection") >>> hasAttrValue "type" (\t -> t == "unit" || t == "model")
-
-findNonUnitSelections :: ArrowXml a => a XmlTree XmlTree
-findNonUnitSelections = deep ( hasName "selection"  >>> hasAttrValue "type" (\a -> (a /= "unit") && (a /= "model")) >>>
-    filterA (deep (isElem >>> hasName "profile" >>> isType "Unit")))
+findSelectionsRepresentingModels :: ArrowXml a => a XmlTree XmlTree
+findSelectionsRepresentingModels = deep (hasName "selection") >>>
+    filterA (deep (isElem >>> hasName "profile" >>> isType "Unit")) >>> da "Found Unit: "
 
 findModels :: ArrowXml a => a XmlTree XmlTree
-findModels = multi (isElem >>> hasName "selection" >>> hasAttrValue "type" (== "model"))
+findModels = multi (isElem >>> hasName "selection" >>> filterA (this /> hasName "profiles" /> hasName "profile" >>> isType "Unit" ))
 
 getStat :: ArrowXml a => String -> a XmlTree String
 getStat statName = this />
@@ -112,16 +129,22 @@ getWeaponStat statName = this /> hasName "characteristics" />
                           hasAttrValue "name" (== statName) >>>
                           getBatScribeValue
 
-getAbilities :: ArrowXml a => a XmlTree String
-getAbilities = deep (hasName "profile" >>> isType "Abilities" >>> getAttrValue "name")
+getAbilityDescription :: ArrowXml a => a XmlTree (Maybe String)
+getAbilityDescription = listA (this /> hasName "characteristics" />
+                                hasName "characteristic" >>> hasAttrValue "name" (== "Description") >>>
+                                getBatScribeValue) >>> arr listToMaybe
 
-getAbilitiesShallow :: ArrowXml a => a XmlTree String
-getAbilitiesShallow = hasAttrValue "type" (== "unit") >>> getChildren >>> hasName "selections" >>> getChildren >>>
-  (hasName "selection" >>> hasAttrValue "type" (== "upgrade")) >>> getAbilities
+getAbilities :: ArrowXml a => a XmlTree [Ability]
+getAbilities = listA $ profileOfThisModel "Abilities" >>>
+    proc el -> do
+    name <- getAttrValue "name" -< el
+    id <- getAttrValue "id" -< el
+    desc <- getAbilityDescription -< el
+    returnA -< (Ability name id (fromMaybe "" desc))
+
 
 getStats :: ArrowXml a => a XmlTree Stats
-getStats = this //>
-           isType "Unit" />
+getStats = profileOfThisModel "Unit" />
            hasName "characteristics" >>>
               proc el -> do
               move <- getStat "M" -< el
@@ -135,32 +158,46 @@ getStats = this //>
               sa <- getStat "Save" -< el
               returnA -< (Stats move ws bs s t w a ld sa)
 
-getWeapon :: ArrowXml a => a XmlTree Weapon
-getWeapon = proc el -> do
-  name <- getAttrValue "name" -< el
+getWeapon :: ArrowXml a => Int -> a (PartialWeapon, XmlTree) Weapon
+getWeapon modelCount = proc (partial, el) -> do
   range <- getWeaponStat "Range" -< el
   weaponType <- getWeaponStat "Type" -< el
   str <- getWeaponStat "S" -< el
   ap <- getWeaponStat "AP" -< el
   damage <- getWeaponStat "D" -< el
   special <- getWeaponStat "Abilities" -< el
-  returnA -< Weapon name range weaponType str ap damage special
+  returnA -< Weapon (_partialWeaponName partial) range weaponType str ap damage special (_partialWeaponCount partial) (_partialWeaponId partial)
 
-getWeapons :: ArrowXml a => a XmlTree [Weapon]
-getWeapons = listA $ deep (hasName "profile" >>> isType "Weapon") >>> getWeapon
+profileOfThisModel :: ArrowXml a => String -> a XmlTree XmlTree
+profileOfThisModel profileType = this />
+                    ((hasName "selections" /> hasName "selection" >>> isType "upgrade" /> hasName "profiles" /> hasName "profile" >>> isType profileType)
+                    <+> (hasName "profiles" /> hasName "profile" >>> isType profileType))
 
-getWeaponsShallow :: ArrowXml a => a XmlTree [Weapon]
-getWeaponsShallow = listA $ hasAttrValue "type" (== "unit") >>> getChildren >>> hasName "selections" >>> getChildren >>>
-    (hasName "selection" >>> hasAttrValue "type" (== "upgrade")) >>> getWeapon
+profileOfThisModelWithSelectionData :: ArrowXml a => String -> a XmlTree b -> a XmlTree (b, XmlTree)
+profileOfThisModelWithSelectionData profileType selectionFn = this />
+                    (hasName "selections" /> hasName "selection" >>> isType "upgrade" >>> (selectionFn &&& (this /> hasName "profiles" /> hasName "profile" >>> isType profileType)))
+
+data PartialWeapon = PartialWeapon {_partialWeaponId :: String, _partialWeaponName :: String, _partialWeaponCount :: Int}
+
+weaponPartial :: ArrowXml a => Int -> a XmlTree PartialWeapon
+weaponPartial modelCount = proc el -> do
+  name <- getAttrValue "name" -< el
+  id <- getAttrValue "id" -< el
+  count <- getAttrValue "number" >>> arr (maybe (-1) (`quot` modelCount) . readMay) -< el
+  returnA -< PartialWeapon id name count
+
+
+getWeapons :: ArrowXml a => Int -> a XmlTree [Weapon]
+getWeapons modelCount = listA $ profileOfThisModelWithSelectionData "Weapon" (weaponPartial modelCount) >>> getWeapon modelCount
 
 getModelGroup :: ArrowXml a => a XmlTree ModelGroup
 getModelGroup = proc el -> do
-  name <- getAttrValue "name" -< el
-  count <- getAttrValue "number"  -< el
-  stats <- getStats -< el
-  weapons <- getWeapons -< el
-  abilities <- listA getAbilities -< el
-  returnA -< ModelGroup (T.pack name) (read count) (Just stats) weapons abilities
+  name <- getAttrValue "name" >>> da "Name: " -< el
+  count <- getAttrValue "number" >>> da "Count: " >>> arr read -< el
+  stats <- getStats >>> da "Stats: " -< el
+  weapons <- getWeapons count >>> da "Weapons: " -<< el
+  abilities <- getAbilities >>> da "Abilities: " -< el
+  returnA -< ModelGroup (T.pack name) count (Just stats) weapons abilities
 
 modelsPerRow = 10
 maxRankXDistance = 22
@@ -249,19 +286,17 @@ addBase baseData vals = modelsAndBase where
                              setTransform "posY" 1.5) vals
   modelsAndBase = scaledBase : respositionedModels
 
-da :: (Show s, ArrowXml a) => a s s
-da = arr Debug.traceShowId
+da :: (Show s, ArrowXml a) => String -> a s s
+da header = arr (\o -> Debug.trace (header ++ show o) o)
 
 makeUnit ::  ArrowXml a => a XmlTree ModelGroup -> a XmlTree (String -> Unit)
 makeUnit modelFn = proc el -> do
-  name <- getAttrValue "name" >>> da -< el
-  abilities <- listA getAbilitiesShallow -< el
-  weapons <- getWeaponsShallow -< el
+  name <- getAttrValue "name" >>> da "Unit: " -< el
+  abilities <- getAbilities -< el
+  weapons <- getWeapons 1 -< el
   stats <- listA getStats >>> arr listToMaybe >>> arr (fromMaybe zeroStats)  -< el
   models <- listA modelFn -< el
-  singleModelUnit <- listA getModelGroup -< el
-  let modelsUsed = if null models then singleModelUnit else models
-  returnA -< \forceName -> Unit name forceName stats modelsUsed abilities weapons ""
+  returnA -< \forceName -> Unit name forceName stats models abilities weapons ""
 
 asRoster :: [Value] -> Value
 asRoster values = object ["ObjectStates" .= values]
@@ -295,10 +330,8 @@ generateRosterNames rosterId units = RosterNamesRequest rosterId descriptors whe
 processRoster :: String -> T.Text -> IO [Unit]
 processRoster xml rosterId = do
   let doc = readString [withParseHTML yes, withWarnings no] xml
-  units <- runX $ doc >>> withForceName (findTopLevelUnitsAndModels >>> makeUnit (findModels >>> getModelGroup))
-  nonUnitSelections <- runX $ doc >>> withForceName (findNonUnitSelections >>> makeUnit getModelGroup)
-  let allUnits = units ++ nonUnitSelections
-  return allUnits
+  runX $ doc >>> withForceName (findSelectionsRepresentingModels >>> makeUnit
+           (findModels >>> da "Found Model: " >>> getModelGroup >>> da "Made Group: ")) >>> da "Made Unit: "
 
 assignmentToPair :: ModelAssignment -> (ModelDescriptor, Value)
 assignmentToPair (ModelAssignment desc val) = (desc, val)

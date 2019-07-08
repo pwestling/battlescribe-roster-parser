@@ -171,12 +171,23 @@ Once all models have been selected, click the "Create Army" button. The models f
 spawned into the game, organized by unit, with their names and descriptions filled in from your Battlescribe data. 
 You're ready to play!
 
+An example roster created using this tool:
+
+![Example Roster](assets/example-roster.png "Example Roster")
+
+
 ## Saved Models
 
 When you select a model with the Battlescribe2TTS tool, the model you've selected is saved 
 into the tool. You can avoid having to re-select models for similar armies in the future by 
 adding the tool to your "Saved Objects" after selecting models. Your selections will be saved 
 and automatically populated in the future for matching units
+
+## Reporting Issues
+
+If you have issues trying to use this tool, please create an issue on 
+[github](https://github.com/pwestling/battlescribe-roster-parser/issues). Please note that 
+none of this is supported by the Battlescribe or Tabletop Simulator teams in any way, so don't complain to them!
         """
 
 
