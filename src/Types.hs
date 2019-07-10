@@ -50,7 +50,6 @@ data Unit = Unit {
     _unitDefaultStats :: Stats,
     _subGroups        :: [ModelGroup],
     _unitAbilities    :: [Ability],
-    _unitWeapons      :: [Weapon],
     _script           :: String
 } deriving (Show, Eq)
 
@@ -128,4 +127,10 @@ newtype RosterId = RosterId {
 }
 
 deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''RosterId
+
+newtype Version = Version {
+    _id :: T.Text
+}
+
+deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''Version
 

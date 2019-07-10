@@ -57,6 +57,6 @@ loadModels = do
 
 
 setScript :: T.Text -> Value -> Value
---setScript script = setScript' . setInStates setScript' where
---    setScript' =  key "LuaScript"._String .~ script
-setScript ignored = id
+setScript script = setScript' . setInStates setScript' where
+   setScript' =  key "LuaScript"._String .~ script
+

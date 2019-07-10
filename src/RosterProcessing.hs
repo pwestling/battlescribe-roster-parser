@@ -31,19 +31,10 @@ import           System.Environment
 import           System.IO
 import           Text.XML.HXT.Core
 import           TTSJson
+import           TTSUI
 import           Types
+import           XmlHelper
 
-isType :: ArrowXml a => String -> a XmlTree XmlTree
-isType t = hasAttrValue "typename" (== t) <+> hasAttrValue "profiletypename" (== t) <+> hasAttrValue "type" (== t)
-
-isTypeF :: ArrowXml a => (String -> Bool) -> a XmlTree XmlTree
-isTypeF f = hasAttrValue "typename" f <+> hasAttrValue "profiletypename" f <+> hasAttrValue "type" f
-
-getType :: ArrowXml a => a XmlTree String
-getType = getAttrValue "typename" <+> getAttrValue "profiletypename" <+> getAttrValue "type"
-
-getBatScribeValue :: ArrowXml a => a XmlTree String
-getBatScribeValue = single ((this /> getText) <+> getAttrValue "value")
 
 textColor :: String -> String -> String
 textColor c s = "["++c++"]"++s++"[-]"
@@ -59,7 +50,7 @@ statString Stats{..} = fixWidths
 
 toDescription :: Unit -> ModelGroup -> Stats -> T.Text
 toDescription unit modelGroup stats = T.pack $ concat statLines where
-  allWeapons = nub (_weapons modelGroup ++ _unitWeapons unit)
+  allWeapons = nub (_weapons modelGroup)
   allAbilities = nub (_abilities modelGroup ++ Types._unitAbilities unit)
   statLines = map (++ "\r\n") rawStatLines
   rawStatLines = [
@@ -112,7 +103,7 @@ withForceName arrow =
 
 findSelectionsRepresentingModels :: ArrowXml a => a XmlTree XmlTree
 findSelectionsRepresentingModels = deep (hasName "selection") >>>
-    filterA (deep (isElem >>> hasName "profile" >>> isType "Unit")) >>> da "Found Unit: "
+    filterA (deep (isElem >>> hasName "profile" >>> isType "Unit"))
 
 findModels :: ArrowXml a => a XmlTree XmlTree
 findModels = multi (isElem >>> hasName "selection" >>> filterA (this /> hasName "profiles" /> hasName "profile" >>> isType "Unit" ))
@@ -192,11 +183,11 @@ getWeapons modelCount = listA $ profileOfThisModelWithSelectionData "Weapon" (we
 
 getModelGroup :: ArrowXml a => a XmlTree ModelGroup
 getModelGroup = proc el -> do
-  name <- getAttrValue "name" >>> da "Name: " -< el
-  count <- getAttrValue "number" >>> da "Count: " >>> arr read -< el
-  stats <- getStats >>> da "Stats: " -< el
-  weapons <- getWeapons count >>> da "Weapons: " -<< el
-  abilities <- getAbilities >>> da "Abilities: " -< el
+  name <- getAttrValue "name" -< el
+  count <- getAttrValue "number" >>> arr read -< el
+  stats <- getStats  -< el
+  weapons <- getWeapons count  -<< el
+  abilities <- getAbilities -< el
   returnA -< ModelGroup (T.pack name) count (Just stats) weapons abilities
 
 modelsPerRow = 10
@@ -241,7 +232,7 @@ mapRight f (Left t)  = Left t
 mapRight f (Right t) = Right (f t)
 
 retrieveAndModifySingleGroupJSON :: ModelFinder -> Unit -> ModelGroup -> [Either String [Value]]
-retrieveAndModifySingleGroupJSON modelFinder unit modelGroup = result where
+retrieveAndModifySingleGroupJSON modelFinder unit modelGroup = [result] where
    modelName =  modelGroup ^. name
    uName = unit ^. unitName
    modelBaseJson = modelFinder unit modelGroup
@@ -254,13 +245,13 @@ retrieveAndModifySingleGroupJSON modelFinder unit modelGroup = result where
                                   T.pack (theStats ^. wounds)]
                                 else
                                   []
-   modifiedJson = fmap
-                        (setDescription description .
-                        setName nameWithWounds .
-                        setScript (T.pack (unit ^. script)))
-                          modelBaseJson
-   jsonOrErr = maybe (Left (uName ++ " - " ++ T.unpack modelName)) Right modifiedJson
-   result = [mapRight (replicate (modelGroup ^. modelCount)) jsonOrErr]
+   nonScriptedModelCount = (modelGroup ^. modelCount) - 1
+   modelSet = do
+       json <- modelBaseJson
+       let modifiedJson = (setDescription description . setName nameWithWounds) json
+       let scriptedJson = setScript (T.pack (unit ^. script)) modifiedJson
+       return $ scriptedJson : replicate nonScriptedModelCount modifiedJson
+   result = maybe (Left (uName ++ " - " ++ T.unpack modelName)) Right modelSet
 
 retrieveAndModifyModelGroupJSON :: ModelFinder -> Unit -> [ModelGroup] -> [Either String [Value]]
 retrieveAndModifyModelGroupJSON modelFinder unit groups = result where
@@ -286,17 +277,14 @@ addBase baseData vals = modelsAndBase where
                              setTransform "posY" 1.5) vals
   modelsAndBase = scaledBase : respositionedModels
 
-da :: (Show s, ArrowXml a) => String -> a s s
-da header = arr (\o -> Debug.trace (header ++ show o) o)
-
 makeUnit ::  ArrowXml a => a XmlTree ModelGroup -> a XmlTree (String -> Unit)
 makeUnit modelFn = proc el -> do
-  name <- getAttrValue "name" >>> da "Unit: " -< el
+  name <- getAttrValue "name" >>> da "Unit Name: " -< el
   abilities <- getAbilities -< el
-  weapons <- getWeapons 1 -< el
   stats <- listA getStats >>> arr listToMaybe >>> arr (fromMaybe zeroStats)  -< el
   models <- listA modelFn -< el
-  returnA -< \forceName -> Unit name forceName stats models abilities weapons ""
+  script <- scriptFromXml name -<< el
+  returnA -< \forceName -> Unit name forceName stats models abilities script
 
 asRoster :: [Value] -> Value
 asRoster values = object ["ObjectStates" .= values]
@@ -331,7 +319,7 @@ processRoster :: String -> T.Text -> IO [Unit]
 processRoster xml rosterId = do
   let doc = readString [withParseHTML yes, withWarnings no] xml
   runX $ doc >>> withForceName (findSelectionsRepresentingModels >>> makeUnit
-           (findModels >>> da "Found Model: " >>> getModelGroup >>> da "Made Group: ")) >>> da "Made Unit: "
+           (findModels >>> getModelGroup ))
 
 assignmentToPair :: ModelAssignment -> (ModelDescriptor, Value)
 assignmentToPair (ModelAssignment desc val) = (desc, val)

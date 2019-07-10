@@ -38,9 +38,13 @@ import           System.Environment
 import           TTSJson
 import           Types
 
+version :: Version
+version = Version "1.1"
+
 type CreateRosterAPI = "roster" :> MultipartForm Mem (MultipartData Mem) :> Post '[JSON] RosterId
 type GetRosterAPI = "roster" :> Capture "id" T.Text :> "names" :> Get '[JSON] RosterNamesRequest
 type CompleteRosterAPI = "roster" :> Capture "id" T.Text :> ReqBody '[JSON, PlainText, OctetStream] RosterNamesResponse :> Put '[JSON] RosterTranslation
+type VersionAPI = "version" :> Get '[JSON] Version
 
 instance FromJSON a => MimeUnrender PlainText a where
   mimeUnrender _ = Data.Aeson.eitherDecode
@@ -48,7 +52,7 @@ instance FromJSON a => MimeUnrender PlainText a where
 instance FromJSON a => MimeUnrender OctetStream a where
     mimeUnrender _ = Data.Aeson.eitherDecode
 
-type API = CreateRosterAPI :<|> GetRosterAPI :<|> CompleteRosterAPI
+type API = CreateRosterAPI :<|> GetRosterAPI :<|> CompleteRosterAPI :<|> VersionAPI
 
 api :: Proxy API
 api = Proxy
@@ -109,7 +113,8 @@ app :: Connection -> BaseData -> Application
 app conn baseData = serve api $
   createRoster conn :<|>
   getRoster conn :<|>
-  completeRoster conn baseData
+  completeRoster conn baseData :<|>
+  return version
 
 startApp :: String -> Int -> Int -> IO ()
 startApp redisHost redisPort appPort = withStdoutLogger $ \aplogger -> do

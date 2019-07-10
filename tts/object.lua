@@ -1,6 +1,8 @@
 ACTIVATED_BUTTON = "rgb(1,0.6,1)|rgb(1,0.4,1)|rgb(1,0.2,1)|rgb(1,0.2,1)"
 DEFAULT_BUTTON = "#FFFFFF|#FFFFFF|#C8C8C8|rgba(0.78,0.78,0.78,0.5)"
-serverURL = "https://backend.battlescribe2tts.net"
+prodServerURL = "https://backend.battlescribe2tts.net"
+serverURL = prodServerURL
+version = "1.1"
 
 nextModelTarget = ""
 nextModelButton = ""
@@ -10,6 +12,18 @@ rosterMapping = {}
 buttonMapping = {}
 storedDataMapping = {}
 createArmyLock = false
+
+function onScriptingButtonDown(index, peekerColor)
+  local player = Player[peekerColor]
+  if index == 1 and player.getHoverObject() and player.getHoverObject().getGUID() == self.getGUID() then
+    broadcastToAll("Activating Development Mode")
+    serverURL = "http://localhost:8080"
+  end
+  if index == 2 and player.getHoverObject() and player.getHoverObject().getGUID() == self.getGUID() then
+    broadcastToAll("Activating Production Mode")
+    serverURL = prodServerURL
+  end
+end
 
 function tempLock()
   self.setLock(true)
@@ -30,6 +44,31 @@ function onLoad()
     rosterMapping[name] = data.json
     descriptorMapping[name] = data.descriptor
     storedDataMapping[name] = v.guid
+  end
+  checkVersion()
+end
+
+function checkVersion()
+  WebRequest.get(serverURL .. "/version", verifyVersion)
+end
+
+function verifyVersion(req)
+  if req and req.text then
+    local json = JSON.decode(req.text)
+    if json and json.id then
+      local remoteVersion = json.id
+      if remoteVersion ~= version then
+        Wait.time(
+          function()
+            broadcastToAll(
+              "You are using an out-of-date version of Battlescribe Army Creator. " ..
+                "Get the latest version from the workshop!"
+            )
+          end,
+          3
+        )
+      end
+    end
   end
 end
 
@@ -81,6 +120,7 @@ function onObjectLeaveContainer(thisContainer, takenObject)
     tempLock()
     local name = takenObject.getName()
     rosterMapping[name] = nil
+    storedDataMapping[name] = nil
     if buttonMapping[name] ~= nil then
       thisContainer.UI.setAttribute(buttonMapping[name], "colors", DEFAULT_BUTTON)
     end
@@ -136,6 +176,10 @@ end
 
 function processNames(webReq)
   tempLock()
+  if not webReq or webReq.error or webReq.is_error then
+    broadcastToAll("Error in web request: No such roster or server error")
+    return
+  end
   print("Names Retrieved")
   local response = JSON.decode(webReq.text)
   local buttonNames = {}
@@ -202,7 +246,7 @@ function processNames(webReq)
 end
 
 function spawnModelRecur(list, index)
-  if index < #list then
+  if index <= #list then
     local v = list[index]
     local relPos = v.Transform
     local thisPos = self.getPosition()
