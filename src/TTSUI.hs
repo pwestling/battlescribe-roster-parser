@@ -100,19 +100,30 @@ computeWidths vals = widths where
 asScript :: T.Text -> T.Text
 asScript uiRaw = [NI.text|
 
+function onLoad()
+  if not Global.getTable("bs2tts-datasheet-positions") then
+    Global.setTable("bs2tts-datasheet-positions", {})
+  end
+end
+
 function createUI(uiId)
   local guid = self.getGUID()
   local uiString = string.gsub(
                    string.gsub(
                    string.gsub([[ $ui ]], "thepanelid", uiId),
                                           "thebuttonid", uiId .. "-button"),
-                                          "theclosefunction", guid .. "/closeUI")
+                                          "theguid", guid)
   return uiString
 end
 
 function loadUI(name)
   local totalUI = createUI(name)
   UI.setXml(UI.getXml() .. totalUI)
+  print("Pre Load: " .. tabToS(Global.getTable("bs2tts-datasheet-positions")))
+  for k,v in pairs(Global.getTable("bs2tts-datasheet-positions")) do
+    print("Setting position of " .. k .. " to " .. v)
+    UI.setAttribute(k, "position", v)
+  end
 end
 
 uiLoaded = false
@@ -131,6 +142,26 @@ end
 function closeUI(player, val, id)
   local peekerColor = player.color
   UI.hide(createName(peekerColor))
+end
+
+function tabToS(tab)
+  local s = "{"
+  for k, v in pairs(tab) do
+    s = s .. k .. "=" .. tostring(v) .. ","
+  end
+  s = s .. "}"
+  return s
+end
+
+function onEndDrag(player, val, id)
+  local peekerColor = player.color
+  local name = createName(peekerColor)
+  local pos = UI.getAttribute(name, "position")
+  print("Dragged to " .. pos)
+  local tab = Global.getTable("bs2tts-datasheet-positions")
+  tab[name] = pos
+  Global.setTable("bs2tts-datasheet-positions", tab)
+  print("Post Drag: " .. tabToS(Global.getTable("bs2tts-datasheet-positions")))
 end
 
 function createName(color)
@@ -156,11 +187,11 @@ escapes = escapeT '"' "&quot;" .
 
 masterPanel :: T.Text -> [Table] -> T.Text
 masterPanel name tables = [NI.text|
-    <Panel id="thepanelid" active="true" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false">
+    <Panel id="thepanelid" active="true" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" onEndDrag="theguid/onEndDrag" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false">
     <TableLayout autoCalculateHeight="true" width="$width" childForceExpandWidth="false" childForceExpandHeight="false">
     <Row preferredHeight="40">
     <Text fontSize="25" text="$name" width="$width"/>
-    <Button id="thebuttonid" class="topButtons" rectAlignment="UpperRight" color="#990000" textColor="#FFFFFF" text="X" height="40" width="40" onClick="theclosefunction" />
+    <Button id="thebuttonid" class="topButtons" rectAlignment="UpperRight" color="#990000" textColor="#FFFFFF" text="X" height="40" width="40" onClick="theguid/closeUI" />
     </Row>
     <Row preferredHeight="$scrollHeight">
     <VerticalScrollView scrollSensitivity="30" height="$scrollHeight" width="$width">
