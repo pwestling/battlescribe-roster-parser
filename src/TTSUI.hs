@@ -103,10 +103,8 @@ asScript uiRaw = [NI.text|
 function onLoad()
   Wait.frames(
     function()
-      print("Loading")
       self.setVar("bs2tts-model", true)
       local id = "bs2tts-ui-load"
-      print("Creating UI")
       loadUI()
       Timer.destroy(id)
       Timer.create(
@@ -122,7 +120,6 @@ function onLoad()
 end
 
 function loadUIs()
-  print("Loading UI from var")
   local uistring = Global.getVar("bs2tts-ui-string")
   UI.setXml(UI.getXml() .. uistring)
 end
@@ -131,18 +128,16 @@ function createUI(uiId, playerColor)
   local guid = self.getGUID()
   local uiString = string.gsub(
                    string.gsub(
-                   string.gsub(
-                   string.gsub([[ $ui ]], "thepanelid", uiId),
-                                          "thebuttonid", uiId .. "-button"),
-                                          "theclosefunction", guid .. "/closeUI"),
-                                          "thevisibility", playerColor)
-  return uiString
+                   string.gsub([[ $ui ]], "thepanelid", uiId ),
+                                          "theguid", guid),
+                                          "thecolor", playerColor)
+  print(uiString)
+                                          return uiString
 end
 
 function loadUI()
   local totalUI = ""
   for k, color in pairs(Player.getColors()) do
-    print("Creating " .. createName(color))
     totalUI = totalUI .. createUI(createName(color), color)
   end
   local base = ""
@@ -150,27 +145,38 @@ function loadUI()
     base = Global.getVar("bs2tts-ui-string")
   end
   Global.setVar("bs2tts-ui-string", base .. totalUI)
-  print("Appended to UI var")
 end
 
 function onScriptingButtonDown(index, peekerColor)
   local player = Player[peekerColor]
   local name = createName(peekerColor)
   if index == 1 and player.getHoverObject() and player.getHoverObject().getDescription() == self.getDescription() then
-    print("Showing " .. name)
     UI.show(name)
   end
 end
 
 function closeUI(player, val, id)
   local peekerColor = player.color
-  print("Closing " .. createName(peekerColor))
   UI.hide(createName(peekerColor))
+end
+
+function grow(player, val, id)
+  local peekerColor = player.color
+  local panelId = createName(peekerColor)
+  print("Grow "..panelId)
+  UI.setAttribute(panelId, "scale", "")
+end
+
+function shrink(player, val, id)
+  local peekerColor = player.color
+  local panelId = createName(peekerColor)
+  print("Shrink "..panelId)
+  UI.setAttribute(panelId, "scale", "0.8 0.8")
 end
 
 function createName(color)
   local guid = self.getGUID()
-  return string.sub(guid .. "-" .. color)
+  return (guid .. "-" .. color)
 end
 
 |] where
@@ -191,11 +197,15 @@ escapes = escapeT '"' "&quot;" .
 
 masterPanel :: T.Text -> [Table] -> T.Text
 masterPanel name tables = [NI.text|
-    <Panel id="thepanelid" visibility="thevisibility" active="false" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false">
+    <Panel id="thepanelid" visibility="thecolor" active="false" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false">
     <TableLayout autoCalculateHeight="true" width="$width" childForceExpandWidth="false" childForceExpandHeight="false">
     <Row preferredHeight="40">
-    <Text fontSize="25" text="$name" width="$width"/>
-    <Button id="thebuttonid" class="topButtons" rectAlignment="UpperRight" color="#990000" textColor="#FFFFFF" text="X" height="40" width="40" onClick="theclosefunction" />
+    <Text fontSize="25" rectAlignment="MiddleCenter" text="$name" width="$width"/>
+    <HorizontalLayout rectAlignment="UpperRight" height="40" width="120">
+    <Button id="theguid-grow" class="topButtons"  color="#990000" textColor="#FFFFFF" text="+" height="40" width="40" onClick="theguid/grow" />
+    <Button id="theguid-shrink" class="topButtons"  color="#990000" textColor="#FFFFFF" text="-" height="40" width="40" onClick="theguid/shrink" />
+    <Button id="theguid-close" class="topButtons"  color="#990000" textColor="#FFFFFF" text="X" height="40" width="40" onClick="theguid/closeUI" />
+    </HorizontalLayout>
     </Row>
     <Row preferredHeight="$scrollHeight">
     <VerticalScrollView scrollSensitivity="30" height="$scrollHeight" width="$width">
@@ -257,7 +267,7 @@ tableToXml tableWidth Table{..} = [NI.text|
     bodyText = mconcat $ map (\(height, row) -> (tRow tSize "Normal" (numToT height) . map escapes) row) rowsAndHeights
 
 tCell :: T.Text -> T.Text -> T.Text -> T.Text
-tCell fs stl val = [NI.text| <Cell><Text resizeTextForBestFit="true" resizeTextMaxSize="$fs" resizeTextMinSize="16"
+tCell fs stl val = [NI.text| <Cell><Text resizeTextForBestFit="true" resizeTextMaxSize="$fs" resizeTextMinSize="6"
   text="$val" fontStyle="$stl" fontSize="$fs"/></Cell> |]
 
 tRow :: T.Text -> T.Text -> T.Text -> [T.Text] -> T.Text
