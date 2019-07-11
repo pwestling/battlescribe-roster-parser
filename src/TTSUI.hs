@@ -106,7 +106,7 @@ function createUI(uiId)
                    string.gsub(
                    string.gsub([[ $ui ]], "thepanelid", uiId),
                                           "thebuttonid", uiId .. "-button"),
-                                          "theclosefunction", guid .. "/closeUI")
+                                          "theguid", guid)
   return uiString
 end
 
@@ -115,27 +115,50 @@ function loadUI(name)
   UI.setXml(UI.getXml() .. totalUI)
 end
 
+function onLoad()
+  local name = createName()
+  loadUI(name)
+  toggleVisible(name, "Jokers")
+end
+
+visibility = {}
 uiLoaded = false
+
+function toggleVisible(id, peekerColor)
+  if visibility[peekerColor] == nil then
+    visibility[peekerColor] = false
+  end
+  visibility[peekerColor] = not visibility[peekerColor]
+  print("Element visibility to " .. peekerColor .. ": " .. tostring(visibility[peekerColor]))
+  local attrVal = ""
+  for k,v in pairs(visibility) do
+    if v then
+      if attrVal ~= "" then
+        attrVal = attrVal .. "|"
+      end
+      attrVal = attrVal .. k
+    end
+  end
+  print("Vis to: " .. attrVal)
+  UI.setAttribute(id, "visibility", attrVal)
+end
 
 function onScriptingButtonDown(index, peekerColor)
   local player = Player[peekerColor]
   if index == 1 and player.getHoverObject() and player.getHoverObject().getDescription() == self.getDescription() then
-    local name = createName(peekerColor)
-    if not UI.getAttribute(name, "id") then
-      loadUI(name)
-    end
-    UI.show(name)
+    local name = createName()
+    toggleVisible(name, peekerColor)
   end
 end
 
 function closeUI(player, val, id)
   local peekerColor = player.color
-  UI.hide(createName(peekerColor))
+  toggleVisible(createName(), peekerColor)
 end
 
-function createName(color)
+function createName()
   local guid = self.getGUID()
-  return string.sub(guid .. "-" .. color .. "-" .. string.gsub(self.getDescription(), "[] \n-?><$%^&*-:?\"[]", ""), 1, 255)
+  return string.sub(guid .. "-" .. string.gsub(self.getDescription(), "[] \n-?><$%^&*-:?\"[]", ""), 1, 255)
 end
 
 |] where
@@ -156,11 +179,11 @@ escapes = escapeT '"' "&quot;" .
 
 masterPanel :: T.Text -> [Table] -> T.Text
 masterPanel name tables = [NI.text|
-    <Panel id="thepanelid" active="true" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false">
+    <Panel id="thepanelid" owner="bs2tss" visibility="Jokers" active="true" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false">
     <TableLayout autoCalculateHeight="true" width="$width" childForceExpandWidth="false" childForceExpandHeight="false">
     <Row preferredHeight="40">
     <Text fontSize="25" text="$name" width="$width"/>
-    <Button id="thebuttonid" class="topButtons" rectAlignment="UpperRight" color="#990000" textColor="#FFFFFF" text="X" height="40" width="40" onClick="theclosefunction" />
+    <Button id="thebuttonid" class="topButtons" rectAlignment="UpperRight" color="#990000" textColor="#FFFFFF" text="X" height="40" width="40" onClick="theguid/closeUI" />
     </Row>
     <Row preferredHeight="$scrollHeight">
     <VerticalScrollView scrollSensitivity="30" height="$scrollHeight" width="$width">
