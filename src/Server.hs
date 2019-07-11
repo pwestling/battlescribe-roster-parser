@@ -8,9 +8,11 @@
 module Main where
 
 import           Codec.Archive.Zip
+import           Control.Lens
 import           Control.Monad
 import           Control.Monad.IO.Class
 import           Data.Aeson
+import           Data.Aeson.Lens
 import qualified Data.ByteString                      as SBS
 import qualified Data.ByteString.Lazy                 as B
 import qualified Data.ByteString.Lazy.Char8           as C8
@@ -38,12 +40,15 @@ import           System.Environment
 import           TTSJson
 import           Types
 
+
 version :: Version
-version = Version "1.1"
+version = Version "1.4"
 
 type CreateRosterAPI = "roster" :> MultipartForm Mem (MultipartData Mem) :> Post '[JSON] RosterId
 type GetRosterAPI = "roster" :> Capture "id" T.Text :> "names" :> Get '[JSON] RosterNamesRequest
 type CompleteRosterAPI = "roster" :> Capture "id" T.Text :> ReqBody '[JSON, PlainText, OctetStream] RosterNamesResponse :> Put '[JSON] RosterTranslation
+type CompleteRosterAPIV2 = "v2" :> "roster" :> Capture "id" T.Text :> ReqBody '[JSON, PlainText, OctetStream] RosterNamesResponse :> Put '[JSON] ItemCount
+type IterateRosterAPIV2 = "v2" :> "roster" :> Capture "id" T.Text :> Capture "index" Int :>  Get '[JSON] Value
 type VersionAPI = "version" :> Get '[JSON] Version
 
 instance FromJSON a => MimeUnrender PlainText a where
@@ -52,7 +57,12 @@ instance FromJSON a => MimeUnrender PlainText a where
 instance FromJSON a => MimeUnrender OctetStream a where
     mimeUnrender _ = Data.Aeson.eitherDecode
 
-type API = CreateRosterAPI :<|> GetRosterAPI :<|> CompleteRosterAPI :<|> VersionAPI
+type API = CreateRosterAPI
+         :<|> GetRosterAPI
+         :<|> CompleteRosterAPI
+         :<|> VersionAPI
+         :<|> CompleteRosterAPIV2
+         :<|> IterateRosterAPIV2
 
 api :: Proxy API
 api = Proxy
@@ -70,8 +80,8 @@ createRoster redisConn multipartData = do
   fullUUID <- liftIO nextRandom
   let id = T.take 8 $ toText fullUUID
   case contents of
-    Just xml -> liftIO $ do
-      unitData <- processRoster xml id
+    Just xml -> do
+      unitData <- liftIO $ processRoster xml id
       storeInRedis redisConn id unitData
       return $ RosterId id
     Nothing -> throwError err400 {
@@ -80,7 +90,7 @@ createRoster redisConn multipartData = do
 
 getRoster :: Connection -> T.Text -> Handler RosterNamesRequest
 getRoster conn id =  do
-  maybeUnits <- liftIO $ retrieveFromRedis conn id
+  maybeUnits <- retrieveFromRedis conn id
   case maybeUnits of
     Just units -> return $ generateRosterNames id units
     Nothing -> throwError err400 {
@@ -89,22 +99,54 @@ getRoster conn id =  do
 
 completeRoster :: Connection -> BaseData -> T.Text -> RosterNamesResponse -> Handler RosterTranslation
 completeRoster conn baseData id mapping =  do
-  units <- liftIO $ retrieveFromRedis conn id
+  units <- retrieveFromRedis conn id
   case units of
-    Just result -> return $ createTTS baseData result mapping
+    Just result -> do
+      let ttsData = createTTS baseData result mapping
+      storeInRedis conn (id <> "-saved-roster") ttsData
+      return ttsData
     Nothing -> throwError err400 {
       errBody = C8.fromStrict $ encodeUtf8 $ "No Roster with ID " <> id
     }
 
-storeInRedis :: ToJSON j => Connection -> T.Text -> j -> IO ()
+completeRosterV2 :: Connection -> BaseData -> T.Text -> RosterNamesResponse -> Handler ItemCount
+completeRosterV2 conn baseData id mapping =  do
+  units <- retrieveFromRedis conn id
+  case units of
+    Just result -> do
+      let ttsData = createTTS baseData result mapping
+      let numItems = fmap (length . (^. key "ObjectStates"._Array)) (ttsData ^. roster)
+      storeInRedis conn (id <> "-saved-roster") ttsData
+      return $ ItemCount (fromMaybe 0 numItems)
+    Nothing -> throwError err400 {
+      errBody = C8.fromStrict $ encodeUtf8 $ "No Roster with ID " <> id
+    }
+
+getRosterItem :: Connection -> T.Text -> Int -> Handler Value
+getRosterItem conn id index =  do
+  rosterTranslation <- retrieveFromRedis conn (id <> "-saved-roster")
+  case rosterTranslation of
+    Just result -> do
+      let maybeRoster = fromMaybe undefined (result ^. roster)
+      let desiredItem = maybeRoster ^? key "ObjectStates" . nth index
+      case desiredItem of
+        Just item -> return item
+        Nothing -> throwError err400 {
+          errBody = C8.fromStrict $ encodeUtf8 $ "No Item " <> T.pack (show index) <> " in roster " <> id <> id
+        }
+    Nothing -> throwError err400 {
+      errBody = C8.fromStrict $ encodeUtf8 $ "No Saved Roster with ID " <> id
+    }
+
+storeInRedis :: ToJSON j => Connection -> T.Text -> j -> Handler ()
 storeInRedis redisConn id struct = do
   let json = toJSON struct
-  runRedis redisConn (setex (encodeUtf8 id) 1209600 (C8.toStrict (encode json)))
+  liftIO $ runRedis redisConn (setex (encodeUtf8 id) 1209600 (C8.toStrict (encode json)))
   return ()
 
-retrieveFromRedis :: FromJSON j => Connection -> T.Text -> IO (Maybe j)
+retrieveFromRedis :: FromJSON j => Connection -> T.Text -> Handler (Maybe j)
 retrieveFromRedis redisConn id = do
-  json <- runRedis redisConn (get (encodeUtf8 id))
+  json <- liftIO $  runRedis redisConn (get (encodeUtf8 id))
   let asMaybe = join $ rightToMaybe json
   let decoded = fmap (join . decode' . C8.fromStrict) asMaybe
   return $ join decoded
@@ -114,7 +156,10 @@ app conn baseData = serve api $
   createRoster conn :<|>
   getRoster conn :<|>
   completeRoster conn baseData :<|>
-  return version
+  return version :<|>
+  completeRosterV2 conn baseData :<|>
+  getRosterItem conn
+
 
 startApp :: String -> Int -> Int -> IO ()
 startApp redisHost redisPort appPort = withStdoutLogger $ \aplogger -> do

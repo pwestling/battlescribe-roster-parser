@@ -134,3 +134,9 @@ newtype Version = Version {
 
 deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''Version
 
+
+newtype ItemCount = ItemCount {
+    _itemCount :: Int
+}
+
+deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''ItemCount

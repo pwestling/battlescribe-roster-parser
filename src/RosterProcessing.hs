@@ -105,11 +105,28 @@ findSelectionsRepresentingModels :: ArrowXml a => a XmlTree XmlTree
 findSelectionsRepresentingModels = deep (hasName "selection") >>>
     filterA (deep (isElem >>> hasName "profile" >>> isType "Unit"))
 
-findModels :: ArrowXml a => a XmlTree XmlTree
-findModels = multi (isElem >>> hasName "selection" >>> filterA (this /> hasName "profiles" /> hasName "profile" >>> isType "Unit" ))
+hasUnitProfileAtLowerLevel :: ArrowXml a => String -> a XmlTree XmlTree
+hasUnitProfileAtLowerLevel topId = this >>> hasAttrValue "id" (/= topId) /> hasName "profiles" /> hasName "profile" >>> isType "Unit"
+
+hasWeaponSelection ::  ArrowXml a => a XmlTree XmlTree
+hasWeaponSelection = this /> hasName "selections" /> hasName "selection" /> hasName "profiles" /> hasName "profile" >>> isType "Weapon"
+
+-- isModelOrHasUnit :: ArrowXml a => String -> a XmlTree XmlTree
+-- isModelOrHasUnit topId = isType "model"
+--                        <+>  (this >>> hasAttrValue "id" (/= topId) /> hasName "profiles" /> hasName "profile" >>> isType "Unit")
+--                        <+>
+
+findModels :: ArrowXml a => String -> a XmlTree XmlTree
+findModels topId = listA (
+      multi (isElem >>> hasName "selection" >>> filterA (isType "model")) <+>
+      multi (isElem >>> hasName "selection" >>> filterA (hasUnitProfileAtLowerLevel topId)) <+>
+      deep (isElem >>> hasName "selection" >>> filterA (isType "model" `orElse` hasWeaponSelection))) >>>
+      arr nub >>> unlistA
+
 
 getStat :: ArrowXml a => String -> a XmlTree String
 getStat statName = this />
+                  hasName "characteristic" >>>
                   hasName "characteristic" >>>
                   hasAttrValue "name" (== statName) >>>
                   getBatScribeValue
@@ -181,14 +198,14 @@ weaponPartial modelCount = proc el -> do
 getWeapons :: ArrowXml a => Int -> a XmlTree [Weapon]
 getWeapons modelCount = listA $ profileOfThisModelWithSelectionData "Weapon" (weaponPartial modelCount) >>> getWeapon modelCount
 
-getModelGroup :: ArrowXml a => a XmlTree ModelGroup
-getModelGroup = proc el -> do
-  name <- getAttrValue "name" -< el
-  count <- getAttrValue "number" >>> arr read -< el
-  stats <- getStats  -< el
+getModelGroup :: ArrowXml a => Stats -> a XmlTree ModelGroup
+getModelGroup defaultStats = proc el -> do
+  name <- getAttrValue "name" >>> da "Model Group: " -< el
+  count <- getAttrValue "number" >>> arr read  >>> da "Model Count: " -< el
+  stats <- listA getStats `orElse` arr (const [defaultStats])  -< el
   weapons <- getWeapons count  -<< el
   abilities <- getAbilities -< el
-  returnA -< ModelGroup (T.pack name) count (Just stats) weapons abilities
+  returnA -< ModelGroup (T.pack name) count (listToMaybe stats) weapons abilities
 
 modelsPerRow = 10
 maxRankXDistance = 22
@@ -277,14 +294,16 @@ addBase baseData vals = modelsAndBase where
                              setTransform "posY" 1.5) vals
   modelsAndBase = scaledBase : respositionedModels
 
-makeUnit ::  ArrowXml a => a XmlTree ModelGroup -> a XmlTree (String -> Unit)
-makeUnit modelFn = proc el -> do
+makeUnit ::  ArrowXml a => a XmlTree (String -> Unit)
+makeUnit = proc el -> do
   name <- getAttrValue "name" >>> da "Unit Name: " -< el
+  selectionId <- getAttrValue "id" -< el
   abilities <- getAbilities -< el
   stats <- listA getStats >>> arr listToMaybe >>> arr (fromMaybe zeroStats)  -< el
-  models <- listA modelFn -< el
+  models <- listA (findModels selectionId) -<< el
+  modelGroups <- mapA (getModelGroup stats) -<< models
   script <- scriptFromXml name -<< el
-  returnA -< \forceName -> Unit name forceName stats models abilities script
+  returnA -< \forceName -> Unit name forceName stats modelGroups abilities script
 
 asRoster :: [Value] -> Value
 asRoster values = object ["ObjectStates" .= values]
@@ -318,8 +337,7 @@ generateRosterNames rosterId units = RosterNamesRequest rosterId descriptors whe
 processRoster :: String -> T.Text -> IO [Unit]
 processRoster xml rosterId = do
   let doc = readString [withParseHTML yes, withWarnings no] xml
-  runX $ doc >>> withForceName (findSelectionsRepresentingModels >>> makeUnit
-           (findModels >>> getModelGroup ))
+  runX $ doc >>> withForceName (findSelectionsRepresentingModels >>> makeUnit)
 
 assignmentToPair :: ModelAssignment -> (ModelDescriptor, Value)
 assignmentToPair (ModelAssignment desc val) = (desc, val)

@@ -8,6 +8,9 @@ import           Text.XML.HXT.Core
 da :: (Show s, ArrowXml a) => String -> a s s
 da header = arr (\o -> Debug.trace (header ++ show o) o)
 
+daA :: (Show s, ArrowXml a) => a s String -> a s s
+daA a = perform (a >>> arr (\o -> Debug.trace o o))
+
 isType :: ArrowXml a => String -> a XmlTree XmlTree
 isType t = hasAttrValue "typename" (== t) <+> hasAttrValue "profiletypename" (== t) <+> hasAttrValue "type" (== t)
 

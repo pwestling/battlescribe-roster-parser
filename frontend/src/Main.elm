@@ -175,6 +175,15 @@ An example roster created using this tool:
 
 ![Example Roster](assets/example-roster.png "Example Roster")
 
+## In-Game Scripting
+
+Every unit can have a full datasheet brought up by pressing Scripting Button 1 over a model from the unit. 
+Scripting Button 1 is the "1" key on the keypad by default, but you can map it to some other key in the 
+Tabletop Simulator options.
+
+An example datasheet:
+
+![Example Datasheet](assets/ttsui.jpeg "Example Datasheet")
 
 ## Saved Models
 
