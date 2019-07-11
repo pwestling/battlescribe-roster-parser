@@ -118,10 +118,9 @@ end
 function onLoad()
   local name = createName()
   loadUI(name)
-  toggleVisible(name, "Jokers")
 end
 
-visibility = {}
+visibility = {Jokers = true}
 uiLoaded = false
 
 function toggleVisible(id, peekerColor)
@@ -152,13 +151,14 @@ function onScriptingButtonDown(index, peekerColor)
 end
 
 function closeUI(player, val, id)
+  print("Closing " .. createName())
   local peekerColor = player.color
   toggleVisible(createName(), peekerColor)
 end
 
 function createName()
   local guid = self.getGUID()
-  return string.sub(guid .. "-" .. string.gsub(self.getDescription(), "[] \n-?><$%^&*-:?\"[]", ""), 1, 255)
+  return "id:" .. guid
 end
 
 |] where
