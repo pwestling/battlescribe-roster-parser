@@ -100,42 +100,77 @@ computeWidths vals = widths where
 asScript :: T.Text -> T.Text
 asScript uiRaw = [NI.text|
 
-function createUI(uiId)
+function onLoad()
+  Wait.frames(
+    function()
+      print("Loading")
+      self.setVar("bs2tts-model", true)
+      local id = "bs2tts-ui-load"
+      print("Creating UI")
+      loadUI()
+      Timer.destroy(id)
+      Timer.create(
+        {
+          identifier = id,
+          function_name = "loadUIs",
+          parameters = {},
+          delay = 2
+        }
+      )
+    end,
+  2)
+end
+
+function loadUIs()
+  print("Loading UI from var")
+  local uistring = Global.getVar("bs2tts-ui-string")
+  UI.setXml(UI.getXml() .. uistring)
+end
+
+function createUI(uiId, playerColor)
   local guid = self.getGUID()
   local uiString = string.gsub(
                    string.gsub(
+                   string.gsub(
                    string.gsub([[ $ui ]], "thepanelid", uiId),
                                           "thebuttonid", uiId .. "-button"),
-                                          "theclosefunction", guid .. "/closeUI")
+                                          "theclosefunction", guid .. "/closeUI"),
+                                          "thevisibility", playerColor)
   return uiString
 end
 
-function loadUI(name)
-  local totalUI = createUI(name)
-  UI.setXml(UI.getXml() .. totalUI)
+function loadUI()
+  local totalUI = ""
+  for k, color in pairs(Player.getColors()) do
+    print("Creating " .. createName(color))
+    totalUI = totalUI .. createUI(createName(color), color)
+  end
+  local base = ""
+  if Global.getVar("bs2tts-ui-string") then
+    base = Global.getVar("bs2tts-ui-string")
+  end
+  Global.setVar("bs2tts-ui-string", base .. totalUI)
+  print("Appended to UI var")
 end
-
-uiLoaded = false
 
 function onScriptingButtonDown(index, peekerColor)
   local player = Player[peekerColor]
+  local name = createName(peekerColor)
   if index == 1 and player.getHoverObject() and player.getHoverObject().getDescription() == self.getDescription() then
-    local name = createName(peekerColor)
-    if not UI.getAttribute(name, "id") then
-      loadUI(name)
-    end
+    print("Showing " .. name)
     UI.show(name)
   end
 end
 
 function closeUI(player, val, id)
   local peekerColor = player.color
+  print("Closing " .. createName(peekerColor))
   UI.hide(createName(peekerColor))
 end
 
 function createName(color)
   local guid = self.getGUID()
-  return string.sub(guid .. "-" .. color .. "-" .. string.gsub(self.getDescription(), "[] \n-?><$%^&*-:?\"[]", ""), 1, 255)
+  return string.sub(guid .. "-" .. color)
 end
 
 |] where
@@ -156,7 +191,7 @@ escapes = escapeT '"' "&quot;" .
 
 masterPanel :: T.Text -> [Table] -> T.Text
 masterPanel name tables = [NI.text|
-    <Panel id="thepanelid" active="true" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false">
+    <Panel id="thepanelid" visibility="thevisibility" active="false" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false">
     <TableLayout autoCalculateHeight="true" width="$width" childForceExpandWidth="false" childForceExpandHeight="false">
     <Row preferredHeight="40">
     <Text fontSize="25" text="$name" width="$width"/>
