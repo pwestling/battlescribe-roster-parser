@@ -105,8 +105,8 @@ findSelectionsRepresentingModels :: ArrowXml a => a XmlTree XmlTree
 findSelectionsRepresentingModels = deep (hasName "selection") >>>
     filterA (deep (isElem >>> hasName "profile" >>> isType "Unit"))
 
-hasUnitProfileAtLowerLevel :: ArrowXml a => String -> a XmlTree XmlTree
-hasUnitProfileAtLowerLevel topId = this >>> hasAttrValue "id" (/= topId) /> hasName "profiles" /> hasName "profile" >>> isType "Unit"
+hasUnitProfile :: ArrowXml a => a XmlTree XmlTree
+hasUnitProfile = this /> hasName "profiles" /> hasName "profile" >>> isType "Unit"
 
 hasWeaponSelection ::  ArrowXml a => a XmlTree XmlTree
 hasWeaponSelection = this /> hasName "selections" /> hasName "selection" /> hasName "profiles" /> hasName "profile" >>> isType "Weapon"
@@ -118,10 +118,15 @@ hasWeaponSelection = this /> hasName "selections" /> hasName "selection" /> hasN
 
 findModels :: ArrowXml a => String -> a XmlTree XmlTree
 findModels topId = listA (
-      multi (isElem >>> hasName "selection" >>> filterA (isType "model")) <+>
-      multi (isElem >>> hasName "selection" >>> filterA (hasUnitProfileAtLowerLevel topId)) <+>
-      deep (isElem >>> hasName "selection" >>> filterA (isType "model" `orElse` hasWeaponSelection))) >>>
-      arr nub >>> unlistA
+      multi (isSelection >>> filterA (isType "model")) <+>
+      multi (isSelection >>> isNotTop >>> filterA hasUnitProfile) <+>
+      deep (isSelection >>> inheritsSomeProfile (isSelection >>> hasWeaponsAndIsntInsideModel))) >>>
+      arr nub >>> da "Found Models: " >>> unlistA where
+        isSelection = isElem >>> hasName "selection"
+        isNotTop = hasAttrValue "id" (/= topId)
+        hasWeaponsAndIsntInsideModel = isType "model" `orElse` hasWeaponSelection
+        inheritsSomeProfile ar = filterA hasUnitProfile >>> deep (filterA ar)
+
 
 
 getStat :: ArrowXml a => String -> a XmlTree String
@@ -201,11 +206,12 @@ getWeapons modelCount = listA $ profileOfThisModelWithSelectionData "Weapon" (we
 getModelGroup :: ArrowXml a => Stats -> a XmlTree ModelGroup
 getModelGroup defaultStats = proc el -> do
   name <- getAttrValue "name" >>> da "Model Group: " -< el
+  id <- getAttrValue "id" -< el
   count <- getAttrValue "number" >>> arr read  >>> da "Model Count: " -< el
-  stats <- listA getStats `orElse` arr (const [defaultStats])  -< el
+  stats <- listA (getStats `orElse` arr (const defaultStats))  -< el
   weapons <- getWeapons count  -<< el
   abilities <- getAbilities -< el
-  returnA -< ModelGroup (T.pack name) count (listToMaybe stats) weapons abilities
+  returnA -< ModelGroup id (T.pack name) count (listToMaybe stats) weapons abilities
 
 modelsPerRow = 10
 maxRankXDistance = 22
@@ -302,8 +308,11 @@ makeUnit = proc el -> do
   stats <- listA getStats >>> arr listToMaybe >>> arr (fromMaybe zeroStats)  -< el
   models <- listA (findModels selectionId) -<< el
   modelGroups <- mapA (getModelGroup stats) -<< models
+  let groupSelectionIds = map _modelGroupId modelGroups
+  let weaponFinder = if selectionId `elem` groupSelectionIds then arr (const []) else getWeapons 1
+  weapons <- weaponFinder -<< el
   script <- scriptFromXml name -<< el
-  returnA -< \forceName -> Unit name forceName stats modelGroups abilities script
+  returnA -< \forceName -> Unit selectionId name forceName stats modelGroups abilities weapons script
 
 asRoster :: [Value] -> Value
 asRoster values = object ["ObjectStates" .= values]

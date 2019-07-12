@@ -25,11 +25,12 @@ data Ability = Ability{
 } deriving (Show, Eq)
 
 data ModelGroup = ModelGroup {
-    _name       :: T.Text,
-    _modelCount :: Int,
-    _stats      :: Maybe Stats,
-    _weapons    :: [Weapon],
-    _abilities  :: [Ability]
+    _modelGroupId :: String,
+    _name         :: T.Text,
+    _modelCount   :: Int,
+    _stats        :: Maybe Stats,
+    _weapons      :: [Weapon],
+    _abilities    :: [Ability]
 } deriving (Show, Eq)
 
 data Stats = Stats {
@@ -45,11 +46,13 @@ data Stats = Stats {
 } deriving (Show, Eq)
 
 data Unit = Unit {
+    _unitSelectionId  :: String,
     _unitName         :: String,
     _forceName        :: String,
     _unitDefaultStats :: Stats,
     _subGroups        :: [ModelGroup],
     _unitAbilities    :: [Ability],
+    _unitWeapons      :: [Weapon],
     _script           :: String
 } deriving (Show, Eq)
 
