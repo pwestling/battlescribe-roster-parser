@@ -116,12 +116,16 @@ hasWeaponSelection = this /> hasName "selections" /> hasName "selection" /> hasN
 --                        <+>  (this >>> hasAttrValue "id" (/= topId) /> hasName "profiles" /> hasName "profile" >>> isType "Unit")
 --                        <+>
 
+printNameAndId :: ArrowXml a => String -> a XmlTree XmlTree
+printNameAndId header = (this &&& getAttrValue "name" &&& getAttrValue "id")
+                        >>> arr (\(v,(n,i)) -> Debug.trace (header ++ "{ Name => " ++ n ++", Id => " ++ i ++ "}") v)
+
 findModels :: ArrowXml a => String -> a XmlTree XmlTree
 findModels topId = listA (
       multi (isSelection >>> filterA (isType "model")) <+>
       multi (isSelection >>> isNotTop >>> filterA hasUnitProfile) <+>
       deep (isSelection >>> inheritsSomeProfile (isSelection >>> hasWeaponsAndIsntInsideModel))) >>>
-      arr nub >>> da "Found Models: " >>> unlistA where
+      arr nub >>> unlistA >>> printNameAndId "Models: " where
         isSelection = isElem >>> hasName "selection"
         isNotTop = hasAttrValue "id" (/= topId)
         hasWeaponsAndIsntInsideModel = isType "model" `orElse` hasWeaponSelection
@@ -300,6 +304,16 @@ addBase baseData vals = modelsAndBase where
                              setTransform "posY" 1.5) vals
   modelsAndBase = scaledBase : respositionedModels
 
+addUnitWeapon :: [ModelGroup] -> Weapon -> [ModelGroup]
+addUnitWeapon [g] w
+  | wepC < modelC = [g {_weapons = w{ _count = 1} : _weapons g, _modelCount = wepC }, g{_modelCount = remModels}]
+  | wepC `mod` modelC == 0 = [g {_weapons = w{_count = wepsPerModel} : _weapons g}] where
+    wepC = _count w
+    modelC = _modelCount g
+    remModels = modelC - wepC
+    wepsPerModel = wepC `quot` modelC
+addUnitWeapon groups _ = Debug.trace "Multiple groups inheriting unit weapons, ignoring" groups
+
 makeUnit ::  ArrowXml a => a XmlTree (String -> Unit)
 makeUnit = proc el -> do
   name <- getAttrValue "name" >>> da "Unit Name: " -< el
@@ -311,8 +325,9 @@ makeUnit = proc el -> do
   let groupSelectionIds = map _modelGroupId modelGroups
   let weaponFinder = if selectionId `elem` groupSelectionIds then arr (const []) else getWeapons 1
   weapons <- weaponFinder -<< el
+  let finalModelGroups = concatMap (addUnitWeapon modelGroups) weapons
   script <- scriptFromXml name -<< el
-  returnA -< \forceName -> Unit selectionId name forceName stats modelGroups abilities weapons script
+  returnA -< \forceName -> Unit selectionId name forceName stats finalModelGroups abilities weapons script
 
 asRoster :: [Value] -> Value
 asRoster values = object ["ObjectStates" .= values]
