@@ -102,7 +102,7 @@ completeRoster conn baseData id mapping =  do
   units <- retrieveFromRedis conn id
   case units of
     Just result -> do
-      let ttsData = createTTS baseData result mapping
+      let ttsData = createTTS id baseData result mapping
       storeInRedis conn (id <> "-saved-roster") ttsData
       return ttsData
     Nothing -> throwError err400 {
@@ -114,7 +114,7 @@ completeRosterV2 conn baseData id mapping =  do
   units <- retrieveFromRedis conn id
   case units of
     Just result -> do
-      let ttsData = createTTS baseData result mapping
+      let ttsData = createTTS id baseData result mapping
       let numItems = fmap (length . (^. key "ObjectStates"._Array)) (ttsData ^. roster)
       storeInRedis conn (id <> "-saved-roster") ttsData
       return $ ItemCount (fromMaybe 0 numItems)

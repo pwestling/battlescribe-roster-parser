@@ -23,8 +23,8 @@ import           TTSJson
 import           Types
 import           XmlHelper
 
-scriptFromXml :: ArrowXml a => String -> a XmlTree String
-scriptFromXml name = uiFromXML name >>> arr asScript >>> arr T.unpack
+scriptFromXml :: ArrowXml a => T.Text -> String -> String -> a XmlTree String
+scriptFromXml rosterId name id = uiFromXML name >>> arr (asScript rosterId (T.pack id)) >>> arr T.unpack
 
 uiFromXML :: ArrowXml a => String -> a XmlTree T.Text
 uiFromXML name = (listA (deep (hasName "profile")) &&&
@@ -97,16 +97,24 @@ computeWidths vals = widths where
     avg = sum asLineLengths
     widths = map (/ avg) asLineLengths
 
-asScript :: T.Text -> T.Text
-asScript uiRaw = [NI.text|
+descriptionId = "desc-id"
+
+descriptionScript :: T.Text -> T.Text -> T.Text
+descriptionScript rosterId unitId = [NI.text|
+function onLoad()
+  self.setVar("$descriptionId", "$uniqueId")
+end
+|] where
+  uniqueId = rosterId <> ":" <> unitId
+
+asScript :: T.Text -> T.Text -> T.Text -> T.Text
+asScript rosterId unitId uiRaw = [NI.text|
 
 function onLoad()
   Wait.frames(
     function()
-      print("Loading")
       self.setVar("bs2tts-model", true)
       local id = "bs2tts-ui-load"
-      print("Creating UI")
       loadUI()
       Timer.destroy(id)
       Timer.create(
@@ -122,9 +130,10 @@ function onLoad()
 end
 
 function loadUIs()
-  print("Loading UI from var")
+  broadcastToAll("loading UI elements (this may take a while)")
   local uistring = Global.getVar("bs2tts-ui-string")
   UI.setXml(UI.getXml() .. uistring)
+  Global.setVar("bs2tts-ui-string", "")
 end
 
 function createUI(uiId, playerColor)
@@ -139,42 +148,60 @@ function createUI(uiId, playerColor)
   return uiString
 end
 
+isUIOwner = false
+
 function loadUI()
-  local totalUI = ""
-  for k, color in pairs(Player.getColors()) do
-    print("Creating " .. createName(color))
-    totalUI = totalUI .. createUI(createName(color), color)
+  self.setVar("$descriptionId", desc())
+  if not Global.getVar("bs2tts-ui-owner-" .. desc()) then
+    isUIOwner = true
+    local totalUI = ""
+    for k, color in pairs(Player.getColors()) do
+      totalUI = totalUI .. createUI(createName(color), color)
+    end
+    local base = ""
+    if Global.getVar("bs2tts-ui-string") then
+      base = Global.getVar("bs2tts-ui-string")
+    end
+    Global.setVar("bs2tts-ui-string", base .. totalUI)
+    Global.setVar("bs2tts-ui-owner-" .. desc(), self.getGUID())
+    print(self.getGUID() .. " owns " .. desc())
+  else
+    print(self.getGUID() .. " blocked from making " .. desc())
   end
-  local base = ""
-  if Global.getVar("bs2tts-ui-string") then
-    base = Global.getVar("bs2tts-ui-string")
-  end
-  Global.setVar("bs2tts-ui-string", base .. totalUI)
-  print("Appended to UI var")
 end
 
 function onScriptingButtonDown(index, peekerColor)
   local player = Player[peekerColor]
   local name = createName(peekerColor)
-  if index == 1 and player.getHoverObject() and player.getHoverObject().getDescription() == self.getDescription() then
-    print("Showing " .. name)
-    UI.show(name)
+  if isUIOwner and index == 1 and player.getHoverObject()
+                and player.getHoverObject().getVar("$descriptionId") == desc() then
+      UI.show(name)
+  end
+end
+
+function onDestroy()
+  if isUIOwner then
+    Global.setVar("bs2tts-ui-owner-" .. desc(), nil)
   end
 end
 
 function closeUI(player, val, id)
   local peekerColor = player.color
-  print("Closing " .. createName(peekerColor))
   UI.hide(createName(peekerColor))
+end
+
+function desc()
+  return "$uniqueId"
 end
 
 function createName(color)
   local guid = self.getGUID()
-  return string.sub(guid .. "-" .. color)
+  return guid .. "-" .. color
 end
 
 |] where
     ui = uiRaw
+    uniqueId = rosterId <> ":" <> unitId
 
 escape :: Char -> String -> String -> String
 escape target replace (c : s) = if c == target then replace ++ escape target replace s else c : escape target replace s

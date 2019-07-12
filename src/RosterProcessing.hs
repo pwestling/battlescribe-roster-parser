@@ -245,9 +245,9 @@ assignPositionsToUnits pos@Pos{..} (u : us) = models : assignPositionsToUnits ne
   nextZ = if rawNextX > maxRankXDistance then posZ + 6 else posZ
   nextPos = Pos nextX posY nextZ
 
-retrieveAndModifyUnitJSON :: ModelFinder -> [Unit] -> [[Either String [Value]]]
-retrieveAndModifyUnitJSON templateMap units = result where
-  retrieve unit = retrieveAndModifyModelGroupJSON templateMap unit (unit ^. subGroups)
+retrieveAndModifyUnitJSON :: T.Text -> ModelFinder -> [Unit] -> [[Either String [Value]]]
+retrieveAndModifyUnitJSON rosterId templateMap units = result where
+  retrieve unit = retrieveAndModifyModelGroupJSON rosterId templateMap unit (unit ^. subGroups)
   result = map retrieve units
 
 orElseM :: Maybe a -> Maybe a -> Maybe a
@@ -258,8 +258,8 @@ mapRight :: (b -> c) -> Either a b -> Either a c
 mapRight f (Left t)  = Left t
 mapRight f (Right t) = Right (f t)
 
-retrieveAndModifySingleGroupJSON :: ModelFinder -> Unit -> ModelGroup -> [Either String [Value]]
-retrieveAndModifySingleGroupJSON modelFinder unit modelGroup = [result] where
+retrieveAndModifySingleGroupJSON :: T.Text -> ModelFinder -> Unit -> ModelGroup -> [Either String [Value]]
+retrieveAndModifySingleGroupJSON rosterId modelFinder unit modelGroup = [result] where
    modelName =  modelGroup ^. name
    uName = unit ^. unitName
    modelBaseJson = modelFinder unit modelGroup
@@ -276,13 +276,14 @@ retrieveAndModifySingleGroupJSON modelFinder unit modelGroup = [result] where
    modelSet = do
        json <- modelBaseJson
        let modifiedJson = (setDescription description . setName nameWithWounds) json
-       let scriptedJson = setScript (T.pack (unit ^. script)) modifiedJson
-       return $ scriptedJson : replicate nonScriptedModelCount modifiedJson
+       let masterScript = setScript (T.pack (unit ^. script)) modifiedJson
+       let childScript = setScript (descriptionScript rosterId (T.pack (unit ^. unitSelectionId))) modifiedJson
+       return $ masterScript : replicate nonScriptedModelCount childScript
    result = maybe (Left (uName ++ " - " ++ T.unpack modelName)) Right modelSet
 
-retrieveAndModifyModelGroupJSON :: ModelFinder -> Unit -> [ModelGroup] -> [Either String [Value]]
-retrieveAndModifyModelGroupJSON modelFinder unit groups = result where
-  results = map (retrieveAndModifySingleGroupJSON modelFinder unit) groups
+retrieveAndModifyModelGroupJSON :: T.Text -> ModelFinder -> Unit -> [ModelGroup] -> [Either String [Value]]
+retrieveAndModifyModelGroupJSON rosterId modelFinder unit groups = result where
+  results = map (retrieveAndModifySingleGroupJSON rosterId modelFinder unit) groups
   result = concat results
 
 zeroPos :: Pos
@@ -318,8 +319,8 @@ addUnitWeapon w [g]
     wepsPerModel = wepC `quot` modelC
 addUnitWeapon _ groups = Debug.trace "Multiple groups inheriting unit weapons, ignoring" groups
 
-makeUnit ::  ArrowXml a => a XmlTree (String -> Unit)
-makeUnit = proc el -> do
+makeUnit ::  ArrowXml a => T.Text -> a XmlTree (String -> Unit)
+makeUnit rosterId = proc el -> do
   name <- getAttrValue "name" >>> da "Unit Name: " -< el
   selectionId <- getAttrValue "id" -< el
   abilities <- getAbilities -< el
@@ -330,15 +331,15 @@ makeUnit = proc el -> do
   let weaponFinder = if selectionId `elem` groupSelectionIds then arr (const []) else getWeapons 1
   weapons <- weaponFinder -<< el
   let finalModelGroups = addUnitWeapons modelGroups weapons
-  script <- scriptFromXml name -<< el
+  script <- scriptFromXml rosterId name selectionId -<< el
   returnA -< \forceName -> Unit selectionId name forceName stats finalModelGroups abilities weapons script
 
 asRoster :: [Value] -> Value
 asRoster values = object ["ObjectStates" .= values]
 
-process :: ModelFinder -> Value -> [Unit] -> RosterTranslation
-process modelData baseData units = result where
-  unitsAndErrors = retrieveAndModifyUnitJSON modelData units
+process :: T.Text -> ModelFinder -> Value -> [Unit] -> RosterTranslation
+process rosterId modelData baseData units = result where
+  unitsAndErrors = retrieveAndModifyUnitJSON rosterId modelData units
   validUnits = filter (/= []) (fmap (join . rights) unitsAndErrors)
   invalidUnits = filter (/= []) $ (lefts . join) unitsAndErrors
   positioned = assignPositionsToUnits zeroPos validUnits
@@ -365,13 +366,13 @@ generateRosterNames rosterId units = RosterNamesRequest rosterId descriptors whe
 processRoster :: String -> T.Text -> IO [Unit]
 processRoster xml rosterId = do
   let doc = readString [withParseHTML yes, withWarnings no] xml
-  runX $ doc >>> withForceName (findSelectionsRepresentingModels >>> makeUnit)
+  runX $ doc >>> withForceName (findSelectionsRepresentingModels >>> makeUnit rosterId)
 
 assignmentToPair :: ModelAssignment -> (ModelDescriptor, Value)
 assignmentToPair (ModelAssignment desc val) = (desc, val)
 
-createTTS :: BaseData -> [Unit] -> RosterNamesResponse -> RosterTranslation
-createTTS baseData units (RosterNamesResponse assignments) = result where
+createTTS :: T.Text -> BaseData -> [Unit] -> RosterNamesResponse -> RosterTranslation
+createTTS rosterId baseData units (RosterNamesResponse assignments) = result where
   map = HM.fromList (fmap assignmentToPair assignments)
   mf unit modelGroup = HM.lookup (createModelDescriptor unit modelGroup) map
-  result = process mf baseData units
+  result = process rosterId mf baseData units
