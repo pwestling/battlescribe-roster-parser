@@ -304,15 +304,19 @@ addBase baseData vals = modelsAndBase where
                              setTransform "posY" 1.5) vals
   modelsAndBase = scaledBase : respositionedModels
 
-addUnitWeapon :: [ModelGroup] -> Weapon -> [ModelGroup]
-addUnitWeapon [g] w
+addUnitWeapons :: [ModelGroup] -> [Weapon] -> [ModelGroup]
+addUnitWeapons g [] = g
+addUnitWeapons g w  = foldl' (.) id (map addUnitWeapon w) g
+
+addUnitWeapon :: Weapon -> [ModelGroup] -> [ModelGroup]
+addUnitWeapon w [g]
   | wepC < modelC = [g {_weapons = w{ _count = 1} : _weapons g, _modelCount = wepC }, g{_modelCount = remModels}]
   | wepC `mod` modelC == 0 = [g {_weapons = w{_count = wepsPerModel} : _weapons g}] where
     wepC = _count w
     modelC = _modelCount g
     remModels = modelC - wepC
     wepsPerModel = wepC `quot` modelC
-addUnitWeapon groups _ = Debug.trace "Multiple groups inheriting unit weapons, ignoring" groups
+addUnitWeapon _ groups = Debug.trace "Multiple groups inheriting unit weapons, ignoring" groups
 
 makeUnit ::  ArrowXml a => a XmlTree (String -> Unit)
 makeUnit = proc el -> do
@@ -325,7 +329,7 @@ makeUnit = proc el -> do
   let groupSelectionIds = map _modelGroupId modelGroups
   let weaponFinder = if selectionId `elem` groupSelectionIds then arr (const []) else getWeapons 1
   weapons <- weaponFinder -<< el
-  let finalModelGroups = concatMap (addUnitWeapon modelGroups) weapons
+  let finalModelGroups = addUnitWeapons modelGroups weapons
   script <- scriptFromXml name -<< el
   returnA -< \forceName -> Unit selectionId name forceName stats finalModelGroups abilities weapons script
 
