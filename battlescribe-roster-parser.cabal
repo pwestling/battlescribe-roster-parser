@@ -23,5 +23,6 @@ executable battlescribe-roster-parser
                        cryptohash-md5, hexstring, servant-server, servant, 
                        http-api-data, wai, warp, wai-logger, zip-archive, 
                        servant-multipart, hedis, mtl, wai-cors, servant-auth, 
-                       servant-auth-server, hashable, uuid, either, wai-extra,uri-encode
+                       servant-auth-server, hashable, uuid, either, wai-extra,
+                       uri-encode, ilist
   other-modules:       TTSJson, Types, RosterProcessing, XmlHelper, TTSUI
