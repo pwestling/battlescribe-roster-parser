@@ -143,3 +143,9 @@ newtype ItemCount = ItemCount {
 }
 
 deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''ItemCount
+
+data ScriptOptions = ScriptOptions {
+    shouldAddScripts :: Bool,
+    uiWidth          :: Maybe Int,
+    uiHeight         :: Maybe Int
+}

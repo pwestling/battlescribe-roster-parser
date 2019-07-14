@@ -319,8 +319,8 @@ addUnitWeapon w [g]
     wepsPerModel = wepC `quot` modelC
 addUnitWeapon _ groups = Debug.trace "Multiple groups inheriting unit weapons, ignoring" groups
 
-makeUnit ::  ArrowXml a => T.Text -> a XmlTree (String -> Unit)
-makeUnit rosterId = proc el -> do
+makeUnit ::  ArrowXml a => ScriptOptions -> T.Text -> a XmlTree (String -> Unit)
+makeUnit options rosterId = proc el -> do
   name <- getAttrValue "name" >>> da "Unit Name: " -< el
   selectionId <- getAttrValue "id" -< el
   abilities <- getAbilities -< el
@@ -331,7 +331,7 @@ makeUnit rosterId = proc el -> do
   let weaponFinder = if selectionId `elem` groupSelectionIds then arr (const []) else getWeapons 1
   weapons <- weaponFinder -<< el
   let finalModelGroups = addUnitWeapons modelGroups weapons
-  script <- scriptFromXml rosterId name selectionId -<< el
+  script <- scriptFromXml options rosterId name selectionId -<< el
   returnA -< \forceName -> Unit selectionId name forceName stats finalModelGroups abilities weapons script
 
 asRoster :: [Value] -> Value
@@ -363,10 +363,10 @@ generateRosterNames :: T.Text -> [Unit] -> RosterNamesRequest
 generateRosterNames rosterId units = RosterNamesRequest rosterId descriptors where
   descriptors = nub $ concatMap createModelDescriptors units
 
-processRoster :: String -> T.Text -> IO [Unit]
-processRoster xml rosterId = do
+processRoster :: ScriptOptions -> String -> T.Text -> IO [Unit]
+processRoster options xml rosterId = do
   let doc = readString [withParseHTML yes, withWarnings no] xml
-  runX $ doc >>> withForceName (findSelectionsRepresentingModels >>> makeUnit rosterId)
+  runX $ doc >>> withForceName (findSelectionsRepresentingModels >>> makeUnit options rosterId)
 
 assignmentToPair :: ModelAssignment -> (ModelDescriptor, Value)
 assignmentToPair (ModelAssignment desc val) = (desc, val)

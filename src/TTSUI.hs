@@ -23,11 +23,15 @@ import           TTSJson
 import           Types
 import           XmlHelper
 
-scriptFromXml :: ArrowXml a => T.Text -> String -> String -> a XmlTree String
-scriptFromXml rosterId name id = uiFromXML name >>> arr (asScript rosterId (T.pack id)) >>> arr T.unpack
+scriptFromXml :: ArrowXml a => ScriptOptions -> T.Text -> String -> String -> a XmlTree String
+scriptFromXml options rosterId name id =
+  if shouldAddScripts options then
+    uiFromXML options name >>> arr (asScript options rosterId (T.pack id)) >>> arr T.unpack
+  else
+    arr (const "")
 
-uiFromXML :: ArrowXml a => String -> a XmlTree T.Text
-uiFromXML name = (listA (deep (hasName "profile")) &&&
+uiFromXML :: ArrowXml a => ScriptOptions -> String -> a XmlTree T.Text
+uiFromXML options name = (listA (deep (hasName "profile")) &&&
                   (listA (deep (hasName "category")) &&&
                   listA (deep (hasName "cost"))))  >>> profilesToXML name
 
@@ -107,8 +111,8 @@ end
 |] where
   uniqueId = rosterId <> ":" <> unitId
 
-asScript :: T.Text -> T.Text -> T.Text -> T.Text
-asScript rosterId unitId uiRaw = [NI.text|
+asScript :: ScriptOptions -> T.Text -> T.Text -> T.Text -> T.Text
+asScript options rosterId unitId uiRaw = [NI.text|
 
 function onLoad()
   Wait.frames(

@@ -44,7 +44,9 @@ import           Types
 version :: Version
 version = Version "1.4"
 
-type CreateRosterAPI = "roster" :> MultipartForm Mem (MultipartData Mem) :> Post '[JSON] RosterId
+type CreateRosterAPI = "roster"
+                       :> QueryFlag "addScripts" :> QueryParam "uiWidth" Int :> QueryParam "uiHeight" Int
+                       :> MultipartForm Mem (MultipartData Mem) :> Post '[JSON] RosterId
 type GetRosterAPI = "roster" :> Capture "id" T.Text :> "names" :> Get '[JSON] RosterNamesRequest
 type CompleteRosterAPI = "roster" :> Capture "id" T.Text :> ReqBody '[JSON, PlainText, OctetStream] RosterNamesResponse :> Put '[JSON] RosterTranslation
 type CompleteRosterAPIV2 = "v2" :> "roster" :> Capture "id" T.Text :> ReqBody '[JSON, PlainText, OctetStream] RosterNamesResponse :> Put '[JSON] ItemCount
@@ -74,14 +76,14 @@ getUploadZipContents multipartData = do
   onlyEntry <- headMay zipEntries
   return (fromEntry onlyEntry)
 
-createRoster :: Connection -> MultipartData Mem -> Handler RosterId
-createRoster redisConn multipartData = do
+createRoster :: Connection -> Bool -> Maybe Int -> Maybe Int -> MultipartData Mem -> Handler RosterId
+createRoster redisConn addScripts uiWidth uiHeight multipartData = do
   let contents = C8.unpack <$> getUploadZipContents multipartData
   fullUUID <- liftIO nextRandom
   let id = T.take 8 $ toText fullUUID
   case contents of
     Just xml -> do
-      unitData <- liftIO $ processRoster xml id
+      unitData <- liftIO $ processRoster (ScriptOptions addScripts uiWidth uiHeight) xml id
       storeInRedis redisConn id unitData
       return $ RosterId id
     Nothing -> throwError err400 {
