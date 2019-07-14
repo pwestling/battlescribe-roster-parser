@@ -279,7 +279,7 @@ tableToXml tableWidth Table{..} = [NI.text|
     headHeight = numToT headerHeight
     tSize = numToT textSize
     htSize = numToT headerTextSize
-    headerText = tRow htSize "Bold" headHeight header
+    headerText = tRow htSize "Bold" headHeight (map escapes header)
     rowsAndHeights = zip rowHeights rows
     bodyText = mconcat $ map (\(height, row) -> (tRow tSize "Normal" (numToT height) . map escapes) row) rowsAndHeights
 
