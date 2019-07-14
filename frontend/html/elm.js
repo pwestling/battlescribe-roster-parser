@@ -4821,6 +4821,7 @@ function _File_toUrl(blob)
 var author$project$Frontend$NavbarMsg = function (a) {
 	return {$: 'NavbarMsg', a: a};
 };
+var elm$core$Basics$True = {$: 'True'};
 var elm$core$Maybe$Nothing = {$: 'Nothing'};
 var elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var elm$core$Array$foldr = F3(
@@ -4933,7 +4934,6 @@ var elm$core$Maybe$Just = function (a) {
 	return {$: 'Just', a: a};
 };
 var elm$core$Basics$False = {$: 'False'};
-var elm$core$Basics$True = {$: 'True'};
 var elm$core$Result$isOk = function (result) {
 	if (result.$ === 'Ok') {
 		return true;
@@ -5653,7 +5653,7 @@ var author$project$Frontend$init = function () {
 	var navbarState = _n0.a;
 	var navbarCmd = _n0.b;
 	return _Utils_Tuple2(
-		{message: elm$core$Maybe$Nothing, navbarState: navbarState, rosterCode: elm$core$Maybe$Nothing},
+		{addScript: true, message: elm$core$Maybe$Nothing, navbarState: navbarState, rosterCode: elm$core$Maybe$Nothing, uiHeight: '450', uiWidth: '700'},
 		navbarCmd);
 }();
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5664,6 +5664,20 @@ var author$project$Frontend$subs = function (model) {
 var author$project$Frontend$GotTTSJson = function (a) {
 	return {$: 'GotTTSJson', a: a};
 };
+var author$project$Frontend$asUrl = F2(
+	function (base, params) {
+		return base + ('?' + A2(
+			elm$core$String$join,
+			'&',
+			A2(
+				elm$core$List$map,
+				function (_n0) {
+					var s1 = _n0.a;
+					var s2 = _n0.b;
+					return s1 + ('=' + s2);
+				},
+				params)));
+	});
 var elm$json$Json$Decode$field = _Json_decodeField;
 var elm$json$Json$Decode$string = _Json_decodeString;
 var author$project$Frontend$rosterDecoder = A2(
@@ -5672,6 +5686,7 @@ var author$project$Frontend$rosterDecoder = A2(
 		return {id: id};
 	},
 	A2(elm$json$Json$Decode$field, 'id', elm$json$Json$Decode$string));
+var elm$core$Basics$not = _Basics_not;
 var elm$core$Debug$toString = _Debug_toString;
 var elm$core$List$head = function (list) {
 	if (list.b) {
@@ -6515,7 +6530,17 @@ var author$project$Frontend$update = F2(
 											A2(elm$http$Http$filePart, 'roster', file)
 										])),
 								expect: A2(elm$http$Http$expectJson, author$project$Frontend$GotTTSJson, author$project$Frontend$rosterDecoder),
-								url: 'https://backend.battlescribe2tts.net/roster'
+								url: A2(
+									author$project$Frontend$asUrl,
+									'http://localhost:8080/roster',
+									_List_fromArray(
+										[
+											_Utils_Tuple2(
+											'addScripts',
+											model.addScript ? 'true' : 'false'),
+											_Utils_Tuple2('uiWidth', model.uiWidth),
+											_Utils_Tuple2('uiHeight', model.uiHeight)
+										]))
 							}));
 				} else {
 					return _Utils_Tuple2(
@@ -6549,8 +6574,28 @@ var author$project$Frontend$update = F2(
 							}),
 						elm$core$Platform$Cmd$none);
 				}
-			default:
+			case 'NoOp':
 				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+			case 'ToggleScripting':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{addScript: !model.addScript}),
+					elm$core$Platform$Cmd$none);
+			case 'SetUiHeight':
+				var y = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{uiHeight: y}),
+					elm$core$Platform$Cmd$none);
+			default:
+				var x = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{uiWidth: x}),
+					elm$core$Platform$Cmd$none);
 		}
 	});
 var elm$html$Html$div = _VirtualDom_node('div');
@@ -6574,7 +6619,6 @@ var elm$core$Basics$composeL = F3(
 		return g(
 			f(x));
 	});
-var elm$core$Basics$not = _Basics_not;
 var elm$core$List$any = F2(
 	function (isOkay, list) {
 		any:
@@ -11573,9 +11617,55 @@ var author$project$Frontend$navbar = function (model) {
 			rundis$elm_bootstrap$Bootstrap$Navbar$withAnimation(
 				rundis$elm_bootstrap$Bootstrap$Navbar$config(author$project$Frontend$NavbarMsg))));
 };
+var author$project$Frontend$SetUiHeight = function (a) {
+	return {$: 'SetUiHeight', a: a};
+};
+var author$project$Frontend$SetUiWidth = function (a) {
+	return {$: 'SetUiWidth', a: a};
+};
+var author$project$Frontend$ToggleScripting = {$: 'ToggleScripting'};
 var author$project$Frontend$UploadRoster = function (a) {
 	return {$: 'UploadRoster', a: a};
 };
+var elm$html$Html$input = _VirtualDom_node('input');
+var elm$html$Html$label = _VirtualDom_node('label');
+var elm$json$Json$Encode$bool = _Json_wrap;
+var elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$bool(bool));
+	});
+var elm$html$Html$Attributes$checked = elm$html$Html$Attributes$boolProperty('checked');
+var elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		elm$html$Html$Events$on,
+		'click',
+		elm$json$Json$Decode$succeed(msg));
+};
+var author$project$Frontend$checkbox = F3(
+	function (msg, name, isChecked) {
+		return A2(
+			elm$html$Html$label,
+			_List_fromArray(
+				[
+					A2(elm$html$Html$Attributes$style, 'padding', '0.1em')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$input,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$type_('checkbox'),
+							elm$html$Html$Events$onClick(msg),
+							elm$html$Html$Attributes$checked(isChecked)
+						]),
+					_List_Nil),
+					elm$html$Html$text(name)
+				]));
+	});
 var elm$time$Time$Posix = function (a) {
 	return {$: 'Posix', a: a};
 };
@@ -11587,14 +11677,54 @@ var author$project$Frontend$filesDecoder = A2(
 	_List_fromArray(
 		['target', 'files']),
 	elm$json$Json$Decode$list(elm$file$File$decoder));
-var elm$html$Html$input = _VirtualDom_node('input');
-var elm$json$Json$Encode$bool = _Json_wrap;
-var elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
+var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
+var elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
 		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$bool(bool));
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var elm$html$Html$Events$targetValue = A2(
+	elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	elm$json$Json$Decode$string);
+var elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			elm$json$Json$Decode$map,
+			elm$html$Html$Events$alwaysStop,
+			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
+};
+var author$project$Frontend$textinput = F3(
+	function (msg, name, currentValue) {
+		return A2(
+			elm$html$Html$label,
+			_List_fromArray(
+				[
+					A2(elm$html$Html$Attributes$style, 'padding', '0.1em')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$input,
+					_List_fromArray(
+						[
+							elm$html$Html$Events$onInput(msg),
+							elm$html$Html$Attributes$value(currentValue)
+						]),
+					_List_Nil),
+					elm$html$Html$text(name)
+				]));
 	});
 var elm$html$Html$Attributes$multiple = elm$html$Html$Attributes$boolProperty('multiple');
 var author$project$Frontend$uploadPage = function (model) {
@@ -11634,7 +11764,50 @@ var author$project$Frontend$uploadPage = function (model) {
 								'change',
 								A2(elm$json$Json$Decode$map, author$project$Frontend$UploadRoster, author$project$Frontend$filesDecoder))
 							]),
-						_List_Nil)
+						_List_Nil),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'display', 'block'),
+								A2(elm$html$Html$Attributes$style, 'float', 'right'),
+								A2(elm$html$Html$Attributes$style, 'font-size', '0.7em'),
+								A2(elm$html$Html$Attributes$style, 'background-color', 'rgb(50, 115, 115);')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										A2(elm$html$Html$Attributes$style, 'font-size', '1.4em')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Advanced Options')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A3(author$project$Frontend$checkbox, author$project$Frontend$ToggleScripting, 'Enable Model Scripting', model.addScript)
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A3(author$project$Frontend$textinput, author$project$Frontend$SetUiWidth, 'UI Width', model.uiWidth)
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A3(author$project$Frontend$textinput, author$project$Frontend$SetUiHeight, 'UI Height', model.uiHeight)
+									]))
+							]))
 					])),
 				function () {
 				var _n0 = model.rosterCode;

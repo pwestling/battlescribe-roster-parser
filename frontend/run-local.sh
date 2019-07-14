@@ -3,7 +3,7 @@
 
 set -euo pipefail
 
-PORT=${1:-"8080"}
+PORT=${1:-"8081"}
 
 elm make src/Main.elm --output html/elm.js
 

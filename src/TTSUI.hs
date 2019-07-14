@@ -114,7 +114,6 @@ end
 
 asScript :: ScriptOptions -> T.Text -> T.Text -> (T.Text, [Table]) -> T.Text
 asScript options rosterId unitId (name, tables) = [NI.text|
-
 function onLoad()
   Wait.frames(
     function()
@@ -135,48 +134,56 @@ function onLoad()
 end
 
 function loadUIs()
-  broadcastToAll("Loading UI elements (TTS may be slow for a bit...)")
+  broadcastToAll("loading UI elements (this may take a while)")
   local uistring = Global.getVar("bs2tts-ui-string")
   UI.setXml(UI.getXml() .. uistring)
   Global.setVar("bs2tts-ui-string", "")
 end
 
-function doSubs(s, uiId, guid, playerColor)
-  return string.gsub(
-    string.gsub(
-    string.gsub(s, "thepanelid", uiId ),
-                           "theguid", guid),
-                           "thecolor", playerColor)
-end
-
-mode = 0
-
 function createUI(uiId, playerColor)
   local guid = self.getGUID()
-  local uiStringLarge = doSubs([[ $uiLarge ]], uiId .. "-1", guid, playerColor)
-  local uiStringSmall = doSubs([[ $uiSmall ]], uiId .. "-2", guid, playerColor)
-  local uiStringTiny = doSubs([[ $uiTiny ]], uiId .. "-3", guid, playerColor)
-  mode = 1
-  return uiStringLarge .. uiStringSmall .. uiStringTiny
+  local uiString = string.gsub(
+                   string.gsub(
+                   string.gsub([[ $ui ]], "thepanelid", uiId),
+                                          "theguid", guid),
+                                          "thevisibility", playerColor)
+  return uiString
 end
 
+isUIOwner = false
+
 function loadUI()
-  local totalUI = ""
-  for k, color in pairs(Player.getAvailableColors()) do
-    totalUI = totalUI .. createUI(createName(color), color)
+  self.setVar("$descriptionId", desc())
+  if not Global.getVar("bs2tts-ui-owner-" .. desc()) then
+    isUIOwner = true
+    local totalUI = ""
+    for k, color in pairs(Player.getColors()) do
+      totalUI = totalUI .. createUI(createName(color), color)
+    end
+    local base = ""
+    if Global.getVar("bs2tts-ui-string") then
+      base = Global.getVar("bs2tts-ui-string")
+    end
+    Global.setVar("bs2tts-ui-string", base .. totalUI)
+    Global.setVar("bs2tts-ui-owner-" .. desc(), self.getGUID())
+    print(self.getGUID() .. " owns " .. desc())
+  else
+    print(self.getGUID() .. " blocked from making " .. desc())
   end
-  local base = ""
-  if Global.getVar("bs2tts-ui-string") then
-    base = Global.getVar("bs2tts-ui-string")
-  end
-  Global.setVar("bs2tts-ui-string", base .. totalUI)
 end
 
 function onScriptingButtonDown(index, peekerColor)
   local player = Player[peekerColor]
   local name = createName(peekerColor)
-  if index == 1 and player.getHoverObject() and player.getHoverObject().getDescription() == self.getDescription() then
-    UI.show(name)
+  if isUIOwner and index == 1 and player.getHoverObject()
+                and player.getHoverObject().getVar("$descriptionId") == desc() then
+      UI.show(name)
+  end
+end
+
+function onDestroy()
+  if isUIOwner then
+    Global.setVar("bs2tts-ui-owner-" .. desc(), nil)
   end
 end
 
@@ -185,40 +192,18 @@ function closeUI(player, val, id)
   UI.hide(createName(peekerColor))
 end
 
-function grow(player, val, id)
-  local peekerColor = player.color
-  local panelId = createName(peekerColor)
-  print("Grow "..panelId)
-  UI.hide(panelId)
-  mode = math.max(1, mode - 1)
-  panelId = createName(peekerColor)
-  UI.show(panelId)
-end
-
-function shrink(player, val, id)
-  local peekerColor = player.color
-  local panelId = createName(peekerColor)
-  print("Shrink "..panelId)
-  UI.hide(panelId)
-  mode = math.min(3, mode + 1)
-  panelId = createName(peekerColor)
-  UI.show(panelId)
+function desc()
+  return "$uniqueId"
 end
 
 function createName(color)
   local guid = self.getGUID()
-  local modeS = ""
-  if mode > 0 then
-    modeS = "-"..tostring(mode)
-  end
-  return (guid .. "-" .. color .. modeS)
+  return guid .. "-" .. color
 end
 
 |] where
-    uiLarge = masterPanel name 900 600 40 tables
-    uiSmall = masterPanel name 600 400 20 tables
-    uiTiny = masterPanel name 400 300 20 tables
-
+    ui = masterPanel name (maybe 700 fromIntegral (uiWidth options)) (maybe 450 fromIntegral (uiHeight options)) 30 tables
+    uniqueId = rosterId <> ":" <> unitId
 
 escape :: Char -> String -> String -> String
 escape target replace (c : s) = if c == target then replace ++ escape target replace s else c : escape target replace s
@@ -228,20 +213,19 @@ escapeT :: Char -> String -> T.Text -> T.Text
 escapeT c s = T.pack . escape c s . T.unpack
 
 escapes :: T.Text -> T.Text
-escapes = escapeT '"' "&quot;" .
-  escapeT '<' "&lt;" . escapeT '>' "&gt;"
+escapes = escapeT '"' "&quot;"
+  . escapeT '<' "&lt;" . escapeT '>' "&gt;"
   . escapeT '\'' "&apos;"
   . escapeT '\n' "&#xD;&#xA;"
+  . escapeT '&' "&amp;"
 
 masterPanel :: T.Text -> Integer -> Integer -> Integer -> [Table] -> T.Text
 masterPanel name widthN heightN controlHeightN tables = [NI.text|
-    <Panel id="thepanelid" visibility="thecolor" active="false" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false">
+    <Panel id="thepanelid" visibility="thevisibility" active="false" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false">
     <TableLayout autoCalculateHeight="true" width="$width" childForceExpandWidth="false" childForceExpandHeight="false">
     <Row preferredHeight="$controlHeight">
     <Text resizeTextForBestFit="true" resizeTextMinSize="6" resizeTextMaxSize="30" fontSize="25" rectAlignment="MiddleCenter" text="$name" width="$width"/>
     <HorizontalLayout rectAlignment="UpperRight" height="$controlHeight" width="$buttonPanelWidth">
-    <Button id="theguid-grow" class="topButtons"  color="#990000" textColor="#FFFFFF" text="+" height="$controlHeight" width="$controlHeight" onClick="theguid/grow" />
-    <Button id="theguid-shrink" class="topButtons"  color="#990000" textColor="#FFFFFF" text="-" height="$controlHeight" width="$controlHeight" onClick="theguid/shrink" />
     <Button id="theguid-close" class="topButtons"  color="#990000" textColor="#FFFFFF" text="X" height="$controlHeight" width="$controlHeight" onClick="theguid/closeUI" />
     </HorizontalLayout>
     </Row>
@@ -256,7 +240,7 @@ masterPanel name widthN heightN controlHeightN tables = [NI.text|
     </Panel> |] where
         height = numToT heightN
         controlHeight = numToT controlHeightN
-        buttonPanelWidthN = controlHeightN * 3
+        buttonPanelWidthN = controlHeightN
         buttonPanelWidth = numToT buttonPanelWidthN
         scrollHeight = numToT (heightN - controlHeightN)
         width = numToT widthN
@@ -305,7 +289,7 @@ tableToXml tableWidth index Table{..} = [NI.text|
     headHeight = numToT headerHeight
     tSize = numToT textSize
     htSize = numToT headerTextSize
-    headerText = tRow (asId "header" 0) htSize "Bold" headHeight header
+    headerText = tRow (asId "header" 0) htSize "Bold" headHeight (map escapes header)
     rowsAndHeights = zip rowHeights rows
     bodyText = mconcat $ imap (\index (height, row) -> (tRow (asId "row" index) tSize "Normal" (numToT height) . map escapes) row) rowsAndHeights
 

@@ -37,11 +37,20 @@ type Msg
     = NoOp
     | UploadRoster (List File)
     | GotTTSJson (Result Error RosterId)
+    | ToggleScripting
+    | SetUiWidth String
+    | SetUiHeight String
     | NavbarMsg Navbar.State
 
 
 type alias Model =
-    { rosterCode : Maybe String, navbarState : Navbar.State, message : Maybe String }
+    { rosterCode : Maybe String
+    , navbarState : Navbar.State
+    , message : Maybe String
+    , addScript : Bool
+    , uiWidth : String
+    , uiHeight : String
+    }
 
 
 init : ( Model, Cmd Msg )
@@ -50,12 +59,25 @@ init =
         ( navbarState, navbarCmd ) =
             Navbar.initialState NavbarMsg
     in
-    ( { rosterCode = Nothing, navbarState = navbarState, message = Nothing }, navbarCmd )
+    ( { rosterCode = Nothing
+      , navbarState = navbarState
+      , message = Nothing
+      , addScript = True
+      , uiWidth = "700"
+      , uiHeight = "450"
+      }
+    , navbarCmd
+    )
 
 
 subs : Model -> Sub Msg
 subs model =
     Sub.none
+
+
+asUrl : String -> List ( String, String ) -> String
+asUrl base params =
+    base ++ "?" ++ String.join "&" (List.map (\( s1, s2 ) -> s1 ++ "=" ++ s2) params)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -69,7 +91,19 @@ update msg model =
                 Just file ->
                     ( { model | message = Just "Uploading..." }
                     , Http.post
-                        { url = "https://backend.battlescribe2tts.net/roster"
+                        { url =
+                            asUrl
+                                "http://localhost:8080/roster"
+                                [ ( "addScripts"
+                                  , if model.addScript then
+                                        "true"
+
+                                    else
+                                        "false"
+                                  )
+                                , ( "uiWidth", model.uiWidth )
+                                , ( "uiHeight", model.uiHeight )
+                                ]
                         , body = multipartBody [ filePart "roster" file ]
                         , expect = Http.expectJson GotTTSJson rosterDecoder
                         }
@@ -90,6 +124,15 @@ update msg model =
 
         NoOp ->
             ( model, Cmd.none )
+
+        ToggleScripting ->
+            ( { model | addScript = not model.addScript }, Cmd.none )
+
+        SetUiHeight y ->
+            ( { model | uiHeight = y }, Cmd.none )
+
+        SetUiWidth x ->
+            ( { model | uiWidth = x }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -136,6 +179,12 @@ uploadPage model =
                 , on "change" (D.map UploadRoster filesDecoder)
                 ]
                 []
+            , div [ style "display" "block", style "float" "right", style "font-size" "0.7em", style "background-color" "rgb(50, 115, 115);" ]
+                [ div [ style "font-size" "1.4em" ] [ text "Advanced Options" ]
+                , div [] [ checkbox ToggleScripting "Enable Model Scripting" model.addScript ]
+                , div [] [ textinput SetUiWidth "UI Width" model.uiWidth ]
+                , div [] [ textinput SetUiHeight "UI Height" model.uiHeight ]
+                ]
             ]
         , case model.rosterCode of
             Just id ->
@@ -198,6 +247,24 @@ If you have issues trying to use this tool, please create an issue on
 [github](https://github.com/pwestling/battlescribe-roster-parser/issues). Please note that 
 none of this is supported by the Battlescribe or Tabletop Simulator teams in any way, so don't complain to them!
         """
+
+
+checkbox : msg -> String -> Bool -> Html msg
+checkbox msg name isChecked =
+    label
+        [ style "padding" "0.1em" ]
+        [ input [ type_ "checkbox", onClick msg, checked isChecked ] []
+        , text name
+        ]
+
+
+textinput : (String -> msg) -> String -> String -> Html msg
+textinput msg name currentValue =
+    label
+        [ style "padding" "0.1em" ]
+        [ input [ onInput msg, value currentValue ] []
+        , text name
+        ]
 
 
 filesDecoder : D.Decoder (List File)
