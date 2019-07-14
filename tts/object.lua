@@ -2,7 +2,7 @@ ACTIVATED_BUTTON = "rgb(1,0.6,1)|rgb(1,0.4,1)|rgb(1,0.2,1)|rgb(1,0.2,1)"
 DEFAULT_BUTTON = "#FFFFFF|#FFFFFF|#C8C8C8|rgba(0.78,0.78,0.78,0.5)"
 prodServerURL = "https://backend.battlescribe2tts.net"
 serverURL = prodServerURL
-version = "1.4"
+version = "1.5"
 
 nextModelTarget = ""
 nextModelButton = ""
@@ -166,8 +166,12 @@ function getCode()
   return code
 end
 
-function submitCode(button)
-  WebRequest.get(serverURL .. "/roster/" .. getCode() .. "/names", processNames)
+function submitCode(player, value, id)
+  if player.host then
+    WebRequest.get(serverURL .. "/roster/" .. getCode() .. "/names", processNames)
+  else
+    broadcastToAll("Sorry, only the host of this game may use the Battlescribe Army Creator")
+  end
 end
 
 function tabToS(tab)
@@ -289,54 +293,58 @@ end
 spawnThreadCounter = 0
 
 function createArmy(player, value, id)
-  if not createArmyLock then
-    spawnThreadCounter = 0
-    tempLock()
-    createArmyLock = true
-    Wait.time(
-      function()
-        createArmyLock = false
-        self.UI.setAttribute(id, "interactable", "true")
-      end,
-      5
-    )
-    self.UI.setAttribute(id, "interactable", "false")
-    mappingResponse = {modelAssignments = {}}
-    for name, json in pairs(rosterMapping) do
-      local assignment = {
-        modelJSON = json,
-        descriptor = descriptorMapping[name]
-      }
-      table.insert(mappingResponse.modelAssignments, assignment)
-    end
-    local jsonToSend = JSON.encode(mappingResponse)
-    broadcastToAll("Contacting Server (this may take a minute or two)...")
-    WebRequest.put(
-      serverURL .. "/v2/roster/" .. getCode(),
-      jsonToSend,
-      function(req)
-        broadcastToAll("Loading Models...")
-        if not req or req.is_error then
-          broadcastToAll("Error in web request")
-        end
-        local status, result =
-          pcall(
-          function()
-            return JSON.decode(req.text)
-          end
-        )
-        if status then
-          local response = JSON.decode(req.text)
-          local itemsToSpawn = response.itemCount
-          local groupsOf = 10
-          for i = 0, (itemsToSpawn / groupsOf), 1 do
-            local start = i * groupsOf
-            spawnModelRecur(getCode(), (itemsToSpawn / groupsOf), math.min(start + groupsOf, itemsToSpawn), start)
-          end
-        else
-          broadcastToAll("Got error: " .. req.text, {r = 1, g = 0, b = 0})
-        end
+  if player.host then
+    if not createArmyLock then
+      spawnThreadCounter = 0
+      tempLock()
+      createArmyLock = true
+      Wait.time(
+        function()
+          createArmyLock = false
+          self.UI.setAttribute(id, "interactable", "true")
+        end,
+        5
+      )
+      self.UI.setAttribute(id, "interactable", "false")
+      mappingResponse = {modelAssignments = {}}
+      for name, json in pairs(rosterMapping) do
+        local assignment = {
+          modelJSON = json,
+          descriptor = descriptorMapping[name]
+        }
+        table.insert(mappingResponse.modelAssignments, assignment)
       end
-    )
+      local jsonToSend = JSON.encode(mappingResponse)
+      broadcastToAll("Contacting Server (this may take a minute or two)...")
+      WebRequest.put(
+        serverURL .. "/v2/roster/" .. getCode(),
+        jsonToSend,
+        function(req)
+          broadcastToAll("Loading Models...")
+          if not req or req.is_error then
+            broadcastToAll("Error in web request")
+          end
+          local status, result =
+            pcall(
+            function()
+              return JSON.decode(req.text)
+            end
+          )
+          if status then
+            local response = JSON.decode(req.text)
+            local itemsToSpawn = response.itemCount
+            local groupsOf = 10
+            for i = 0, (itemsToSpawn / groupsOf), 1 do
+              local start = i * groupsOf
+              spawnModelRecur(getCode(), (itemsToSpawn / groupsOf), math.min(start + groupsOf, itemsToSpawn), start)
+            end
+          else
+            broadcastToAll("Got error: " .. req.text, {r = 1, g = 0, b = 0})
+          end
+        end
+      )
+    end
+  else
+    broadcastToAll("Sorry, only the host of this game may use the Battlescribe Army Creator")
   end
 end
