@@ -163,9 +163,6 @@ function loadUI()
     end
     Global.setVar("bs2tts-ui-string", base .. totalUI)
     Global.setVar("bs2tts-ui-owner-" .. desc(), self.getGUID())
-    print(self.getGUID() .. " owns " .. desc())
-  else
-    print(self.getGUID() .. " blocked from making " .. desc())
   end
 end
 
