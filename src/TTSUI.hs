@@ -89,15 +89,12 @@ inferTable profileType = proc profiles -> do
     let sortedUniqueRows = sort (nubBy (\o t -> head o == head t ) rows)
     returnA -< normalTable header sortedUniqueRows widths
 
-bound :: Double -> Double
-bound i =  result where
-    thresh = 10
-    mult = 0.15
-    result = if i < thresh then i * 1.5 else thresh + ((i-thresh) * mult)
+bound :: Double -> Double -> Double -> Double
+bound min max i =  minimum [maximum [i, min], max]
 
 computeWidths :: [[T.Text]] -> [Double]
 computeWidths vals = widths where
-    asLengths = map (map (bound . fromIntegral . T.length)) vals :: [[Double]]
+    asLengths = map (map (bound 12 90 . fromIntegral . T.length)) vals :: [[Double]]
     asLineLengths = map maximum (transpose asLengths) :: [Double]
     avg = sum asLineLengths
     widths = map (/ avg) asLineLengths
