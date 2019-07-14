@@ -14,6 +14,7 @@ import qualified Data.Text.Encoding as E
 
 import           Crypto.Hash.MD5
 import           Data.HexString
+import           Data.List.Index
 import qualified Data.Text.IO
 import           Debug.Trace        as Debug
 import qualified NeatInterpolation  as NI
@@ -23,10 +24,10 @@ import           TTSJson
 import           Types
 import           XmlHelper
 
-scriptFromXml :: ArrowXml a => T.Text -> String -> String -> a XmlTree String
-scriptFromXml rosterId name id = uiFromXML name >>> arr (asScript rosterId (T.pack id)) >>> arr T.unpack
+scriptFromXml :: ArrowXml a => String -> a XmlTree String
+scriptFromXml name = uiFromXML name >>> arr asScript >>> arr T.unpack
 
-uiFromXML :: ArrowXml a => String -> a XmlTree T.Text
+uiFromXML :: ArrowXml a => String -> a XmlTree (T.Text, [Table])
 uiFromXML name = (listA (deep (hasName "profile")) &&&
                   (listA (deep (hasName "category")) &&&
                   listA (deep (hasName "cost"))))  >>> profilesToXML name
@@ -34,14 +35,14 @@ uiFromXML name = (listA (deep (hasName "profile")) &&&
 mapA :: ArrowXml a => a b c -> a [b] [c]
 mapA a = listA (unlistA >>> a)
 
-profilesToXML :: ArrowXml a => String -> a ([XmlTree], ([XmlTree], [XmlTree])) T.Text
+profilesToXML :: ArrowXml a => String -> a ([XmlTree], ([XmlTree], [XmlTree])) (T.Text, [Table])
 profilesToXML name = proc (profiles, (categories, costs)) -> do
     categoryTab <- optional (oneCellTable "Categories: ") categoryTable -< categories
     ptsCost <- optional 0 (costsTable "pts") -< costs
     plCost <- optional 0 (costsTable " PL") -< costs
     profileTabs <- inferTables -< profiles
     let costTab = oneCellTable (escapes (T.pack ("Cost: " ++ show ptsCost ++ "pts" ++ " " ++ show plCost ++ " PL")))
-    returnA -< masterPanel (T.pack name)  (costTab : categoryTab : filter tableNotEmpty profileTabs)
+    returnA -< (T.pack name , costTab : categoryTab : filter tableNotEmpty profileTabs)
 
 optional :: ArrowXml a => c -> a b c -> a b c
 optional defaultVal a = listA a >>> arr listToMaybe >>> arr (fromMaybe defaultVal)
@@ -97,18 +98,8 @@ computeWidths vals = widths where
     avg = sum asLineLengths
     widths = map (/ avg) asLineLengths
 
-descriptionId = "desc-id"
-
-descriptionScript :: T.Text -> T.Text -> T.Text
-descriptionScript rosterId unitId = [NI.text|
-function onLoad()
-  self.setVar("$descriptionId", "$uniqueId")
-end
-|] where
-  uniqueId = rosterId <> ":" <> unitId
-
-asScript :: T.Text -> T.Text -> T.Text -> T.Text
-asScript rosterId unitId uiRaw = [NI.text|
+asScript :: (T.Text, [Table]) -> T.Text
+asScript (name, tables) = [NI.text|
 
 function onLoad()
   Wait.frames(
@@ -130,58 +121,48 @@ function onLoad()
 end
 
 function loadUIs()
-  broadcastToAll("loading UI elements (this may take a while)")
+  broadcastToAll("Loading UI elements (TTS may be slow for a bit...)")
   local uistring = Global.getVar("bs2tts-ui-string")
   UI.setXml(UI.getXml() .. uistring)
   Global.setVar("bs2tts-ui-string", "")
 end
 
-function createUI(uiId, playerColor)
-  local guid = self.getGUID()
-  local uiString = string.gsub(
-                   string.gsub(
-                   string.gsub(
-                   string.gsub([[ $ui ]], "thepanelid", uiId),
-                                          "thebuttonid", uiId .. "-button"),
-                                          "theclosefunction", guid .. "/closeUI"),
-                                          "thevisibility", playerColor)
-  return uiString
+function doSubs(s, uiId, guid, playerColor)
+  return string.gsub(
+    string.gsub(
+    string.gsub(s, "thepanelid", uiId ),
+                           "theguid", guid),
+                           "thecolor", playerColor)
 end
 
-isUIOwner = false
+mode = 0
+
+function createUI(uiId, playerColor)
+  local guid = self.getGUID()
+  local uiStringLarge = doSubs([[ $uiLarge ]], uiId .. "-1", guid, playerColor)
+  local uiStringSmall = doSubs([[ $uiSmall ]], uiId .. "-2", guid, playerColor)
+  local uiStringTiny = doSubs([[ $uiTiny ]], uiId .. "-3", guid, playerColor)
+  mode = 1
+  return uiStringLarge .. uiStringSmall .. uiStringTiny
+end
 
 function loadUI()
-  self.setVar("$descriptionId", desc())
-  if not Global.getVar("bs2tts-ui-owner-" .. desc()) then
-    isUIOwner = true
-    local totalUI = ""
-    for k, color in pairs(Player.getColors()) do
-      totalUI = totalUI .. createUI(createName(color), color)
-    end
-    local base = ""
-    if Global.getVar("bs2tts-ui-string") then
-      base = Global.getVar("bs2tts-ui-string")
-    end
-    Global.setVar("bs2tts-ui-string", base .. totalUI)
-    Global.setVar("bs2tts-ui-owner-" .. desc(), self.getGUID())
-    print(self.getGUID() .. " owns " .. desc())
-  else
-    print(self.getGUID() .. " blocked from making " .. desc())
+  local totalUI = ""
+  for k, color in pairs(Player.getAvailableColors()) do
+    totalUI = totalUI .. createUI(createName(color), color)
   end
+  local base = ""
+  if Global.getVar("bs2tts-ui-string") then
+    base = Global.getVar("bs2tts-ui-string")
+  end
+  Global.setVar("bs2tts-ui-string", base .. totalUI)
 end
 
 function onScriptingButtonDown(index, peekerColor)
   local player = Player[peekerColor]
   local name = createName(peekerColor)
-  if isUIOwner and index == 1 and player.getHoverObject()
-                and player.getHoverObject().getVar("$descriptionId") == desc() then
-      UI.show(name)
-  end
-end
-
-function onDestroy()
-  if isUIOwner then
-    Global.setVar("bs2tts-ui-owner-" .. desc(), nil)
+  if index == 1 and player.getHoverObject() and player.getHoverObject().getDescription() == self.getDescription() then
+    UI.show(name)
   end
 end
 
@@ -190,18 +171,40 @@ function closeUI(player, val, id)
   UI.hide(createName(peekerColor))
 end
 
-function desc()
-  return "$uniqueId"
+function grow(player, val, id)
+  local peekerColor = player.color
+  local panelId = createName(peekerColor)
+  print("Grow "..panelId)
+  UI.hide(panelId)
+  mode = math.max(1, mode - 1)
+  panelId = createName(peekerColor)
+  UI.show(panelId)
+end
+
+function shrink(player, val, id)
+  local peekerColor = player.color
+  local panelId = createName(peekerColor)
+  print("Shrink "..panelId)
+  UI.hide(panelId)
+  mode = math.min(3, mode + 1)
+  panelId = createName(peekerColor)
+  UI.show(panelId)
 end
 
 function createName(color)
   local guid = self.getGUID()
-  return guid .. "-" .. color
+  local modeS = ""
+  if mode > 0 then
+    modeS = "-"..tostring(mode)
+  end
+  return (guid .. "-" .. color .. modeS)
 end
 
 |] where
-    ui = uiRaw
-    uniqueId = rosterId <> ":" <> unitId
+    uiLarge = masterPanel name 900 600 40 tables
+    uiSmall = masterPanel name 600 400 20 tables
+    uiTiny = masterPanel name 400 300 20 tables
+
 
 escape :: Char -> String -> String -> String
 escape target replace (c : s) = if c == target then replace ++ escape target replace s else c : escape target replace s
@@ -216,16 +219,20 @@ escapes = escapeT '"' "&quot;" .
   . escapeT '\'' "&apos;"
   . escapeT '\n' "&#xD;&#xA;"
 
-masterPanel :: T.Text -> [Table] -> T.Text
-masterPanel name tables = [NI.text|
-    <Panel id="thepanelid" visibility="thevisibility" active="false" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false">
+masterPanel :: T.Text -> Integer -> Integer -> Integer -> [Table] -> T.Text
+masterPanel name widthN heightN controlHeightN tables = [NI.text|
+    <Panel id="thepanelid" visibility="thecolor" active="false" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false">
     <TableLayout autoCalculateHeight="true" width="$width" childForceExpandWidth="false" childForceExpandHeight="false">
-    <Row preferredHeight="40">
-    <Text fontSize="25" text="$name" width="$width"/>
-    <Button id="thebuttonid" class="topButtons" rectAlignment="UpperRight" color="#990000" textColor="#FFFFFF" text="X" height="40" width="40" onClick="theclosefunction" />
+    <Row preferredHeight="$controlHeight">
+    <Text resizeTextForBestFit="true" resizeTextMinSize="6" resizeTextMaxSize="30" fontSize="25" rectAlignment="MiddleCenter" text="$name" width="$width"/>
+    <HorizontalLayout rectAlignment="UpperRight" height="$controlHeight" width="$buttonPanelWidth">
+    <Button id="theguid-grow" class="topButtons"  color="#990000" textColor="#FFFFFF" text="+" height="$controlHeight" width="$controlHeight" onClick="theguid/grow" />
+    <Button id="theguid-shrink" class="topButtons"  color="#990000" textColor="#FFFFFF" text="-" height="$controlHeight" width="$controlHeight" onClick="theguid/shrink" />
+    <Button id="theguid-close" class="topButtons"  color="#990000" textColor="#FFFFFF" text="X" height="$controlHeight" width="$controlHeight" onClick="theguid/closeUI" />
+    </HorizontalLayout>
     </Row>
-    <Row preferredHeight="$scrollHeight">
-    <VerticalScrollView scrollSensitivity="30" height="$scrollHeight" width="$width">
+    <Row id="theguid-scrollRow" preferredHeight="$scrollHeight">
+    <VerticalScrollView id="theguid-scrollView" scrollSensitivity="30" height="$scrollHeight" width="$width">
     <TableLayout padding="10" cellPadding="5" horizontalOverflow="Wrap" columnWidths="$width" autoCalculateHeight="true">
     $tableXml
     </TableLayout>
@@ -233,12 +240,13 @@ masterPanel name tables = [NI.text|
     </Row>
     </TableLayout>
     </Panel> |] where
-        heightN = 600
         height = numToT heightN
-        scrollHeight = numToT (heightN - 40)
-        widthN = 900
+        controlHeight = numToT controlHeightN
+        buttonPanelWidthN = controlHeightN * 3
+        buttonPanelWidth = numToT buttonPanelWidthN
+        scrollHeight = numToT (heightN - controlHeightN)
         width = numToT widthN
-        tableXml = mconcat $ map (tableToXml widthN) tables
+        tableXml = mconcat $ imap (tableToXml widthN) tables
 
 data Table = Table {
     columnWidthPercents :: [Double],
@@ -256,39 +264,43 @@ normalTable header rows widths = Table widths 40 18 20 header rows
 numToT :: Integer -> T.Text
 numToT = T.pack . show
 
-inferRowHeight :: [T.Text] -> Integer
-inferRowHeight = maximum . map inferCellHeight
+inferRowHeight :: Integer -> [T.Text] -> Integer
+inferRowHeight tableWidth = maximum . map (inferCellHeight tableWidth)
 
-inferCellHeight :: T.Text -> Integer
-inferCellHeight t = maximum [(tLen `quot` 80 + newlines) * 20, 80] where
+inferCellHeight :: Integer -> T.Text -> Integer
+inferCellHeight tableWidth t = maximum [(ceiling(tLen / lengthPerLine) + newlines) * 20, 80] where
   newlines = fromIntegral (T.count "\n" t)
   tLen = fromIntegral $ T.length t
+  tableWidthFloat = fromIntegral tableWidth :: Double
+  lengthPerLine = 80.0 * (tableWidthFloat / 900.0)
 
-tableToXml :: Integer -> Table -> T.Text
-tableToXml tableWidth Table{..} = [NI.text|
-  <Row preferredHeight="$tableHeight">
+tableToXml :: Integer -> Int -> Table -> T.Text
+tableToXml tableWidth index Table{..} = [NI.text|
+  <Row id="theguid-rowtab-$idex" preferredHeight="$tableHeight">
     <TableLayout autoCalculateHeight="false" cellPadding="5" columnWidths="$colWidths">
         $headerText
         $bodyText
     </TableLayout>
   </Row>
 |] where
-    rowHeights = map inferRowHeight rows
+    idex = T.pack( show index)
+    asId k i = "theguid-" <> idex <> "-" <> k <> "-" <> T.pack (show i)
+    rowHeights = map (inferRowHeight tableWidth) rows
     tableHeight = numToT $ headerHeight + sum rowHeights
     colWidths = T.intercalate " " $ map (numToT . floor . (* fromIntegral tableWidth)) columnWidthPercents
     headHeight = numToT headerHeight
     tSize = numToT textSize
     htSize = numToT headerTextSize
-    headerText = tRow htSize "Bold" headHeight (map escapes header)
+    headerText = tRow (asId "header" 0) htSize "Bold" headHeight header
     rowsAndHeights = zip rowHeights rows
-    bodyText = mconcat $ map (\(height, row) -> (tRow tSize "Normal" (numToT height) . map escapes) row) rowsAndHeights
+    bodyText = mconcat $ imap (\index (height, row) -> (tRow (asId "row" index) tSize "Normal" (numToT height) . map escapes) row) rowsAndHeights
 
 tCell :: T.Text -> T.Text -> T.Text -> T.Text
-tCell fs stl val = [NI.text| <Cell><Text resizeTextForBestFit="true" resizeTextMaxSize="$fs" resizeTextMinSize="16"
+tCell fs stl val = [NI.text| <Cell><Text resizeTextForBestFit="true" resizeTextMaxSize="$fs" resizeTextMinSize="6"
   text="$val" fontStyle="$stl" fontSize="$fs"/></Cell> |]
 
-tRow :: T.Text -> T.Text -> T.Text -> [T.Text] -> T.Text
-tRow fs stl h vals = "<Row flexibleHeight=\"1\" preferredHeight=\"" <> h <> "\">" <> mconcat (map (tCell fs stl) vals) <> "</Row>"
+tRow :: T.Text -> T.Text -> T.Text -> T.Text -> [T.Text] -> T.Text
+tRow id fs stl h vals = "<Row id=\"" <> id <>"\" flexibleHeight=\"1\" preferredHeight=\"" <> h <> "\">" <> mconcat (map (tCell fs stl) vals) <> "</Row>"
 
 child :: ArrowXml a => String -> a XmlTree XmlTree
 child tag = getChildren >>> hasName tag
