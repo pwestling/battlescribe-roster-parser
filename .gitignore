@@ -5,3 +5,4 @@ tts-examples
 frontend/elm-stuff/
 .vscode
 .stack-work
+tts/temp.lua
