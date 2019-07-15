@@ -6532,7 +6532,7 @@ var author$project$Frontend$update = F2(
 								expect: A2(elm$http$Http$expectJson, author$project$Frontend$GotTTSJson, author$project$Frontend$rosterDecoder),
 								url: A2(
 									author$project$Frontend$asUrl,
-									'http://localhost:8080/roster',
+									'https://backend.battlescribe2tts.net/roster',
 									_List_fromArray(
 										[
 											_Utils_Tuple2(

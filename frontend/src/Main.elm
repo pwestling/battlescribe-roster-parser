@@ -93,7 +93,7 @@ update msg model =
                     , Http.post
                         { url =
                             asUrl
-                                "http://localhost:8080/roster"
+                                "https://backend.battlescribe2tts.net/roster"
                                 [ ( "addScripts"
                                   , if model.addScript then
                                         "true"
