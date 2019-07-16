@@ -331,7 +331,7 @@ makeUnit options rosterId = proc el -> do
   let weaponFinder = if selectionId `elem` groupSelectionIds then arr (const []) else getWeapons 1
   weapons <- weaponFinder -<< el
   let finalModelGroups = addUnitWeapons modelGroups weapons
-  script <- scriptFromXml options rosterId name selectionId -<< el
+  script <- scriptFromXml options rosterId name selectionId (concatMap _weapons finalModelGroups) -<< el
   returnA -< \forceName -> Unit selectionId name forceName stats finalModelGroups abilities weapons script
 
 asRoster :: [Value] -> Value

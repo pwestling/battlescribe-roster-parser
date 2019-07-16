@@ -24,15 +24,15 @@ import           TTSJson
 import           Types
 import           XmlHelper
 
-scriptFromXml :: ArrowXml a => ScriptOptions -> T.Text -> String -> String -> a XmlTree String
-scriptFromXml options rosterId name id =
+scriptFromXml :: ArrowXml a => ScriptOptions -> T.Text -> String -> String -> [Weapon] -> a XmlTree String
+scriptFromXml options rosterId name id weapons =
   if shouldAddScripts options then
-    uiFromXML options name >>> arr (asScript options rosterId (T.pack id)) >>> arr T.unpack
+    uiFromXML options name weapons >>> arr (asScript options rosterId (T.pack id) weapons) >>> arr T.unpack
   else
     arr (const "")
 
-uiFromXML :: ArrowXml a => ScriptOptions -> String -> a XmlTree (T.Text, [Table])
-uiFromXML options name = (listA (deep (hasName "profile")) &&&
+uiFromXML :: ArrowXml a => ScriptOptions -> String -> [Weapon] -> a XmlTree (T.Text, [Table])
+uiFromXML options name unit = (listA (deep (hasName "profile")) &&&
                   (listA (deep (hasName "category")) &&&
                   listA (deep (hasName "cost"))))  >>> profilesToXML name
 
@@ -109,25 +109,29 @@ end
 |] where
   uniqueId = rosterId <> ":" <> unitId
 
-asScript :: ScriptOptions -> T.Text -> T.Text -> (T.Text, [Table]) -> T.Text
-asScript options rosterId unitId (name, tables) = [NI.text|
+asScript :: ScriptOptions -> T.Text -> T.Text -> [Weapon] -> (T.Text, [Table]) -> T.Text
+asScript options rosterId unitId unit (name, tables) = [NI.text|
 function onLoad()
-  Wait.frames(
-    function()
-      self.setVar("bs2tts-model", true)
-      local id = "bs2tts-ui-load"
-      loadUI()
-      Timer.destroy(id)
-      Timer.create(
-        {
-          identifier = id,
-          function_name = "loadUIs",
-          parameters = {},
-          delay = 2
-        }
-      )
-    end,
-  2)
+  if Global.getVar("bs2tts-ui-string") and string.len(Global.getVar("bs2tts-ui-string")) > 100000 then
+    Wait.frames(onLoad, 3)
+  else
+    Wait.frames(
+      function()
+        self.setVar("bs2tts-model", true)
+        local id = "bs2tts-ui-load"
+        loadUI()
+        Timer.destroy(id)
+        Timer.create(
+          {
+            identifier = id,
+            function_name = "loadUIs",
+            parameters = {},
+            delay = 1
+          }
+        )
+      end,
+    2)
+  end
 end
 
 function loadUIs()
@@ -148,6 +152,15 @@ function createUI(uiId, playerColor)
 end
 
 isUIOwner = false
+unitModels = {}
+
+function collectUnitModels()
+  for k,v in pairs(getAllObjects()) do
+    if v.getVar("$descriptionId") == desc() then
+      table.insert(unitModels, v)
+    end
+  end
+end
 
 function loadUI()
   self.setVar("$descriptionId", desc())
@@ -161,6 +174,7 @@ function loadUI()
     if Global.getVar("bs2tts-ui-string") then
       base = Global.getVar("bs2tts-ui-string")
     end
+    Wait.frames(collectUnitModels,2)
     Global.setVar("bs2tts-ui-string", base .. totalUI)
     Global.setVar("bs2tts-ui-owner-" .. desc(), self.getGUID())
   end
@@ -171,13 +185,64 @@ function onScriptingButtonDown(index, peekerColor)
   local name = createName(peekerColor)
   if isUIOwner and index == 1 and player.getHoverObject()
                 and player.getHoverObject().getVar("$descriptionId") == desc() then
+      updateModelCount()
       UI.show(name)
+  end
+end
+
+function distance2D(point1, point2)
+  local x = point1.x - point2.x
+  local z = point1.z - point2.z
+  return math.sqrt(x * x + z * z)
+end
+
+function updateModelCount()
+  local originModel = nil
+  local dist = 10000
+  for k, model in pairs(unitModels) do
+    print()
+    local newDist = distance2D({x=0,y=0,z=0}, model.getPosition())
+    if  newDist < dist then
+      originModel = model
+      dist = newDist
+    end
+  end
+  originModel.highlightOn({1, 0, 1}, 5)
+  local modelCounts = {}
+  local seenModels = {}
+  searchModels(originModel, seenModels, modelCounts)
+  local label = ""
+  for k,v in pairs(modelCounts) do
+    label = label .. k .. " - " .. tostring(v)
+  end
+  print(label)
+  Wait.frames(
+    function() UI.setAttribute(self.getGUID() .. "-modelcount", "text", "Models in Unit: " .. label ) end, 10)
+end
+
+function searchModels(origin, seen, modelCounts)
+  for k, model in pairs(unitModels) do
+    if not seen[model.getGUID()] and distance2D(origin.getPosition(), model.getPosition()) < 2 then
+      seen[model.getGUID()] = true
+      print(model.getName())
+      model.highlightOn({1, 0, 0}, 5)
+      if not modelCounts[model.getName()] then
+        modelCounts[model.getName()] = 0
+      end
+      modelCounts[model.getName()] = modelCounts[model.getName()] + 1
+      searchModels(model, seen, modelCounts)
+    end
   end
 end
 
 function onDestroy()
   if isUIOwner then
+    print(self.getName())
     Global.setVar("bs2tts-ui-owner-" .. desc(), nil)
+    for k, color in pairs(Player.getColors()) do
+      closeUI(color, nil, nil)
+    end
+    broadcastToAll("Script owner " .. self.getName() .. "is being deleted. Scripts for its unit will no longer work")
   end
 end
 
@@ -196,7 +261,7 @@ function createName(color)
 end
 
 |] where
-    ui = masterPanel name (maybe 700 fromIntegral (uiWidth options)) (maybe 450 fromIntegral (uiHeight options)) 30 tables
+    ui = masterPanel name (maybe 700 fromIntegral (uiWidth options)) (maybe 450 fromIntegral (uiHeight options)) 30 tables unit
     uniqueId = rosterId <> ":" <> unitId
 
 escape :: Char -> String -> String -> String
@@ -213,8 +278,8 @@ escapes = escapeT '"' "&quot;"
   . escapeT '\n' "&#xD;&#xA;"
   . escapeT '&' "&amp;"
 
-masterPanel :: T.Text -> Integer -> Integer -> Integer -> [Table] -> T.Text
-masterPanel name widthN heightN controlHeightN tables = [NI.text|
+masterPanel :: T.Text -> Integer -> Integer -> Integer -> [Table] -> [Weapon] -> T.Text
+masterPanel name widthN heightN controlHeightN tables unit = [NI.text|
     <Panel id="thepanelid" visibility="thevisibility" active="false" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false">
     <TableLayout autoCalculateHeight="true" width="$width" childForceExpandWidth="false" childForceExpandHeight="false">
     <Row preferredHeight="$controlHeight">
@@ -230,14 +295,24 @@ masterPanel name widthN heightN controlHeightN tables = [NI.text|
     </TableLayout>
     </VerticalScrollView>
     </Row>
+    <Row preferredHeight="$controlHeight">
+    <HorizontalLayout rectAlignment="MiddleCenter" height="$controlHeight">
+    <Button id="theguid-gundice" class="topButtons"  color="#995500" textColor="#FFFFFF" text="Shooting Dice" height="$controlHeight" width="$oneQuarterWidth" onClick="theguid/gundice" />
+    <Button id="theguid-fightdice" class="topButtons"  color="#995500" textColor="#FFFFFF" text="Fight Dice" height="$controlHeight" width="$oneQuarterWidth" onClick="theguid/fightdice" />
+    </HorizontalLayout>
+    </Row>
+    <Row preferredHeight="$controlHeight">
+    <Button id="theguid-modelcount" resizeTextMinSize="6" resizeTextMaxSize="30" fontSize="25" height="$controlHeight" width="$width" />
+    </Row>
     </TableLayout>
     </Panel> |] where
         height = numToT heightN
         controlHeight = numToT controlHeightN
         buttonPanelWidthN = controlHeightN
         buttonPanelWidth = numToT buttonPanelWidthN
-        scrollHeight = numToT (heightN - controlHeightN)
+        scrollHeight = numToT (heightN - (controlHeightN * 3))
         width = numToT widthN
+        oneQuarterWidth = numToT $ widthN `quot` 4
         tableXml = mconcat $ imap (tableToXml widthN) tables
 
 data Table = Table {
