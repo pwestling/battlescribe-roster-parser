@@ -156,7 +156,9 @@ function onObjectDrop(playerColor, obj)
 end
 
 function onObjectDestroy(obj)
-  scheduleUpdateIfInUnit(obj)
+  if obj.getGUID() ~= self.getGUID() then
+    scheduleUpdateIfInUnit(obj)
+  end
 end
 
 function scheduleUpdateIfInUnit(obj)
@@ -210,6 +212,11 @@ end
 
 function updateModelCount()
   local modelCounts = {}
+  if unitModels then
+    for k, model in pairs(unitModels) do
+      model.highlightOff()
+    end
+  end
   local getModelNames = function(model)
     if not modelCounts[model.getName()] then
       modelCounts[model.getName()] = 0
@@ -221,7 +228,11 @@ function updateModelCount()
   end
   operateOnModels(getModelNames)
   local label = ""
-  for k,v in pairs(modelCounts) do
+  local keys = {}
+  for k in pairs(modelCounts) do table.insert(keys, k) end
+  table.sort(keys)
+  for index,k in pairs(keys) do
+    local v = modelCounts[k]
     modelName = string.gsub(k, "[0-9]+/[0-9]+","")
     label = label .. modelName .. " - " .. tostring(v) .. "\n"
   end
@@ -264,6 +275,8 @@ function highlightUnit()
 end
 
 function onDestroy()
+  local id = desc() .. "countModels"
+  Timer.destroy(id)
   for k,v in pairs(Player.getColors()) do
     UI.hide(createName(v))
   end
