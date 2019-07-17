@@ -226,6 +226,8 @@ An example roster created using this tool:
 
 ## In-Game Scripting
 
+### Datasheets
+
 Every unit can have a full datasheet brought up by pressing Scripting Button 1 over a model from the unit. 
 Scripting Button 1 is the "1" key on the keypad by default, but you can map it to some other key in the 
 Tabletop Simulator options.
@@ -233,6 +235,13 @@ Tabletop Simulator options.
 An example datasheet:
 
 ![Example Datasheet](assets/ttsui.jpeg "Example Datasheet")
+
+### Coherency
+
+The datasheet will give a read out of all the models in the unit that are in coherency. Models closer to the 
+center of the table are preferred, and models are not counted if they are flipped over, so you can remove models 
+from the table or flip them upside down with the flip key to remove them from the unit count. The highlight button 
+will toggle a highlight on the models the script believes are in coherency.
 
 ## Saved Models
 
