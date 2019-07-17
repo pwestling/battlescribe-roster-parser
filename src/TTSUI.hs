@@ -170,6 +170,7 @@ function loadUI()
     for k, color in pairs(Player.getColors()) do
       totalUI = totalUI .. createUI(createName(color), color)
     end
+    print(totalUI)
     local base = ""
     if Global.getVar("bs2tts-ui-string") then
       base = Global.getVar("bs2tts-ui-string")
@@ -185,14 +186,16 @@ function onScriptingButtonDown(index, peekerColor)
   local name = createName(peekerColor)
   if isUIOwner and index == 1 and player.getHoverObject()
                 and player.getHoverObject().getVar("$descriptionId") == desc() then
-      updateModelCount()
       UI.show(name)
+      updateModelCount()
   end
 end
 
 function distance2D(point1, point2)
   local x = point1.x - point2.x
   local z = point1.z - point2.z
+  print("X: " .. tostring(x))
+  print("Z: " .. tostring(z))
   return math.sqrt(x * x + z * z)
 end
 
@@ -216,21 +219,32 @@ function updateModelCount()
     label = label .. k .. " - " .. tostring(v)
   end
   print(label)
+  local theid = self.getGUID() .. "-modelcount"
+  print(theid)
   Wait.frames(
-    function() UI.setAttribute(self.getGUID() .. "-modelcount", "text", "Models in Unit: " .. label ) end, 10)
+    function()
+      print("Updating to " .. label)
+      Global.UI.setAttribute(theid, "text", "Models in Unit: " .. label )
+      Global.UI.setValue(theid, "Models in Unit: " .. label )
+    end, 10)
 end
 
 function searchModels(origin, seen, modelCounts)
   for k, model in pairs(unitModels) do
-    if not seen[model.getGUID()] and distance2D(origin.getPosition(), model.getPosition()) < 2 then
-      seen[model.getGUID()] = true
-      print(model.getName())
-      model.highlightOn({1, 0, 0}, 5)
-      if not modelCounts[model.getName()] then
-        modelCounts[model.getName()] = 0
+    if not seen[model.getGUID()] then
+      local dist = distance2D(origin.getPosition(), model.getPosition())
+      print("Saw " .. model.getGUID() .. " at dist " .. tostring(dist))
+      if dist < 5 then
+        local dist = distance2D(origin.getPosition(), model.getPosition())
+        seen[model.getGUID()] = true
+        print(model.getName())
+        model.highlightOn({1, 0, 0}, 5)
+        if not modelCounts[model.getName()] then
+          modelCounts[model.getName()] = 0
+        end
+        modelCounts[model.getName()] = modelCounts[model.getName()] + 1
+        searchModels(model, seen, modelCounts)
       end
-      modelCounts[model.getName()] = modelCounts[model.getName()] + 1
-      searchModels(model, seen, modelCounts)
     end
   end
 end
@@ -240,7 +254,7 @@ function onDestroy()
     print(self.getName())
     Global.setVar("bs2tts-ui-owner-" .. desc(), nil)
     for k, color in pairs(Player.getColors()) do
-      closeUI(color, nil, nil)
+      closeUI(Player[color], nil, nil)
     end
     broadcastToAll("Script owner " .. self.getName() .. "is being deleted. Scripts for its unit will no longer work")
   end
@@ -301,13 +315,14 @@ masterPanel name widthN heightN controlHeightN tables unit = [NI.text|
     <Button id="theguid-fightdice" class="topButtons"  color="#995500" textColor="#FFFFFF" text="Fight Dice" height="$controlHeight" width="$oneQuarterWidth" onClick="theguid/fightdice" />
     </HorizontalLayout>
     </Row>
-    <Row preferredHeight="$controlHeight">
-    <Button id="theguid-modelcount" resizeTextMinSize="6" resizeTextMaxSize="30" fontSize="25" height="$controlHeight" width="$width" />
+    <Row preferredHeight="$controlHeight2">
+    <Button id="theguid-modelcount" fontSize="25" height="$controlHeight2" width="$oneQuarterWidth" />
     </Row>
     </TableLayout>
     </Panel> |] where
         height = numToT heightN
         controlHeight = numToT controlHeightN
+        controlHeight2 = numToT (controlHeightN * 2)
         buttonPanelWidthN = controlHeightN
         buttonPanelWidth = numToT buttonPanelWidthN
         scrollHeight = numToT (heightN - (controlHeightN * 3))
