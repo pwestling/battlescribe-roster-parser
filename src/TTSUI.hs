@@ -133,6 +133,8 @@ end
 
 uiCreated = false
 
+timesActivated = 0
+
 function onScriptingButtonDown(index, peekerColor)
   local player = Player[peekerColor]
   local name = createName(peekerColor)
@@ -142,12 +144,130 @@ function onScriptingButtonDown(index, peekerColor)
         loadUI(peekerColor)
         uiCreated = true
       end
-      Wait.frames(function() UI.show(name) end, 2)
+      Wait.frames(function()
+      updateModelCount()
+      UI.show(name)
+      end, 2)
   end
 end
 
+function onObjectDrop(playerColor, obj)
+  scheduleUpdateIfInUnit(obj)
+end
+
+function onObjectDestroy(obj)
+  scheduleUpdateIfInUnit(obj)
+end
+
+function scheduleUpdateIfInUnit(obj)
+if obj.getVar("$descriptionId") == desc() then
+  local id = desc() .. "countModels"
+  Timer.destroy(id)
+  Timer.create(
+  {
+    identifier = id,
+    function_name = "updateModelCount",
+    parameters = {},
+    delay = 0.2
+  }
+)
+end
+end
+
+function distance2D(point1, point2)
+  local x = point1.x - point2.x
+  local z = point1.z - point2.z
+  return math.sqrt(x * x + z * z)
+end
+
+unitModels = nil
+
+function collectUnitModels()
+  unitModels = {}
+  for k,v in pairs(getAllObjects()) do
+    if v.getVar("$descriptionId") == desc() then
+      table.insert(unitModels, v)
+    end
+  end
+end
+
+function operateOnModels(fn)
+  if not unitModels then
+    collectUnitModels()
+  end
+  local originModel = nil
+  local dist = 10000
+  for k, model in pairs(unitModels) do
+    local newDist = distance2D({x=0,y=0,z=0}, model.getPosition())
+    if not model.is_face_down and newDist < dist then
+      originModel = model
+      dist = newDist
+    end
+  end
+  local seenModels = {}
+  searchModels(originModel, seenModels, fn)
+end
+
+function updateModelCount()
+  local modelCounts = {}
+  local getModelNames = function(model)
+    if not modelCounts[model.getName()] then
+      modelCounts[model.getName()] = 0
+    end
+    modelCounts[model.getName()] = modelCounts[model.getName()] + 1
+    if highlighting then
+      model.highlightOn({r=0.8,g=0.3,b=0.8})
+    end
+  end
+  operateOnModels(getModelNames)
+  local label = ""
+  for k,v in pairs(modelCounts) do
+    modelName = string.gsub(k, "[0-9]+/[0-9]+","")
+    label = label .. modelName .. " - " .. tostring(v) .. "\n"
+  end
+  local theid = self.getGUID() .. "-modelcount"
+  UI.setAttribute(theid, "text", label )
+end
+
+function getCenterDist(obj)
+  local boundsSize = obj.getBoundsNormalized().size
+  local longest = math.max(boundsSize.x, boundsSize.z)
+  return longest/2
+end
+
+function searchModels(origin, seen, fn)
+  for k, model in pairs(unitModels) do
+    if not model.is_face_down and not seen[model.getGUID()] then
+      local originCenterDist = getCenterDist(origin)
+      local modelCenterDist = getCenterDist(model)
+      local dist = distance2D(origin.getPosition(), model.getPosition())
+      if dist < (2.05 + originCenterDist + modelCenterDist) then
+        seen[model.getGUID()] = true
+        fn(model)
+        searchModels(model, seen, fn)
+      end
+    end
+  end
+end
+
+highlighting = false
+
+function highlightUnit()
+  highlighting = not highlighting
+  operateOnModels(function(model)
+    if highlighting then
+      model.highlightOn({r=0.8,g=0.3,b=0.8})
+    else
+      model.highlightOff()
+    end
+  end)
+end
+
 function onDestroy()
-  broadcastToAll("script owner for $name has been destroyed. Scripts for this unit will no longer function.")
+  for k,v in pairs(Player.getColors()) do
+    UI.hide(createName(v))
+  end
+  broadcastToAll("Script owner for $name has been destroyed. Scripts for this unit will no longer function.")
 end
 
 function closeUI(player, val, id)
@@ -199,13 +319,25 @@ masterPanel name widthN heightN controlHeightN tables = [NI.text|
     </TableLayout>
     </VerticalScrollView>
     </Row>
+    <Row preferredHeight="$modelCountHeight">
+    <Text id="theguid-modelcount" padding="5" height="$modelCountHeight" alignment="UpperLeft" text="Default" rectAlignment="UpperLeft" width="$modelCountWidth" resizeTextForBestFit="true" horizontalOverflow="Wrap" resizeTextMinSize="6" fontSize="18" resizeTextMaxSize="30"/>
+    <Button id="theguid-coherency" height="$fnBtnHeight" color="#BB88BB" textColor="#FFFFFF" text="Highlight Unit" rectAlignment="UpperRight" width="$fnBtnWidth" resizeTextForBestFit="true" horizontalOverflow="Wrap" resizeTextMinSize="6" fontSize="18" resizeTextMaxSize="18" onClick="theguid/highlightUnit"/>
+    </Row>
     </TableLayout>
     </Panel> |] where
         height = numToT heightN
         controlHeight = numToT controlHeightN
+        modelCountHeightN = controlHeightN * 2
+        modelCountHeight = numToT modelCountHeightN
+        modelCountWidthN = widthN `quot` 2
+        modelCountWidth = numToT modelCountWidthN
+        fnBtnWidthN = widthN `quot` 4
+        fnBtnWidth = numToT fnBtnWidthN
+        fnBtnHeightN = (controlHeightN * 3) `quot` 4
+        fnBtnHeight = numToT fnBtnHeightN
         buttonPanelWidthN = controlHeightN
         buttonPanelWidth = numToT buttonPanelWidthN
-        scrollHeight = numToT (heightN - controlHeightN)
+        scrollHeight = numToT (heightN - controlHeightN - modelCountHeightN)
         width = numToT widthN
         tableXml = mconcat $ imap (tableToXml widthN) tables
 

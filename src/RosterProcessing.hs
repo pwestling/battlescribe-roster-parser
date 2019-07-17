@@ -276,15 +276,27 @@ retrieveAndModifySingleGroupJSON rosterId modelFinder unit modelGroup = [result]
    modelSet = do
        json <- modelBaseJson
        let modifiedJson = (setDescription description . setName nameWithWounds) json
-       let masterScript = setScript (T.pack (unit ^. script)) modifiedJson
        let childScript = setScript (descriptionScript rosterId (T.pack (unit ^. unitSelectionId))) modifiedJson
-       return $ masterScript : replicate nonScriptedModelCount childScript
+       return $ replicate (modelGroup ^. modelCount) childScript
    result = maybe (Left (uName ++ " - " ++ T.unpack modelName)) Right modelSet
+
+changeFirstWhere :: (a -> Bool) -> (a -> a) -> [a] -> [a]
+changeFirstWhere pred fn [] = []
+changeFirstWhere pred fn (a: as) = if pred a then fn a : as else a : changeFirstWhere pred fn as
+
+hasValue :: Either String [Value] -> Bool
+hasValue (Right (v:vs) ) = True
+hasValue _               = False
+
+setMasterScript :: Unit -> Either String [Value] -> Either String [Value]
+setMasterScript unit (Right (v : vs)) = Right (setScript (T.pack (unit ^. script)) v : vs)
+setMasterScript unit _ = error "Predicate should have prevent there being no valid values"
 
 retrieveAndModifyModelGroupJSON :: T.Text -> ModelFinder -> Unit -> [ModelGroup] -> [Either String [Value]]
 retrieveAndModifyModelGroupJSON rosterId modelFinder unit groups = result where
   results = map (retrieveAndModifySingleGroupJSON rosterId modelFinder unit) groups
-  result = concat results
+  result = changeFirstWhere hasValue (setMasterScript unit) (concat results)
+
 
 zeroPos :: Pos
 zeroPos = Pos 0.0 0.0 0.0
