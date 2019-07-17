@@ -265,13 +265,7 @@ highlighting = false
 
 function highlightUnit()
   highlighting = not highlighting
-  operateOnModels(function(model)
-    if highlighting then
-      model.highlightOn({r=0.8,g=0.3,b=0.8})
-    else
-      model.highlightOff()
-    end
-  end)
+  updateModelCount()
 end
 
 function onDestroy()
