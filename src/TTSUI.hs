@@ -111,31 +111,6 @@ end
 
 asScript :: ScriptOptions -> T.Text -> T.Text -> (T.Text, [Table]) -> T.Text
 asScript options rosterId unitId (name, tables) = [NI.text|
-function onLoad()
-  Wait.frames(
-    function()
-      self.setVar("bs2tts-model", true)
-      local id = "bs2tts-ui-load"
-      loadUI()
-      Timer.destroy(id)
-      Timer.create(
-        {
-          identifier = id,
-          function_name = "loadUIs",
-          parameters = {},
-          delay = 2
-        }
-      )
-    end,
-  2)
-end
-
-function loadUIs()
-  broadcastToAll("loading UI elements (this may take a while)")
-  local uistring = Global.getVar("bs2tts-ui-string")
-  UI.setXml(UI.getXml() .. uistring)
-  Global.setVar("bs2tts-ui-string", "")
-end
 
 function createUI(uiId, playerColor)
   local guid = self.getGUID()
@@ -147,38 +122,32 @@ function createUI(uiId, playerColor)
   return uiString
 end
 
-isUIOwner = false
-
-function loadUI()
+function onLoad()
   self.setVar("$descriptionId", desc())
-  if not Global.getVar("bs2tts-ui-owner-" .. desc()) then
-    isUIOwner = true
-    local totalUI = ""
-    for k, color in pairs(Player.getColors()) do
-      totalUI = totalUI .. createUI(createName(color), color)
-    end
-    local base = ""
-    if Global.getVar("bs2tts-ui-string") then
-      base = Global.getVar("bs2tts-ui-string")
-    end
-    Global.setVar("bs2tts-ui-string", base .. totalUI)
-    Global.setVar("bs2tts-ui-owner-" .. desc(), self.getGUID())
-  end
 end
+
+function loadUI(playerColor)
+  local uiString = createUI(createName(playerColor), playerColor)
+  UI.setXml(UI.getXml() .. uiString)
+end
+
+uiCreated = false
 
 function onScriptingButtonDown(index, peekerColor)
   local player = Player[peekerColor]
   local name = createName(peekerColor)
-  if isUIOwner and index == 1 and player.getHoverObject()
+  if index == 1 and player.getHoverObject()
                 and player.getHoverObject().getVar("$descriptionId") == desc() then
-      UI.show(name)
+      if not uiCreated then
+        loadUI(peekerColor)
+        uiCreated = true
+      end
+      Wait.frames(function() UI.show(name) end, 2)
   end
 end
 
 function onDestroy()
-  if isUIOwner then
-    Global.setVar("bs2tts-ui-owner-" .. desc(), nil)
-  end
+  broadcastToAll("script owner for $name has been destroyed. Scripts for this unit will no longer function.")
 end
 
 function closeUI(player, val, id)
