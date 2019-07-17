@@ -265,13 +265,13 @@ retrieveAndModifySingleGroupJSON rosterId modelFinder unit modelGroup = [result]
    modelBaseJson = modelFinder unit modelGroup
    theStats =  fromMaybe (unit ^. unitDefaultStats) (modelGroup ^. stats)
    description = toDescription unit modelGroup theStats
-   nameWithWounds = mconcat $ [modelName, " "] ++
-                                if read (theStats ^. wounds) > 1 then
+   nameWithWounds = mconcat $   (if read (theStats ^. wounds) > 1 then
                                   [T.pack (theStats ^. wounds),
                                   "/" ,
-                                  T.pack (theStats ^. wounds)]
+                                  T.pack (theStats ^. wounds),
+                                  " "]
                                 else
-                                  []
+                                  []) ++ [modelName]
    nonScriptedModelCount = (modelGroup ^. modelCount) - 1
    modelSet = do
        json <- modelBaseJson
