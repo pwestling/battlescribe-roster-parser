@@ -17,6 +17,7 @@ import           Data.Aeson.Lens
 import qualified Data.ByteString            as BS
 import qualified Data.ByteString.Lazy       as B
 import qualified Data.ByteString.Lazy.Char8 as C8
+import           Data.Char
 import           Data.Either
 import           Data.Fixed
 import qualified Data.HashMap.Strict        as HM
@@ -97,13 +98,13 @@ withForceName :: ArrowXml a => a XmlTree (String -> b) -> a XmlTree b
 withForceName arrow =
   deep (isElem >>> hasName "force") >>>
   proc el -> do
-    forceName <- getAttrValue "cataloguename" -< el
+    forceName <- getAttrValue "cataloguename" >>> da "Force: " -< el
     result <- arrow -< el
     returnA -< result forceName
 
 findSelectionsRepresentingModels :: ArrowXml a => a XmlTree XmlTree
-findSelectionsRepresentingModels = deep (hasName "selection") >>>
-    filterA (deep (isElem >>> hasName "profile" >>> isType "Unit"))
+findSelectionsRepresentingModels = deep (hasName "selection") -- >>>
+    -- filterA (deep (isElem >>> hasName "profile" >>> isType "Unit"))
 
 hasUnitProfile :: ArrowXml a => a XmlTree XmlTree
 hasUnitProfile = this /> hasName "profiles" /> hasName "profile" >>> isType "Unit"
@@ -131,13 +132,16 @@ findModels topId = listA (
         hasWeaponsAndIsntInsideModel = isType "model" `orElse` hasWeaponSelection
         inheritsSomeProfile ar = filterA hasUnitProfile >>> deep (filterA ar)
 
-
-
 getStat :: ArrowXml a => String -> a XmlTree String
 getStat statName = this />
                   hasName "characteristic" >>>
-                  hasName "characteristic" >>>
                   hasAttrValue "name" (== statName) >>>
+                  getBatScribeValue
+
+getStatF :: ArrowXml a => (String -> Bool) -> a XmlTree String
+getStatF pred = this />
+                  hasName "characteristic" >>>
+                  hasAttrValue "name" pred >>>
                   getBatScribeValue
 
 getWeaponStat :: ArrowXml a => String -> a XmlTree String
@@ -161,7 +165,7 @@ getAbilities = listA $ profileOfThisModel "Abilities" >>>
 
 
 getStats :: ArrowXml a => a XmlTree Stats
-getStats = profileOfThisModel "Unit" />
+getStats = (profileOfThisModel "Unit"  `orElse` profileOfThisModel "Model") />
            hasName "characteristics" >>>
               proc el -> do
               move <- getStat "M" -< el
@@ -172,7 +176,7 @@ getStats = profileOfThisModel "Unit" />
               w <- getStat "W" -< el
               a <- getStat "A" -< el
               ld <- getStat "Ld" -< el
-              sa <- getStat "Save" -< el
+              sa <- getStatF (`elem` ["Save", "Sv"]) -< el
               returnA -< (Stats move ws bs s t w a ld sa)
 
 getWeapon :: ArrowXml a => Int -> a (PartialWeapon, XmlTree) Weapon
@@ -207,12 +211,18 @@ weaponPartial modelCount = proc el -> do
 getWeapons :: ArrowXml a => Int -> a XmlTree [Weapon]
 getWeapons modelCount = listA $ profileOfThisModelWithSelectionData "Weapon" (weaponPartial modelCount) >>> getWeapon modelCount
 
+getNameAndMultiplier :: String -> (String, Int)
+getNameAndMultiplier name = result where
+  (digits, rest) = span isDigit name
+  result = if not (null digits) && "x " `isPrefixOf` rest then (drop 2 rest, read digits) else (name, 1)
+
+
 getModelGroup :: ArrowXml a => Stats -> a XmlTree ModelGroup
 getModelGroup defaultStats = proc el -> do
-  name <- getAttrValue "name" >>> da "Model Group: " -< el
+  (name, mult) <- getAttrValue "name" >>> da "Model Group: " >>> arr getNameAndMultiplier -< el
   id <- getAttrValue "id" -< el
-  count <- getAttrValue "number" >>> arr read  >>> da "Model Count: " -< el
-  stats <- listA (getStats `orElse` arr (const defaultStats))  -< el
+  count <- getAttrValue "number" >>> arr readMay >>> arr (fromMaybe 0) >>> arr (* mult)  >>> da "Model Count: " -<< el
+  stats <- listA ((getStats >>> da "Stats: ") `orElse` arr (const defaultStats))  -< el
   weapons <- getWeapons count  -<< el
   abilities <- getAbilities -< el
   returnA -< ModelGroup id (T.pack name) count (listToMaybe stats) weapons abilities
@@ -265,7 +275,8 @@ retrieveAndModifySingleGroupJSON rosterId modelFinder unit modelGroup = [result]
    modelBaseJson = modelFinder unit modelGroup
    theStats =  fromMaybe (unit ^. unitDefaultStats) (modelGroup ^. stats)
    description = toDescription unit modelGroup theStats
-   nameWithWounds = mconcat $   (if read (theStats ^. wounds) > 1 then
+   woundCount = fromMaybe 0 (readMay (theStats ^. wounds))
+   nameWithWounds = mconcat $   (if woundCount > 1 then
                                   [T.pack (theStats ^. wounds),
                                   "/" ,
                                   T.pack (theStats ^. wounds),
