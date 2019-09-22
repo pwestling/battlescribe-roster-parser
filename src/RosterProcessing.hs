@@ -223,7 +223,7 @@ getModelGroup defaultStats = proc el -> do
   id <- getAttrValue "id" -< el
   count <- getAttrValue "number" >>> arr readMay >>> arr (fromMaybe 0) >>> arr (* mult)  >>> da "Model Count: " -<< el
   stats <- listA ((getStats >>> da "Stats: ") `orElse` arr (const defaultStats))  -< el
-  weapons <- getWeapons count  -<< el
+  weapons <- getWeapons count >>> da "Weapons: "  -<< el
   abilities <- getAbilities -< el
   returnA -< ModelGroup id (T.pack name) count (listToMaybe stats) weapons abilities
 
