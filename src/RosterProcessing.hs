@@ -194,9 +194,16 @@ profileOfThisModel profileType = this />
                     ((hasName "selections" /> hasName "selection" >>> isType "upgrade" /> hasName "profiles" /> hasName "profile" >>> isType profileType)
                     <+> (hasName "profiles" /> hasName "profile" >>> isType profileType))
 
+
+profileOfThisModelWithSelectionDataHelper arr =
+    this /> hasName "selections" /> hasName "selection" >>> isType "upgrade"
+      >>> (this /> hasName "selections" >>> profileOfThisModelWithSelectionDataHelper arr `orElse` arr)
+
 profileOfThisModelWithSelectionData :: ArrowXml a => String -> a XmlTree b -> a XmlTree (b, XmlTree)
 profileOfThisModelWithSelectionData profileType selectionFn = this />
-                    (hasName "selections" /> hasName "selection" >>> isType "upgrade" >>> (selectionFn &&& (this /> hasName "profiles" /> hasName "profile" >>> isType profileType)))
+                    (hasName "selections" /> hasName "selection" >>> isType "upgrade" >>>
+                    (profileOfThisModelWithSelectionData profileType selectionFn <+>
+                    (selectionFn &&& (this /> hasName "profiles" /> hasName "profile" >>> isType profileType))))
 
 data PartialWeapon = PartialWeapon {_partialWeaponId :: String, _partialWeaponName :: String, _partialWeaponCount :: Int}
 
