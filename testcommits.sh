@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -euo pipefail
-
 CURRENT=$(git rev-parse --short HEAD)
 git add -A
 git stash
@@ -10,6 +8,7 @@ generate(){
   git checkout $1
   OUTDIR=$(git rev-parse --short $1)
   mkdir $OUTDIR
+  stack build
   for f in $(ls *.testros) 
   do
     stack exec battlescribe-roster-parser-cli $f 2>/dev/null | tail -n 1 | jq . > $OUTDIR/$f 
