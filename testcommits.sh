@@ -11,7 +11,7 @@ generate(){
   stack build
   for f in $(ls *.testros) 
   do
-    stack exec battlescribe-roster-parser-cli $f 2>/dev/null | tail -n 1 | jq . > $OUTDIR/$f 
+    stack exec battlescribe-roster-parser-cli $f 2>/dev/null | tail -n 1 | jq . > $OUTDIR/${f}.test 
   done  
   popd
   git checkout $CURRENT

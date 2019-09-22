@@ -2,6 +2,7 @@ tts-examples
 *.ros
 *.rosz
 *.txt
+*.testros.test
 frontend/elm-stuff/
 .vscode
 .stack-work
