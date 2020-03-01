@@ -6,27 +6,21 @@ import Bootstrap.Navbar as Navbar
 import Browser as Browser
 import Debug as Debug
 import File exposing (File)
-import File.Download as Download
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
 import Json.Decode as D
-import Json.Encode as E
 import List as L
 import Markdown
 import Maybe exposing (withDefault)
+import Html.Parser
+import Html.Parser.Util
 
 
 main : Program () Model Msg
 main =
-    Browser.document { init = \f -> init, view = viewWithTitle, update = update, subscriptions = subs }
-
-
-type alias RosterTranslation =
-    { roster : Maybe D.Value
-    , missingUnits : List String
-    }
+    Browser.document { init = \_ -> init, view = viewWithTitle, update = update, subscriptions = subs }
 
 
 type alias RosterId =
@@ -71,7 +65,7 @@ init =
 
 
 subs : Model -> Sub Msg
-subs model =
+subs _ =
     Sub.none
 
 
@@ -169,8 +163,8 @@ navbar model =
 
 uploadPage : Model -> Html Msg
 uploadPage model =
-    div []
-        [ span [ style "padding" "1em", style "margin-top" "2em" ]
+    div [style "display" "flex"]
+        [ span [ style "padding" "1em", style "margin-top" "1em" ]
             [ span [ style "font-size" "2em", style "margin-right" "2em" ]
                 [ text "Upload Roster" ]
             , input
@@ -198,7 +192,11 @@ uploadPage model =
 
 instructions : Html Msg
 instructions =
-    div [ style "margin-top" "5em", style "margin-bottom" "5em" ] <|
+    div [] <| [
+    div [style "margin-top" "0.5em"] [
+        text "Battlescribe2TTS is free forever: it's a personal passion project, but if you want to give me money anyway click here: ", 
+        div [style "display" "inline-block", style "vertical-align" "middle"] (textHtml donateButton)],
+    div [ style "margin-top" "2em", style "margin-bottom" "5em" ] <|
         Markdown.toHtml Nothing """
 ## How To Use
         
@@ -255,7 +253,7 @@ and automatically populated in the future for matching units
 If you have issues trying to use this tool, please create an issue on 
 [github](https://github.com/pwestling/battlescribe-roster-parser/issues). Please note that 
 none of this is supported by the Battlescribe or Tabletop Simulator teams in any way, so don't complain to them!
-        """
+        """]
 
 
 checkbox : msg -> String -> Bool -> Html msg
@@ -288,3 +286,23 @@ rosterDecoder =
             "id"
             D.string
         )
+
+
+donateButton = """
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_donations" />
+<input type="hidden" name="business" value="9F3TY5GV3ZHEG" />
+<input type="hidden" name="currency_code" value="USD" />
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+</form>
+"""
+
+textHtml : String -> List (Html.Html msg)
+textHtml t =
+    case Html.Parser.run t of
+        Ok nodes ->
+            Html.Parser.Util.toVirtualDom nodes
+
+        Err _ ->
+            []
