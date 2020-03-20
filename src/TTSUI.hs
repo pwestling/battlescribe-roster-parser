@@ -131,7 +131,7 @@ function loadUI(playerColor)
   UI.setXml(UI.getXml() .. uiString)
 end
 
-uiCreated = false
+uiCreated = {}
 
 timesActivated = 0
 
@@ -140,13 +140,13 @@ function onScriptingButtonDown(index, peekerColor)
   local name = createName(peekerColor)
   if index == 1 and player.getHoverObject()
                 and player.getHoverObject().getVar("$descriptionId") == desc() then
-      if not uiCreated then
+      if not uiCreated[peekerColor] then
         loadUI(peekerColor)
-        uiCreated = true
+        uiCreated[peekerColor] = true
       end
       Wait.frames(function()
       updateModelCount()
-      UI.show(name)
+      UI.setAttribute(createName(peekerColor), "active", true)
       end, 2)
   end
 end
@@ -279,7 +279,7 @@ end
 
 function closeUI(player, val, id)
   local peekerColor = player.color
-  UI.hide(createName(peekerColor))
+  UI.setAttribute(createName(peekerColor), "active", false)
 end
 
 function desc()
