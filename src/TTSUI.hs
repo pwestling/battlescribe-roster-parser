@@ -223,7 +223,7 @@ function updateModelCount()
     end
     modelCounts[model.getName()] = modelCounts[model.getName()] + 1
     if highlighting then
-      model.highlightOn({r=0.8,g=0.3,b=0.8})
+      model.highlightOn(highlighting)
     end
   end
   operateOnModels(getModelNames)
@@ -263,8 +263,27 @@ end
 
 highlighting = false
 
-function highlightUnit()
-  highlighting = not highlighting
+function highlightUnitRed() highlightUnit("Red") end
+function highlightUnitGreen() highlightUnit("Green") end
+function highlightUnitBlue() highlightUnit("Blue") end
+function highlightUnitPurple() highlightUnit("Purple") end
+function highlightUnitYellow() highlightUnit("Yellow") end
+function highlightUnitWhite() highlightUnit("White") end
+function highlightUnitOrange() highlightUnit("Orange") end
+function highlightUnitTeal() highlightUnit("Teal") end
+function highlightUnitPink() highlightUnit("Pink") end
+
+function highlightUnitNone()
+  highlighting = false
+  updateModelCount()
+end
+
+function highlightUnit(color)
+  if highlighting ~= color then
+    highlighting = color
+  else
+    highlighting = false
+  end
   updateModelCount()
 end
 
@@ -327,9 +346,22 @@ masterPanel name widthN heightN controlHeightN tables = [NI.text|
     </VerticalScrollView>
     </Row>
     <Row preferredHeight="$modelCountHeight">
-    <Text id="theguid-modelcount" padding="5" height="$modelCountHeight" alignment="UpperLeft" text="Default" rectAlignment="UpperLeft" width="$modelCountWidth" resizeTextForBestFit="true" horizontalOverflow="Wrap" resizeTextMinSize="6" fontSize="18" resizeTextMaxSize="30"/>
-    <Button id="theguid-coherency" height="$fnBtnHeight" color="#BB88BB" textColor="#FFFFFF" text="Highlight Unit" rectAlignment="UpperRight" width="$fnBtnWidth" resizeTextForBestFit="true" horizontalOverflow="Wrap" resizeTextMinSize="6" fontSize="18" resizeTextMaxSize="18" onClick="theguid/highlightUnit"/>
+      <Text id="theguid-modelcount" padding="5" height="$modelCountHeight" alignment="UpperLeft" text="Default" rectAlignment="UpperLeft" width="$modelCountWidth" resizeTextForBestFit="true" horizontalOverflow="Wrap" resizeTextMinSize="6" fontSize="18" resizeTextMaxSize="30"/>
     </Row>
+    <Row preferredHeight="$fnBtnHeight">
+    <HorizontalLayout rectAlignment="UpperRight" preferredHeight="$fnBtnHeight">
+     $redBtn
+     $greenBtn
+     $blueBtn
+     $purpleBtn
+     $yellowBtn
+     $whiteBtn
+     $orangeBtn
+     $tealBtn
+     $pinkBtn
+     $noneBtn
+    </HorizontalLayout>
+     </Row>
     </TableLayout>
     </Panel> |] where
         height = numToT heightN
@@ -347,6 +379,18 @@ masterPanel name widthN heightN controlHeightN tables = [NI.text|
         scrollHeight = numToT (heightN - controlHeightN - modelCountHeightN)
         width = numToT widthN
         tableXml = mconcat $ imap (tableToXml widthN) tables
+        colorHighlightButton colorName hexCode = [NI.text| <Button id="theguid-coherency-$colorName" height="$fnBtnHeight" color="$hexCode" width="$fnBtnHeight" onClick="theguid/highlightUnit$colorName"/> |]
+        redBtn = colorHighlightButton "Red" "#BB2222"
+        greenBtn = colorHighlightButton "Green" "#22BB22"
+        blueBtn = colorHighlightButton "Blue" "#2222BB"
+        purpleBtn = colorHighlightButton "Purple" "#BB22BB"
+        yellowBtn = colorHighlightButton "Yellow" "#DDDD22"
+        whiteBtn = colorHighlightButton "White" "#FFFFFF"
+        orangeBtn = colorHighlightButton "Orange" "#DD6633"
+        tealBtn = colorHighlightButton "Teal" "#29D9D9"
+        pinkBtn = colorHighlightButton "Pink" "#DD77CC"
+        noneBtn = colorHighlightButton "None" "#BBBBBB"
+
 
 data Table = Table {
     columnWidthPercents :: [Double],

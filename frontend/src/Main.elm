@@ -73,6 +73,8 @@ asUrl : String -> List ( String, String ) -> String
 asUrl base params =
     base ++ "?" ++ String.join "&" (List.map (\( s1, s2 ) -> s1 ++ "=" ++ s2) params)
 
+localMode = False
+serverAddress = if localMode then "http://localhost:8080/roster" else "https://backend.battlescribe2tts.net/roster"
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -86,8 +88,8 @@ update msg model =
                     ( { model | message = Just "Uploading..." }
                     , Http.post
                         { url =
-                            asUrl
-                                "https://backend.battlescribe2tts.net/roster"
+                            asUrl 
+                            serverAddress
                                 [ ( "addScripts"
                                   , if model.addScript then
                                         "true"
@@ -234,12 +236,14 @@ An example datasheet:
 
 ![Example Datasheet](assets/ttsui.jpeg "Example Datasheet")
 
-### Coherency
+### Unit Colors and Coherency
 
 The datasheet will give a read out of all the models in the unit that are in coherency. Models closer to the 
 center of the table are preferred, and models are not counted if they are flipped over, so you can remove models 
-from the table or flip them upside down with the flip key to remove them from the unit count. The highlight button 
-will toggle a highlight on the models the script believes are in coherency.
+from the table or flip them upside down with the flip key to remove them from the unit count. 
+
+The colored buttons at the bottom of the sheet will toggle a colored highlight on the models the script believes are in coherency. 
+You can use the colors to help distinguish models from different units.
 
 ## Saved Models
 
