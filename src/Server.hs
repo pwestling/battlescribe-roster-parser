@@ -143,7 +143,7 @@ getRosterItem conn id index =  do
 storeInRedis :: ToJSON j => Connection -> T.Text -> j -> Handler ()
 storeInRedis redisConn id struct = do
   let json = toJSON struct
-  liftIO $ runRedis redisConn (setex (encodeUtf8 id) 1209600 (C8.toStrict (encode json)))
+  liftIO $ runRedis redisConn (setex (encodeUtf8 id) 3600 (C8.toStrict (encode json)))
   return ()
 
 retrieveFromRedis :: FromJSON j => Connection -> T.Text -> Handler (Maybe j)
