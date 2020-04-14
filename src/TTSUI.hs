@@ -138,6 +138,7 @@ timesActivated = 0
 function onScriptingButtonDown(index, peekerColor)
   local player = Player[peekerColor]
   local name = createName(peekerColor)
+  print("Button index " .. tostring(index))
   if index == 1 and player.getHoverObject()
                 and player.getHoverObject().getVar("$descriptionId") == desc() then
       if not uiCreated[peekerColor] then
@@ -148,6 +149,27 @@ function onScriptingButtonDown(index, peekerColor)
       updateModelCount()
       UI.setAttribute(createName(peekerColor), "active", true)
       end, 2)
+  end
+   if index == 2 and player.getHoverObject()
+                and player.getHoverObject().getVar("$descriptionId") == desc() then
+          print("Decrementing wounds")
+
+     local target = player.getHoverObject()
+     local name = target.getName()
+     local current, total = string.gmatch(name,"([0-9]+)/([0-9]+)")()
+     current = tonumber(current) - 1
+     local newName = string.gsub(name, "([0-9]+)/([0-9]+)", tostring(current) .. "/" .. total)
+     target.setName(newName)
+  end
+   if index == 3 and player.getHoverObject()
+                and player.getHoverObject().getVar("$descriptionId") == desc() then
+     print("Incrementing wounds")
+     local target = player.getHoverObject()
+     local name = target.getName()
+     local current, total = string.gmatch(name,"([0-9]+)/([0-9]+)")()
+     current = tonumber(current) + 1
+     local newName = string.gsub(name, "([0-9]+)/([0-9]+)", tostring(current) .. "/" .. total)
+     target.setName(newName)
   end
 end
 
