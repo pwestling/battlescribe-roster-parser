@@ -337,17 +337,19 @@ addBase baseData vals = modelsAndBase where
 
 addUnitWeapons :: [ModelGroup] -> [Weapon] -> [ModelGroup]
 addUnitWeapons g [] = g
-addUnitWeapons g w  = foldl' (.) id (map addUnitWeapon w) g
+addUnitWeapons g w  = foldl' (.) id (map addUnitWeapon w) (sortOn ( (* (-1)) . _modelCount) g)
 
 addUnitWeapon :: Weapon -> [ModelGroup] -> [ModelGroup]
-addUnitWeapon w [g]
-  | wepC < modelC = [g {_weapons = w{ _count = 1} : _weapons g, _modelCount = wepC }, g{_modelCount = remModels}]
-  | wepC `mod` modelC == 0 = [g {_weapons = w{_count = wepsPerModel} : _weapons g}] where
+addUnitWeapon w (g : groups)
+  | wepC == 1 = Debug.trace ("Single wep special case " ++ _weaponName w) $ g {_weapons = w{ _count = 1} : _weapons g, _modelCount = modelC } : addUnitWeapon w groups
+  | wepC < modelC = Debug.trace ("Fewer weps than models" ++ _weaponName w) [g {_weapons = w{ _count = 1} : _weapons g, _modelCount = wepC }, g{_modelCount = remModels}] ++ groups
+  | wepC `mod` modelC == 0 = Debug.trace ("Divisble weps per model" ++ _weaponName w)  [g {_weapons = w{_count = wepsPerModel} : _weapons g}] 
+  | wepC > modelC = Debug.trace ("More weps than models" ++ _weaponName w) $ addUnitWeapon w{ _count = modelC} [g] ++ addUnitWeapon w{ _count = wepC - modelC} groups where
     wepC = _count w
     modelC = _modelCount g
     remModels = modelC - wepC
     wepsPerModel = wepC `quot` modelC
-addUnitWeapon _ groups = Debug.trace "Multiple groups inheriting unit weapons, ignoring" groups
+addUnitWeapon w [] = []
 
 makeUnit ::  ArrowXml a => ScriptOptions -> T.Text -> a XmlTree (String -> Unit)
 makeUnit options rosterId = proc el -> do
