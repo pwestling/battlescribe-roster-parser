@@ -343,7 +343,7 @@ addUnitWeapon :: Weapon -> [ModelGroup] -> [ModelGroup]
 addUnitWeapon w (g : groups)
   | wepC == 1 = Debug.trace ("Single wep special case " ++ _weaponName w) $ g {_weapons = w{ _count = 1} : _weapons g, _modelCount = modelC } : addUnitWeapon w groups
   | wepC < modelC = Debug.trace ("Fewer weps than models" ++ _weaponName w) [g {_weapons = w{ _count = 1} : _weapons g, _modelCount = wepC }, g{_modelCount = remModels}] ++ groups
-  | wepC `mod` modelC == 0 = Debug.trace ("Divisble weps per model" ++ _weaponName w)  [g {_weapons = w{_count = wepsPerModel} : _weapons g}] 
+  | wepC `mod` modelC == 0 = Debug.trace ("Divisble weps per model" ++ _weaponName w) $ g {_weapons = w{_count = wepsPerModel} : _weapons g} : groups
   | wepC > modelC = Debug.trace ("More weps than models" ++ _weaponName w) $ addUnitWeapon w{ _count = modelC} [g] ++ addUnitWeapon w{ _count = wepC - modelC} groups where
     wepC = _count w
     modelC = _modelCount g
@@ -362,7 +362,7 @@ makeUnit options rosterId = proc el -> do
   let groupSelectionIds = map _modelGroupId modelGroups
   let weaponFinder = if selectionId `elem` groupSelectionIds then arr (const []) else getWeapons 1
   weapons <- weaponFinder -<< el
-  let finalModelGroups = addUnitWeapons modelGroups weapons
+  let finalModelGroups = Debug.traceShowId $ addUnitWeapons modelGroups weapons
   script <- scriptFromXml options rosterId name selectionId -<< el
   returnA -< \forceName -> Unit selectionId name forceName stats finalModelGroups abilities weapons script
 
