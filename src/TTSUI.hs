@@ -132,26 +132,21 @@ function loadUI(playerColor)
     Global.setTable(loadedUIListKey, {})
   end
   local loadedUIs = Global.getTable(loadedUIListKey)
-  print("Already loaded UIs: " .. JSON.encode(loadedUIs))
   local panelId = createName(playerColor)
   local uiString = createUI(panelId, playerColor)
   if #loadedUIs >= 3 then
-    print("Removing a loaded UI")
     local head = table.remove(loadedUIs, 1)
     local headPanel = head["panel"]
     local headGuid = head["guid"]
-    print("Removing pattern " .. "<Panel id=\"" .. headPanel .. "\" .*</Panel>")
     local uiTable = UI.getXmlTable()
     local panelIndex = -1
     for index, element in pairs(uiTable) do
-      print("Checking element with attrs: " .. JSON.encode(element["attributes"])) 
       if element["attributes"]["id"] == headPanel then
         panelIndex = index
         break
       end
     end
     if panelIndex >= 0 then
-      print("Removing panel at index " .. tostring(panelIndex))
       table.remove(uiTable, panelIndex)
       UI.setXmlTable(uiTable)
     end
@@ -162,13 +157,11 @@ function loadUI(playerColor)
   Wait.frames(function ()
     local currentUI = UI.getXml()
     local newUI = currentUI .. uiString
-    print("UI length is " .. tostring(#newUI))
     UI.setXml(newUI)
   end, 2)
 end
 
 function unloadUI(args)
-  print("Unloading UI on " .. self.getGUID())
   uiCreated[args["color"]] = false
 end
 
@@ -179,7 +172,6 @@ timesActivated = 0
 function onScriptingButtonDown(index, peekerColor)
   local player = Player[peekerColor]
   local name = createName(peekerColor)
-  print("Button index " .. tostring(index))
   if index == 1 and player.getHoverObject()
                 and player.getHoverObject().getVar("$descriptionId") == desc() then
       if not uiCreated[peekerColor] then
@@ -193,8 +185,6 @@ function onScriptingButtonDown(index, peekerColor)
   end
    if index == 2 and player.getHoverObject()
                 and player.getHoverObject().getVar("$descriptionId") == desc() then
-          print("Decrementing wounds")
-
      local target = player.getHoverObject()
      local name = target.getName()
      local current, total = string.gmatch(name,"([0-9]+)/([0-9]+)")()
@@ -204,7 +194,6 @@ function onScriptingButtonDown(index, peekerColor)
   end
    if index == 3 and player.getHoverObject()
                 and player.getHoverObject().getVar("$descriptionId") == desc() then
-     print("Incrementing wounds")
      local target = player.getHoverObject()
      local name = target.getName()
      local current, total = string.gmatch(name,"([0-9]+)/([0-9]+)")()
