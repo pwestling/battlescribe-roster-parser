@@ -126,43 +126,31 @@ function onLoad()
   self.setVar("$descriptionId", desc())
 end
 
+
+
 function loadUI(playerColor)
-  local loadedUIListKey = "loaded-bs2tts-uis-" .. playerColor
-  if Global.getTable(loadedUIListKey) == nil then
-    Global.setTable(loadedUIListKey, {})
-  end
-  local loadedUIs = Global.getTable(loadedUIListKey)
   local panelId = createName(playerColor)
   local uiString = createUI(panelId, playerColor)
-  if #loadedUIs >= 3 then
-    local head = table.remove(loadedUIs, 1)
-    local headPanel = head["panel"]
-    local headGuid = head["guid"]
-    local uiTable = UI.getXmlTable()
-    local panelIndex = -1
-    for index, element in pairs(uiTable) do
-      if element["attributes"]["id"] == headPanel then
-        panelIndex = index
-        break
-      end
-    end
-    if panelIndex >= 0 then
-      table.remove(uiTable, panelIndex)
-      UI.setXmlTable(uiTable)
-    end
-    getObjectFromGUID(headGuid).call("unloadUI", {color = playerColor})
-  end
-  table.insert(loadedUIs, {panel = panelId, guid = self.getGUID()})
-  Global.setTable(loadedUIListKey, loadedUIs)
-  Wait.frames(function ()
-    local currentUI = UI.getXml()
-    local newUI = currentUI .. uiString
-    UI.setXml(newUI)
-  end, 2)
+  local currentUI = UI.getXml()
+  local newUI = currentUI .. uiString
+  UI.setXml(newUI)
 end
 
-function unloadUI(args)
-  uiCreated[args["color"]] = false
+function unloadUI(playerColor)
+  local panelId = createName(playerColor)
+  local uiTable = UI.getXmlTable()
+  local panelIndex = -1
+  for index, element in pairs(uiTable) do
+    if element["attributes"]["id"] == panelId then
+      panelIndex = index
+      break
+    end
+  end
+  if panelIndex >= 0 then
+    table.remove(uiTable, panelIndex)
+    UI.setXmlTable(uiTable)
+  end
+  uiCreated[playerColor] = false
 end
 
 uiCreated = {}
@@ -351,6 +339,7 @@ end
 function closeUI(player, val, id)
   local peekerColor = player.color
   UI.setAttribute(createName(peekerColor), "active", false)
+  self.unloadUI(peekerColor)
 end
 
 function desc()
