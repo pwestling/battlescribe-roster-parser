@@ -202,8 +202,13 @@ profileOfThisModelWithSelectionDataHelper arr =
 profileOfThisModelWithSelectionData :: ArrowXml a => String -> a XmlTree b -> a XmlTree (b, XmlTree)
 profileOfThisModelWithSelectionData profileType selectionFn = this />
                     (hasName "selections" /> hasName "selection" >>> isType "upgrade" >>>
-                    (profileOfThisModelWithSelectionData profileType selectionFn <+>
-                    (selectionFn &&& (this /> hasName "profiles" /> hasName "profile" >>> isType profileType))))
+                    profileOfThisModelWithSelectionData profileType selectionFn <+>
+                    (selectionFn &&& (this /> hasName "profiles" /> hasName "profile" >>> isType profileType)))
+
+profileOfThisModelWithSelectionDataShallow :: ArrowXml a => String -> a XmlTree b -> a XmlTree (b, XmlTree)
+profileOfThisModelWithSelectionDataShallow profileType selectionFn = this />
+                    (hasName "selections" /> hasName "selection" >>> isType "upgrade" >>>
+                    (selectionFn &&& (this /> hasName "profiles" /> hasName "profile" >>> isType profileType)))
 
 data PartialWeapon = PartialWeapon {_partialWeaponId :: String, _partialWeaponName :: String, _partialWeaponCount :: Int}
 
@@ -217,6 +222,9 @@ weaponPartial modelCount = proc el -> do
 
 getWeapons :: ArrowXml a => Int -> a XmlTree [Weapon]
 getWeapons modelCount = listA $ profileOfThisModelWithSelectionData "Weapon" (weaponPartial modelCount) >>> getWeapon modelCount
+
+getWeaponsShallow :: ArrowXml a => Int -> a XmlTree [Weapon]
+getWeaponsShallow modelCount = listA $ profileOfThisModelWithSelectionDataShallow "Weapon" (weaponPartial modelCount) >>> getWeapon modelCount
 
 getNameAndMultiplier :: String -> (String, Int)
 getNameAndMultiplier name = result where
@@ -360,9 +368,9 @@ makeUnit options rosterId = proc el -> do
   models <- listA (findModels selectionId) -<< el
   modelGroups <- mapA (getModelGroup stats) -<< models
   let groupSelectionIds = map _modelGroupId modelGroups
-  let weaponFinder = if selectionId `elem` groupSelectionIds then arr (const []) else getWeapons 1
-  weapons <- weaponFinder -<< el
-  let finalModelGroups = Debug.traceShowId $ addUnitWeapons modelGroups weapons
+  let weaponFinder = if selectionId `elem` groupSelectionIds then arr (const []) else getWeaponsShallow 1
+  weapons <- weaponFinder >>> da "Unit Level Weapons: " -<< el
+  let finalModelGroups = addUnitWeapons modelGroups weapons
   script <- scriptFromXml options rosterId name selectionId -<< el
   returnA -< \forceName -> Unit selectionId name forceName stats finalModelGroups abilities weapons script
 
