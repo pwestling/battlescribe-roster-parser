@@ -132,11 +132,31 @@ function loadUI(playerColor)
   local panelId = createName(playerColor)
   local uiString = createUI(panelId, playerColor)
   local currentUI = UI.getXml()
+  print("Length of current UI: " .. tostring(#currentUI))
+
   local newUI = currentUI .. uiString
-  UI.setXml(newUI)
+    print("Length being added: " .. tostring(#uiString))
+
+  print("Length of UI: " .. tostring(#newUI))
+  setXml(newUI)
+end
+
+function setXml(xml)
+  UI.setXml("")
+  Wait.frames(function()
+    print("Length of UI: " .. tostring(#(UI.getXml())))
+    UI.setXml(xml)
+  end, 2)
+   Wait.frames(function()
+    print("Updated Length of UI: " .. tostring(#(UI.getXml())))
+  end, 4)
 end
 
 function unloadUI(playerColor)
+  print("Unloading UI for :" .. self.getGUID() )
+  print("Before unload, ui length is: " .. tostring(#UI.getXml()))
+  print("Before unload, ui elements is: " .. tostring(#UI.getXmlTable()))
+
   local panelId = createName(playerColor)
   local uiTable = UI.getXmlTable()
   local panelIndex = -1
@@ -147,9 +167,20 @@ function unloadUI(playerColor)
     end
   end
   if panelIndex >= 0 then
-    table.remove(uiTable, panelIndex)
+    local el = table.remove(uiTable, panelIndex)
+    print("Removing index: " .. tostring(panelIndex))
+    print("Removing element with attributes: " .. JSON.encode(el["attributes"]))
+    print("Table length is now: " .. tostring(#uiTable))
+    for index, element in pairs(uiTable) do
+      print("Index " .. tostring(index) .. " is approx size " .. #JSON.encode(element))
+    end
     UI.setXmlTable(uiTable)
   end
+  Wait.frames(function()
+    print("After unload, ui length is: " .. tostring(#UI.getXml()))
+    print("After unload, ui elements is: " .. tostring(#UI.getXmlTable()))
+    print("After unload, UI is: " .. UI.getXml())
+  end, 2)
   uiCreated[playerColor] = false
 end
 
@@ -167,8 +198,8 @@ function onScriptingButtonDown(index, peekerColor)
         uiCreated[peekerColor] = true
       end
       Wait.frames(function()
-      updateModelCount()
-      UI.setAttribute(createName(peekerColor), "active", true)
+        updateModelCount()
+        UI.setAttribute(createName(peekerColor), "active", true)
       end, 4)
   end
    if index == 2 and player.getHoverObject()
@@ -338,8 +369,8 @@ end
 
 function closeUI(player, val, id)
   local peekerColor = player.color
-  UI.setAttribute(createName(peekerColor), "active", false)
-  self.unloadUI(peekerColor)
+  -- UI.setAttribute(createName(peekerColor), "active", false)
+  unloadUI(peekerColor)
 end
 
 function desc()
