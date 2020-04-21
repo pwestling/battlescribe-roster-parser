@@ -118,7 +118,7 @@ hasWeaponSelection = this /> hasName "selections" /> hasName "selection" /> hasN
 --                        <+>
 
 printNameAndId :: ArrowXml a => String -> a XmlTree XmlTree
-printNameAndId header = (this &&& getAttrValue "name" &&& getAttrValue "id")
+printNameAndId header = (this &&& getNameAttrValue &&& getAttrValue "id")
                         >>> arr (\(v,(n,i)) -> Debug.trace (header ++ "{ Name => " ++ n ++", Id => " ++ i ++ "}") v)
 
 findModels :: ArrowXml a => String -> a XmlTree XmlTree
@@ -135,34 +135,33 @@ findModels topId = listA (
 getStat :: ArrowXml a => String -> a XmlTree String
 getStat statName = this />
                   hasName "characteristic" >>>
-                  hasAttrValue "name" (== statName) >>>
+                  hasNameAttrValue (== statName) >>>
                   getBatScribeValue
 
 getStatF :: ArrowXml a => (String -> Bool) -> a XmlTree String
 getStatF pred = this />
                   hasName "characteristic" >>>
-                  hasAttrValue "name" pred >>>
+                  hasNameAttrValue pred >>>
                   getBatScribeValue
 
 getWeaponStat :: ArrowXml a => String -> a XmlTree String
 getWeaponStat statName = this /> hasName "characteristics" />
                           hasName "characteristic" >>>
-                          hasAttrValue "name" (== statName) >>>
+                          hasNameAttrValue (== statName) >>>
                           getBatScribeValue
 
 getAbilityDescription :: ArrowXml a => a XmlTree (Maybe String)
 getAbilityDescription = listA (this /> hasName "characteristics" />
-                                hasName "characteristic" >>> hasAttrValue "name" (== "Description") >>>
+                                hasName "characteristic" >>> hasNameAttrValue (== "Description") >>>
                                 getBatScribeValue) >>> arr listToMaybe
 
 getAbilities :: ArrowXml a => a XmlTree [Ability]
 getAbilities = listA $ profileOfThisModel "Abilities" >>>
     proc el -> do
-    name <- getAttrValue "name" -< el
+    name <- getNameAttrValue -< el
     id <- getAttrValue "id" -< el
     desc <- getAbilityDescription -< el
     returnA -< (Ability name id (fromMaybe "" desc))
-
 
 getStats :: ArrowXml a => a XmlTree Stats
 getStats = (profileOfThisModel "Unit"  `orElse` profileOfThisModel "Model") />
@@ -214,7 +213,7 @@ data PartialWeapon = PartialWeapon {_partialWeaponId :: String, _partialWeaponNa
 
 weaponPartial :: ArrowXml a => Int -> a XmlTree PartialWeapon
 weaponPartial modelCount = proc el -> do
-  name <- getAttrValue "name" -< el
+  name <- getNameAttrValue -< el
   id <- getAttrValue "id" -< el
   count <- getAttrValue "number" >>> arr (maybe (-1) (`quot` modelCount) . readMay) -< el
   returnA -< PartialWeapon id name count
@@ -234,7 +233,7 @@ getNameAndMultiplier name = result where
 
 getModelGroup :: ArrowXml a => Stats -> a XmlTree ModelGroup
 getModelGroup defaultStats = proc el -> do
-  (name, mult) <- getAttrValue "name" >>> da "Model Group: " >>> arr getNameAndMultiplier -< el
+  (name, mult) <- getNameAttrValue >>> da "Model Group: " >>> arr getNameAndMultiplier -< el
   id <- getAttrValue "id" -< el
   count <- getAttrValue "number" >>> arr readMay >>> arr (fromMaybe 0) >>> arr (* mult)  >>> da "Model Count: " -<< el
   stats <- listA ((getStats >>> da "Stats: ") `orElse` arr (const defaultStats))  -< el
@@ -361,7 +360,7 @@ addUnitWeapon w [] = []
 
 makeUnit ::  ArrowXml a => ScriptOptions -> T.Text -> a XmlTree (String -> Unit)
 makeUnit options rosterId = proc el -> do
-  name <- getAttrValue "name" >>> da "Unit Name: " -< el
+  name <- getNameAttrValue >>> da "Unit Name: " -< el
   selectionId <- getAttrValue "id" -< el
   abilities <- getAbilities -< el
   stats <- listA getStats >>> arr listToMaybe >>> arr (fromMaybe zeroStats)  -< el

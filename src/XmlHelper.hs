@@ -20,6 +20,11 @@ isTypeF f = hasAttrValue "typename" f <+> hasAttrValue "profiletypename" f <+> h
 getType :: ArrowXml a => a XmlTree String
 getType = getAttrValue "typename" <+> getAttrValue "profiletypename" <+> getAttrValue "type"
 
+getNameAttrValue :: ArrowXml a => a XmlTree String
+getNameAttrValue = (getAttrValue0 "customname" >>> isA (/= "")) `orElse` getAttrValue "name"
+
+hasNameAttrValue :: ArrowXml a => (String -> Bool) -> a XmlTree XmlTree
+hasNameAttrValue f = hasAttrValue "customname" f `orElse` hasAttrValue "name" f
+
 getBatScribeValue :: ArrowXml a => a XmlTree String
 getBatScribeValue = single ((this /> getText) <+> getAttrValue "value")
-
