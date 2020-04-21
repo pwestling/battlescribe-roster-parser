@@ -112,43 +112,79 @@ end
 asScript :: ScriptOptions -> T.Text -> T.Text -> (T.Text, [Table]) -> T.Text
 asScript options rosterId unitId (name, tables) = [NI.text|
 
+function uiSub(uiTable, target, value)
+  if uiTable["attributes"] then
+    for k,v in pairs(uiTable["attributes"]) do
+      uiTable["attributes"][k] = nil
+      uiTable["attributes"][string.gsub(k, target, value)] = string.gsub(v, target, value)
+    end
+  end
+  if uiTable["children"] then
+    for k,child in pairs(uiTable["children"]) do
+      uiTable["children"][k] = uiSub(child, target, value)
+    end
+  end
+  return uiTable
+end
+
 function createUI(uiId, playerColor)
   local guid = self.getGUID()
-  local uiString = string.gsub(
-                   string.gsub(
-                   string.gsub([[ $ui ]], "thepanelid", uiId),
-                                          "theguid", guid),
-                                          "thevisibility", playerColor)
-  return uiString
+  local uiTable = uiSub(
+                   uiSub(
+                   uiSub($ui, "thepanelid", uiId),
+                              "theguid", guid),
+                              "thevisibility", playerColor)
+  return uiTable
 end
 
 function onLoad()
   self.setVar("$descriptionId", desc())
 end
 
+function copyUITable(uiTable)
+  local result = {}
+  result["tag"] = uiTable["tag"]
+  result["attributes"] = uiTable["attributes"]
+  if uiTable["children"] ~= nil then
+    result["children"] = {}
+    for k, child in pairs(uiTable["children"]) do
+      table.insert(result["children"], copyUITable(child))
+    end
+  end
+  return result
+end
 
 
 function loadUI(playerColor)
   local panelId = createName(playerColor)
-  local uiString = createUI(panelId, playerColor)
-  local currentUI = UI.getXml()
-  print("Length of current UI: " .. tostring(#currentUI))
-
-  local newUI = currentUI .. uiString
-    print("Length being added: " .. tostring(#uiString))
-
-  print("Length of UI: " .. tostring(#newUI))
-  setXml(newUI)
+  local uiTable = createUI(panelId, playerColor)
+  local currentUI = UI.getXmlTable()
+  local inserted = false
+  for k,element in pairs(currentUI) do
+    if element["attributes"] ~= nil and element["attributes"]["id"] == panelId then
+      currentUI[k]["children"] = uiTable["children"]
+      inserted = true
+      print("Overwriting index " .. tostring(k))
+    else
+      print("Panel attributes: " .. JSON.encode(element["attributes"]))
+    end
+  end
+  if not inserted then
+    table.insert(currentUI, uiTable)
+    print("Appending")
+    setXmlTable(currentUI)
+  end
 end
 
-function setXml(xml)
-  UI.setXml("")
+function setXmlTable(tab)
   Wait.frames(function()
     print("Length of UI: " .. tostring(#(UI.getXml())))
-    UI.setXml(xml)
+    UI.setXmlTable(copyUITable(tab))
   end, 2)
    Wait.frames(function()
     print("Updated Length of UI: " .. tostring(#(UI.getXml())))
+    print("Updated string Length of UI: " .. tostring(string.len(UI.getXml())))
+
   end, 4)
 end
 
@@ -167,20 +203,25 @@ function unloadUI(playerColor)
     end
   end
   if panelIndex >= 0 then
-    local el = table.remove(uiTable, panelIndex)
+    local el = uiTable[panelIndex]
     print("Removing index: " .. tostring(panelIndex))
     print("Removing element with attributes: " .. JSON.encode(el["attributes"]))
     print("Table length is now: " .. tostring(#uiTable))
+    print("element as json: " .. JSON.encode(el))
     for index, element in pairs(uiTable) do
       print("Index " .. tostring(index) .. " is approx size " .. #JSON.encode(element))
     end
-    UI.setXmlTable(uiTable)
   end
+   Wait.frames(function()
+     print("Setting to table of approx size: " .. tostring(#JSON.encode(uiTable)))
+     --UI.setXmlTable(uiTable)
+  end, 2)
   Wait.frames(function()
     print("After unload, ui length is: " .. tostring(#UI.getXml()))
+    print("After unload, ui str length is: " .. tostring(string.len(UI.getXml())))
+
     print("After unload, ui elements is: " .. tostring(#UI.getXmlTable()))
-    print("After unload, UI is: " .. UI.getXml())
-  end, 2)
+  end, 4)
   uiCreated[playerColor] = false
 end
 
@@ -369,7 +410,7 @@ end
 
 function closeUI(player, val, id)
   local peekerColor = player.color
-  -- UI.setAttribute(createName(peekerColor), "active", false)
+  UI.setAttribute(createName(peekerColor), "active", false)
   unloadUI(peekerColor)
 end
 
@@ -379,11 +420,11 @@ end
 
 function createName(color)
   local guid = self.getGUID()
-  return guid .. "-" .. color
+  return "bs2tts" .. "-" .. color
 end
 
 |] where
-    ui = masterPanel name (maybe 700 fromIntegral (uiWidth options)) (maybe 450 fromIntegral (uiHeight options)) 30 tables
+    ui = toLua $ masterPanel name (maybe 700 fromIntegral (uiWidth options)) (maybe 450 fromIntegral (uiHeight options)) 30 tables
     uniqueId = rosterId <> ":" <> unitId
 
 escape :: Char -> String -> String -> String
@@ -400,42 +441,41 @@ escapes = escapeT '"' "&quot;"
   . escapeT '\n' "&#xD;&#xA;"
   . escapeT '&' "&amp;"
 
-masterPanel :: T.Text -> Integer -> Integer -> Integer -> [Table] -> T.Text
-masterPanel name widthN heightN controlHeightN tables = [NI.text|
-    <Panel id="thepanelid" visibility="thevisibility" active="false" width="$width" height="$height" returnToOriginalPositionWhenReleased="false" allowDragging="true" color="#FFFFFF" childForceExpandWidth="false" childForceExpandHeight="false">
-    <TableLayout autoCalculateHeight="true" width="$width" childForceExpandWidth="false" childForceExpandHeight="false">
-    <Row preferredHeight="$controlHeight">
-    <Text resizeTextForBestFit="true" resizeTextMinSize="6" resizeTextMaxSize="30" fontSize="25" rectAlignment="MiddleCenter" text="$name" width="$width"/>
-    <HorizontalLayout rectAlignment="UpperRight" height="$controlHeight" width="$buttonPanelWidth">
-    <Button id="theguid-close" class="topButtons"  color="#990000" textColor="#FFFFFF" text="X" height="$controlHeight" width="$controlHeight" onClick="theguid/closeUI" />
-    </HorizontalLayout>
-    </Row>
-    <Row id="theguid-scrollRow" preferredHeight="$scrollHeight">
-    <VerticalScrollView id="theguid-scrollView" scrollSensitivity="30" height="$scrollHeight" width="$width">
-    <TableLayout padding="10" cellPadding="5" horizontalOverflow="Wrap" columnWidths="$width" autoCalculateHeight="true">
-    $tableXml
-    </TableLayout>
-    </VerticalScrollView>
-    </Row>
-    <Row preferredHeight="$modelCountHeight">
-      <Text id="theguid-modelcount" padding="5" height="$modelCountHeight" alignment="UpperLeft" text="Default" rectAlignment="UpperLeft" width="$modelCountWidth" resizeTextForBestFit="true" horizontalOverflow="Wrap" resizeTextMinSize="6" fontSize="18" resizeTextMaxSize="30"/>
-    </Row>
-    <Row preferredHeight="$fnBtnHeight">
-    <HorizontalLayout rectAlignment="UpperRight" preferredHeight="$fnBtnHeight">
-     $redBtn
-     $greenBtn
-     $blueBtn
-     $purpleBtn
-     $yellowBtn
-     $whiteBtn
-     $orangeBtn
-     $tealBtn
-     $pinkBtn
-     $noneBtn
-    </HorizontalLayout>
-     </Row>
-    </TableLayout>
-    </Panel> |] where
+masterPanel :: T.Text -> Integer -> Integer -> Integer -> [Table] -> LuaUIElement
+masterPanel name widthN heightN controlHeightN tables =
+    LUI "Panel" [("id","thepanelid"), ("visibility","thevisibility"), ("active","false"), ("width",width), ("height",height), ("returnToOriginalPositionWhenReleased","false"), ("allowDragging","true"), ("color","#FFFFFF"), ("childForceExpandWidth","false"), ("childForceExpandHeight","false")] [
+      LUI "TableLayout" [("autoCalculateHeight","true"), ("width",width), ("childForceExpandWidth","false"), ("childForceExpandHeight","false")] [
+        LUI "Row" [("preferredHeight",controlHeight)] [
+          LUI "Text" [("resizeTextForBestFit","true"), ("resizeTextMinSize","6"), ("resizeTextMaxSize","30"), ("fontSize","25"), ("rectAlignment","MiddleCenter"), ("text",name), ("width",width)] [],
+          LUI "HorizontalLayout" [("rectAlignment","UpperRight"), ("height",controlHeight), ("width",buttonPanelWidth)] [
+            LUI "Button" [("id","theguid-close"), ("class","topButtons"), ("color","#990000"), ("textColor","#FFFFFF"), ("text","X"), ("height",controlHeight), ("width",controlHeight), ("onClick","theguid/closeUI")] []
+          ]
+        ],
+        LUI "Row" [("id","theguid-scrollRow"), ("preferredHeight",scrollHeight)] [
+          LUI "VerticalScrollView" [("id","theguid-scrollView"), ("scrollSensitivity","30"), ("height",scrollHeight), ("width",width)] [
+            LUI "TableLayout" [("padding","10"), ("cellPadding","5"), ("horizontalOverflow","Wrap"), ("columnWidths",width), ("autoCalculateHeight","true")] 
+              tableXml
+          ]
+        ],
+        LUI "Row" [("preferredHeight",modelCountHeight)] [
+          LUI "Text" [("id","theguid-modelcount"), ("padding","5"), ("height",modelCountHeight), ("alignment","UpperLeft"), ("text","Default"), ("rectAlignment","UpperLeft"), ("width",modelCountWidth), ("resizeTextForBestFit","true"), ("horizontalOverflow","Wrap"), ("resizeTextMinSize","6"), ("fontSize","18"), ("resizeTextMaxSize","30")] []
+        ],
+        LUI "Row" [("preferredHeight",fnBtnHeight)] [
+          LUI "HorizontalLayout" [("rectAlignment","UpperRight"), ("preferredHeight",fnBtnHeight)] [
+            redBtn,
+            greenBtn,
+            blueBtn,
+            purpleBtn,
+            yellowBtn,
+            whiteBtn,
+            orangeBtn,
+            tealBtn,
+            pinkBtn,
+            noneBtn
+          ]
+        ]
+      ]
+    ] where
         height = numToT heightN
         controlHeight = numToT controlHeightN
         modelCountHeightN = controlHeightN * 2
@@ -450,8 +490,8 @@ masterPanel name widthN heightN controlHeightN tables = [NI.text|
         buttonPanelWidth = numToT buttonPanelWidthN
         scrollHeight = numToT (heightN - controlHeightN - modelCountHeightN)
         width = numToT widthN
-        tableXml = mconcat $ imap (tableToXml widthN) tables
-        colorHighlightButton colorName hexCode = [NI.text| <Button id="theguid-coherency-$colorName" height="$fnBtnHeight" color="$hexCode" width="$fnBtnHeight" onClick="theguid/highlightUnit$colorName"/> |]
+        tableXml = imap (tableToXml widthN) tables
+        colorHighlightButton colorName hexCode = LUI "Button" [("id","theguid-coherency-" <> colorName), ("height", fnBtnHeight), ("color", hexCode), ("width", fnBtnHeight), ("onClick","theguid/highlightUnit" <> colorName)] []
         redBtn = colorHighlightButton "Red" "#BB2222"
         greenBtn = colorHighlightButton "Green" "#22BB22"
         blueBtn = colorHighlightButton "Blue" "#2222BB"
@@ -490,15 +530,10 @@ inferCellHeight tableWidth t = maximum [(ceiling(tLen / lengthPerLine) + newline
   tableWidthFloat = fromIntegral tableWidth :: Double
   lengthPerLine = 80.0 * (tableWidthFloat / 900.0)
 
-tableToXml :: Integer -> Int -> Table -> T.Text
-tableToXml tableWidth index Table{..} = [NI.text|
-  <Row id="theguid-rowtab-$idex" preferredHeight="$tableHeight">
-    <TableLayout autoCalculateHeight="false" cellPadding="5" columnWidths="$colWidths">
-        $headerText
-        $bodyText
-    </TableLayout>
-  </Row>
-|] where
+tableToXml :: Integer -> Int -> Table -> LuaUIElement
+tableToXml tableWidth index Table{..} =  LUI "Row" [("id","theguid-rowtab-" <> idex), ("preferredHeight",tableHeight)] [
+    LUI "TableLayout" [("autoCalculateHeight","false"), ("cellPadding","5"),("columnWidths",colWidths)] (headerText : bodyText)]
+  where
     idex = T.pack( show index)
     asId k i = "theguid-" <> idex <> "-" <> k <> "-" <> T.pack (show i)
     rowHeights = map (inferRowHeight tableWidth) rows
@@ -509,17 +544,28 @@ tableToXml tableWidth index Table{..} = [NI.text|
     htSize = numToT headerTextSize
     headerText = tRow (asId "header" 0) htSize "Bold" headHeight (map escapes header)
     rowsAndHeights = zip rowHeights rows
-    bodyText = mconcat $ imap (\index (height, row) -> (tRow (asId "row" index) tSize "Normal" (numToT height) . map escapes) row) rowsAndHeights
+    bodyText = imap (\index (height, row) -> (tRow (asId "row" index) tSize "Normal" (numToT height) . map escapes) row) rowsAndHeights
 
-tCell :: T.Text -> T.Text -> T.Text -> T.Text
-tCell fs stl val = [NI.text| <Cell><Text resizeTextForBestFit="true" resizeTextMaxSize="$fs" resizeTextMinSize="6"
-  text="$val" fontStyle="$stl" fontSize="$fs"/></Cell> |]
+tCell :: T.Text -> T.Text -> T.Text -> LuaUIElement
+tCell fs stl val = LUI "Cell" [] [LUI "Text" [("resizeTextForBestFit","true"), ("resizeTextMaxSize",fs), ("resizeTextMinSize","6"),
+  ("text",val), ("fontStyle",stl), ("fontSize",fs)] []]
 
-tRow :: T.Text -> T.Text -> T.Text -> T.Text -> [T.Text] -> T.Text
-tRow id fs stl h vals = "<Row id=\"" <> id <>"\" flexibleHeight=\"1\" preferredHeight=\"" <> h <> "\">" <> mconcat (map (tCell fs stl) vals) <> "</Row>"
+tRow :: T.Text -> T.Text -> T.Text -> T.Text -> [T.Text] -> LuaUIElement
+tRow id fs stl h vals = LUI "Row" [("id", id), ("flexibleHeight","1"), ("preferredHeight",h)] cells where
+  cells = map (tCell fs stl) vals
 
 child :: ArrowXml a => String -> a XmlTree XmlTree
 child tag = getChildren >>> hasName tag
 
 getAttrValueT :: ArrowXml a => String -> a XmlTree T.Text
 getAttrValueT attr = getAttrValue attr >>> arr T.pack
+
+data LuaUIElement = LUI T.Text [(T.Text, T.Text)] [LuaUIElement]
+
+toLua :: LuaUIElement -> T.Text
+toLua (LUI tag attributes children) = [NI.text| {tag = "$tag", attributes = { $attrs }, children = { $chil }} |] where
+  attrs = T.intercalate ", " $ fmap attrToString attributes
+  chil = T.intercalate ", " $ fmap toLua children
+
+attrToString :: (T.Text, T.Text) -> T.Text
+attrToString (attrKey, attrVal) = [NI.text| $attrKey = "$attrVal" |]
