@@ -143,13 +143,18 @@ end
 
 function copyUITable(uiTable)
   local result = {}
-  result["tag"] = uiTable["tag"]
-  result["attributes"] = uiTable["attributes"]
-  if uiTable["children"] ~= nil then
-    result["children"] = {}
-    for k, child in pairs(uiTable["children"]) do
-      table.insert(result["children"], copyUITable(child))
+  for k, element in pairs(uiTable) do
+    local newElement = {}
+    newElement["tag"] = element["tag"]
+    if element["value"] ~= nil then
+      newElement["value"], times = string.gsub(element["value"],"[ ]+"," ")
     end
+    newElement["attributes"] = element["attributes"]
+    newElement["children"] = {}
+    if element["children"] ~= nil then
+      newElement["children"] = copyUITable(element["children"])
+    end
+    table.insert(result, newElement)
   end
   return result
 end
@@ -164,35 +169,16 @@ function loadUI(playerColor)
     if element["attributes"] ~= nil and element["attributes"]["id"] == panelId then
       currentUI[k]["children"] = uiTable["children"]
       inserted = true
-      print("Overwriting index " .. tostring(k))
-    else
-      print("Panel attributes: " .. JSON.encode(element["attributes"]))
     end
   end
   if not inserted then
     table.insert(currentUI, uiTable)
-    print("Appending")
-    setXmlTable(currentUI)
   end
-end
-
-function setXmlTable(tab)
-  Wait.frames(function()
-    print("Length of UI: " .. tostring(#(UI.getXml())))
-    UI.setXmlTable(copyUITable(tab))
-  end, 2)
-   Wait.frames(function()
-    print("Updated Length of UI: " .. tostring(#(UI.getXml())))
-    print("Updated string Length of UI: " .. tostring(string.len(UI.getXml())))
-
-  end, 4)
+  local result = copyUITable(currentUI)
+  UI.setXmlTable(result)
 end
 
 function unloadUI(playerColor)
-  print("Unloading UI for :" .. self.getGUID() )
-  print("Before unload, ui length is: " .. tostring(#UI.getXml()))
-  print("Before unload, ui elements is: " .. tostring(#UI.getXmlTable()))
-
   local panelId = createName(playerColor)
   local uiTable = UI.getXmlTable()
   local panelIndex = -1
@@ -204,24 +190,7 @@ function unloadUI(playerColor)
   end
   if panelIndex >= 0 then
     local el = uiTable[panelIndex]
-    print("Removing index: " .. tostring(panelIndex))
-    print("Removing element with attributes: " .. JSON.encode(el["attributes"]))
-    print("Table length is now: " .. tostring(#uiTable))
-    print("element as json: " .. JSON.encode(el))
-    for index, element in pairs(uiTable) do
-      print("Index " .. tostring(index) .. " is approx size " .. #JSON.encode(element))
-    end
   end
-   Wait.frames(function()
-     print("Setting to table of approx size: " .. tostring(#JSON.encode(uiTable)))
-     --UI.setXmlTable(uiTable)
-  end, 2)
-  Wait.frames(function()
-    print("After unload, ui length is: " .. tostring(#UI.getXml()))
-    print("After unload, ui str length is: " .. tostring(string.len(UI.getXml())))
-
-    print("After unload, ui elements is: " .. tostring(#UI.getXmlTable()))
-  end, 4)
   uiCreated[playerColor] = false
 end
 
@@ -234,14 +203,11 @@ function onScriptingButtonDown(index, peekerColor)
   local name = createName(peekerColor)
   if index == 1 and player.getHoverObject()
                 and player.getHoverObject().getVar("$descriptionId") == desc() then
-      if not uiCreated[peekerColor] then
-        loadUI(peekerColor)
-        uiCreated[peekerColor] = true
-      end
+      loadUI(peekerColor)
       Wait.frames(function()
         updateModelCount()
         UI.setAttribute(createName(peekerColor), "active", true)
-      end, 4)
+      end, 2)
   end
    if index == 2 and player.getHoverObject()
                 and player.getHoverObject().getVar("$descriptionId") == desc() then
@@ -411,7 +377,6 @@ end
 function closeUI(player, val, id)
   local peekerColor = player.color
   UI.setAttribute(createName(peekerColor), "active", false)
-  unloadUI(peekerColor)
 end
 
 function desc()
