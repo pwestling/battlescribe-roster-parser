@@ -214,7 +214,7 @@ function onScriptingButtonDown(index, peekerColor)
      local target = player.getHoverObject()
      local name = target.getName()
      local current, total = string.gmatch(name,"([0-9]+)/([0-9]+)")()
-     current = tonumber(current) - 1
+     current = math.max(tonumber(current) - 1,0)
      local newName = string.gsub(name, "([0-9]+)/([0-9]+)", tostring(current) .. "/" .. total)
      target.setName(newName)
   end
