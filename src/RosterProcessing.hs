@@ -163,6 +163,16 @@ getAbilities = listA $ profileOfThisModel "Abilities" >>>
     desc <- getAbilityDescription -< el
     returnA -< (Ability name id (fromMaybe "" desc))
 
+hasNoProfiles :: ArrowXml a => a XmlTree XmlTree
+hasNoProfiles = neg $ da "upgrades: " >>> deep (da "part: " >>> hasName "profile" >>> da "profile: " >>> hasName "profile")
+
+getUpgrades :: ArrowXml a => a XmlTree [Upgrade]
+getUpgrades = listA $ this /> hasName "selections" /> hasName "selection" >>>  isType "upgrade"  >>> filterA hasNoProfiles >>>
+    proc el -> do
+    name <- getNameAttrValue -< el
+    id <- getAttrValue "id" -< el
+    returnA -< (Upgrade name id)
+
 getStats :: ArrowXml a => a XmlTree Stats
 getStats = (profileOfThisModel "Unit"  `orElse` profileOfThisModel "Model") />
            hasName "characteristics" >>>
@@ -239,7 +249,8 @@ getModelGroup defaultStats = proc el -> do
   stats <- listA ((getStats >>> da "Stats: ") `orElse` arr (const defaultStats))  -< el
   weapons <- getWeapons count >>> da "Weapons: "  -<< el
   abilities <- getAbilities -< el
-  returnA -< ModelGroup id (T.pack name) count (listToMaybe stats) weapons abilities
+  upgrades <- getUpgrades  >>> da "Upgrades: "-< el
+  returnA -< ModelGroup id (T.pack name) count (listToMaybe stats) weapons abilities upgrades
 
 modelsPerRow = 10
 maxRankXDistance = 22
@@ -397,6 +408,9 @@ createModelDescriptor :: Unit -> ModelGroup -> ModelDescriptor
 createModelDescriptor unit group = ModelDescriptor
                                    (group ^. name)
                                    (T.pack <$> Data.List.sort (fmap _weaponName (group ^. weapons)))
+                                   (Just (T.pack <$> Data.List.sort (fmap _abilityName (group ^. abilities))))
+                                   (Just (T.pack <$> Data.List.sort (fmap _upgradeName (group ^. upgrades))))
+
 
 generateRosterNames :: T.Text -> [Unit] -> RosterNamesRequest
 generateRosterNames rosterId units = RosterNamesRequest rosterId descriptors where

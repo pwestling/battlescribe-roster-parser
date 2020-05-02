@@ -183,6 +183,20 @@ function tabToS(tab)
   return s
 end
 
+function getList(header, l)
+  local result = ""
+  for k, v in pairs(l) do
+    if result ~= "" then
+      result = result .. ", "
+    end
+    result = result .. v
+  end
+  if #result > 0 then
+    result = "\n" .. header .. ": " .. result
+  end
+  return result
+end
+
 function processNames(webReq)
   tempLock()
   if not webReq or webReq.error or webReq.is_error then
@@ -193,15 +207,11 @@ function processNames(webReq)
   local buttonNames = {}
   local shortNames = {}
   for k, v in pairs(response.modelsRequested) do
-    local weapons = ""
-    for k, v in pairs(v.modelWeapons) do
-      if weapons ~= "" then
-        weapons = weapons .. ", "
-      end
-      weapons = weapons .. v
-    end
-    local name = "Model: " .. v.modelName .. "\nWeapons: " .. weapons
-    table.insert(buttonNames, name)
+    local weapons = getList("Weapons",v.modelWeapons)
+    local abilities = getList("Abilities",v.modelAbilities)
+    local upgrades = getList("Upgrades",v.modelUpgrades)
+    local name = "Model: " .. v.modelName .. weapons .. abilities .. upgrades
+    table.insert(buttonNames, { name = name, lineHeight = lineHeight})
     shortNames[name] = v.modelName
     descriptorMapping[name] = v
   end
@@ -210,15 +220,15 @@ function processNames(webReq)
   local vectors = {}
   local index = 0
   local newButtons = {}
-  local heightInc = 220
-  local widthInc = 820
-  local colHeight = 10
+  local heightInc = 500
+  local widthInc = 1100
+  local colHeight = 5
   for k, v in pairs(buttonNames) do
     local buttonColor = DEFAULT_BUTTON
     if rosterMapping[v] ~= nil then
       buttonColor = ACTIVATED_BUTTON
     end
-    local buttonId = "select " .. v .. " " .. index
+    local buttonId = "select " .. v["name"] .. " " .. index
     buttonMapping[v] = buttonId
     table.insert(
       newButtons,
@@ -227,26 +237,27 @@ function processNames(webReq)
         attributes = {
           id = buttonId,
           onClick = "setModel",
-          modelName = v,
-          shortName = shortNames[v],
+          modelName = v["name"],
+          shortName = shortNames[v["name"]],
           padding = 20,
           colors = buttonColor,
           fontSize = 50,
           height = heightInc,
           width = widthInc,
-          offsetXY = widthInc * (math.floor(index / colHeight)) .. " " .. -1 * heightInc * (index % colHeight)
+          offsetXY = (widthInc * (math.floor(index / colHeight))) .. " " .. -1 * heightInc * (index % colHeight)
         },
-        value = v
+        value = v["name"]
       }
     )
     index = index + 1
   end
+  local xstart = 1300 + (widthInc - 900)
   local panel = {
     tag = "Panel",
     attributes = {
       width = widthInc * ((#buttonNames / colHeight) + 1),
       height = heightInc * colHeight,
-      position = "1300 0 -300"
+      position = tostring(xstart) .. " 0 -300"
     },
     children = newButtons
   }
@@ -312,6 +323,7 @@ function createArmy(player, value, id)
           modelJSON = json,
           descriptor = descriptorMapping[name]
         }
+        print(JSON.encode(descriptorMapping[name]))
         table.insert(mappingResponse.modelAssignments, assignment)
       end
       local jsonToSend = JSON.encode(mappingResponse)

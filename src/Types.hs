@@ -24,13 +24,20 @@ data Ability = Ability{
     _description :: String
 } deriving (Show, Eq)
 
+data Upgrade = Upgrade{
+    _upgradeName :: String,
+    _id          :: String
+} deriving (Show, Eq)
+
 data ModelGroup = ModelGroup {
     _modelGroupId :: String,
     _name         :: T.Text,
     _modelCount   :: Int,
     _stats        :: Maybe Stats,
     _weapons      :: [Weapon],
-    _abilities    :: [Ability]
+    _abilities    :: [Ability],
+    _upgrades     :: [Upgrade]
+
 } deriving (Show, Eq)
 
 data Stats = Stats {
@@ -74,6 +81,7 @@ instance Hashable Weapon
 deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''Ability
 deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''Stats
 deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''Weapon
+deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''Upgrade
 deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''ModelGroup
 deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''Unit
 
@@ -94,8 +102,12 @@ deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''RosterTranslation
 
 data ModelDescriptor = ModelDescriptor {
     --_unitName     :: T.Text,
-    _modelName    :: T.Text,
-    _modelWeapons :: [T.Text]
+    _modelName      :: T.Text,
+    _modelWeapons   :: [T.Text],
+    _modelAbilities :: Maybe [T.Text],
+    _modelUpgrades  :: Maybe [T.Text]
+
+
 } deriving (Generic, Eq, Show)
 
 instance Hashable ModelDescriptor
