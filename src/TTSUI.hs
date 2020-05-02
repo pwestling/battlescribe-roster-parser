@@ -400,11 +400,7 @@ escapeT :: Char -> String -> T.Text -> T.Text
 escapeT c s = T.pack . escape c s . T.unpack
 
 escapes :: T.Text -> T.Text
-escapes = escapeT '"' "&quot;"
-  . escapeT '<' "&lt;" . escapeT '>' "&gt;"
-  . escapeT '\'' "&apos;"
-  . escapeT '\n' "&#xD;&#xA;"
-  . escapeT '&' "&amp;"
+escapes = escapeT '"' "\\u{201D}"
 
 masterPanel :: T.Text -> Integer -> Integer -> Integer -> [Table] -> LuaUIElement
 masterPanel name widthN heightN controlHeightN tables =
@@ -534,3 +530,4 @@ toLua (LUI tag attributes children) = [NI.text| {tag = "$tag", attributes = { $a
 
 attrToString :: (T.Text, T.Text) -> T.Text
 attrToString (attrKey, attrVal) = [NI.text| $attrKey = "$attrVal" |]
+
