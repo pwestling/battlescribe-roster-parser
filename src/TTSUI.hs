@@ -400,7 +400,7 @@ escapeT :: Char -> String -> T.Text -> T.Text
 escapeT c s = T.pack . escape c s . T.unpack
 
 escapes :: T.Text -> T.Text
-escapes = escapeT '"' "\\u{201D}"
+escapes = escapeT '"' "\\u{201D}" . escapeT '\n' "\\n"
 
 masterPanel :: T.Text -> Integer -> Integer -> Integer -> [Table] -> LuaUIElement
 masterPanel name widthN heightN controlHeightN tables =
