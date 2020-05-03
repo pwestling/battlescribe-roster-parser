@@ -127,7 +127,7 @@ findModels :: ArrowXml a => String -> a XmlTree XmlTree
 findModels topId = listA (
       multi (isSelection >>> filterA (isType "model")) <+>
       multi (isSelection >>> isNotTop >>> filterA hasUnitProfile) 
-      <+> (this /> deep (isSelection >>> inheritsSomeProfile (isSelection >>> hasWeaponsAndIsntInsideModel)))
+      <+> (deep (isSelection >>> inheritsSomeProfile (isSelection >>> hasWeaponsAndIsntInsideModel))
       ) >>>
       arr nub >>> unlistA >>> printNameAndId "Models: " where
         isSelection = isElem >>> hasName "selection"
