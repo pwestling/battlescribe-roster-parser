@@ -79,43 +79,64 @@ end
 
 function setModel(player, value, id)
   nextModelTarget = self.UI.getAttribute(id, "modelName")
+  print("Target is " .. nextModelTarget)
   local shortName = self.UI.getAttribute(id, "shortName")
   nextModelButton = id
   broadcastToAll("Pick up an object to set it as the model for " .. shortName)
 end
 
+pickedUp = {}
+timerId = nil
+
 function onObjectPickUp(colorName, obj)
   if nextModelTarget ~= "" then
     obj.highlightOn({1, 0, 1}, 5)
     self.UI.setAttribute(nextModelButton, "colors", ACTIVATED_BUTTON)
+    table.insert(pickedUp, obj)
+    if timerId ~= nil then
+      Wait.stop(timerId)
+    end
+    timerId = Wait.frames(function() 
+      processPickups()
+    end,10)
+  end
+end
+
+function processPickups()
+  local modelList = {}
+  print("Processing " .. tostring(#pickedUp) .. " pickups for " .. nextModelTarget)
+  for k, obj in pairs(pickedUp) do
     local bounds = obj.getBoundsNormalized()
     local width = math.max(bounds.size.x, bounds.size.z) * 1.2
     local copy = JSON.decode(obj.getJSON())
     copy.Nickname = nextModelTarget
     copy.States = nil
     copy.Width = width
-    local data = {
-      name = nextModelTarget,
-      descriptor = descriptorMapping[nextModelTarget],
-      json = copy,
-      width = width
-    }
-    local jsonData = JSON.encode(data)
-    local this = self
-    spawnObject(
-      {
-        type = "Notecard",
-        callback_function = function(spawned)
-          spawned.setVar("bs2tts-allowed", "true")
-          spawned.setName(data.name)
-          spawned.setDescription(jsonData)
-          this.putObject(spawned)
-        end
-      }
-    )
-    nextModelTarget = ""
-    nextModelButton = ""
+    table.insert(modelList, copy)
   end
+  local data = {
+    name = nextModelTarget,
+    descriptor = descriptorMapping[nextModelTarget],
+    json = modelList
+  }
+  local jsonData = JSON.encode(data)
+  local this = self
+  local nameCopy = nextModelTarget .. ""
+  spawnObject(
+    {
+      type = "Notecard",
+      callback_function = function(spawned)
+        spawned.setVar("bs2tts-allowed", "true")
+        spawned.setName(nameCopy)
+        spawned.setDescription(jsonData)
+        this.putObject(spawned)
+      end
+    }
+  )
+  nextModelTarget = ""
+  nextModelButton = ""
+  pickedUp = {}
+  timerId = nil
 end
 
 function filterObjectEnter(obj)
@@ -140,6 +161,7 @@ function onObjectEnterContainer(thisContainer, addedObject)
     local name = addedObject.getName()
     local data = JSON.decode(addedObject.getDescription())
     if storedDataMapping[name] ~= nil then
+      print("Removing old entry for: " .. name)
       self.takeObject(
         {
           guid = storedDataMapping[name],
@@ -194,6 +216,9 @@ function getList(header, l)
   if #result > 0 then
     result = "\n" .. header .. ": " .. result
   end
+  if #result > 128 then
+    result = string.sub(result, 1, 128) .. "..."
+  end
   return result
 end
 
@@ -210,7 +235,7 @@ function processNames(webReq)
     local weapons = getList("Weapons",v.modelWeapons)
     local abilities = getList("Abilities",v.modelAbilities)
     local upgrades = getList("Upgrades",v.modelUpgrades)
-    local name = "Model: " .. v.modelName .. weapons .. abilities .. upgrades
+    local name = "Model: " .. v.modelName .. weapons .. upgrades .. abilities 
     table.insert(buttonNames, { name = name, lineHeight = lineHeight})
     shortNames[name] = v.modelName
     descriptorMapping[name] = v
@@ -220,9 +245,15 @@ function processNames(webReq)
   local vectors = {}
   local index = 0
   local newButtons = {}
-  local heightInc = 500
-  local widthInc = 1100
+  local heightInc = 400
+  local widthInc = 900
   local colHeight = 5
+  if #buttonNames > 25 then
+    colHeight = 8
+  end
+  if #buttonNames > 40 then
+    colHeight = 10
+  end
   for k, v in pairs(buttonNames) do
     local buttonColor = DEFAULT_BUTTON
     if rosterMapping[v] ~= nil then

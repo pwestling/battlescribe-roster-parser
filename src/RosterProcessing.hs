@@ -35,6 +35,8 @@ import           TTSJson
 import           TTSUI
 import           Types
 import           XmlHelper
+import           Control.Monad.Random
+import qualified Data.Vector as Vec
 
 
 textColor :: String -> String -> String
@@ -124,8 +126,9 @@ printNameAndId header = (this &&& getNameAttrValue &&& getAttrValue "id")
 findModels :: ArrowXml a => String -> a XmlTree XmlTree
 findModels topId = listA (
       multi (isSelection >>> filterA (isType "model")) <+>
-      multi (isSelection >>> isNotTop >>> filterA hasUnitProfile) <+>
-      deep (isSelection >>> inheritsSomeProfile (isSelection >>> hasWeaponsAndIsntInsideModel))) >>>
+      multi (isSelection >>> isNotTop >>> filterA hasUnitProfile) 
+      <+> (this /> deep (isSelection >>> inheritsSomeProfile (isSelection >>> hasWeaponsAndIsntInsideModel)))
+      ) >>>
       arr nub >>> unlistA >>> printNameAndId "Models: " where
         isSelection = isElem >>> hasName "selection"
         isNotTop = hasAttrValue "id" (/= topId)
@@ -280,10 +283,10 @@ assignPositionsToUnits pos@Pos{..} (u : us) = models : assignPositionsToUnits ne
   nextZ = if rawNextX > maxRankXDistance then posZ + 6 else posZ
   nextPos = Pos nextX posY nextZ
 
-retrieveAndModifyUnitJSON :: T.Text -> ModelFinder -> [Unit] -> [[Either String [Value]]]
+retrieveAndModifyUnitJSON :: T.Text -> ModelFinder -> [Unit] -> IO [[Either String [Value]]]
 retrieveAndModifyUnitJSON rosterId templateMap units = result where
   retrieve unit = retrieveAndModifyModelGroupJSON rosterId templateMap unit (unit ^. subGroups)
-  result = map retrieve units
+  result = mapM retrieve units
 
 orElseM :: Maybe a -> Maybe a -> Maybe a
 orElseM (Just a) _ = Just a
@@ -293,28 +296,33 @@ mapRight :: (b -> c) -> Either a b -> Either a c
 mapRight f (Left t)  = Left t
 mapRight f (Right t) = Right (f t)
 
-retrieveAndModifySingleGroupJSON :: T.Text -> ModelFinder -> Unit -> ModelGroup -> [Either String [Value]]
-retrieveAndModifySingleGroupJSON rosterId modelFinder unit modelGroup = [result] where
-   modelName =  modelGroup ^. name
-   uName = unit ^. unitName
-   modelBaseJson = modelFinder unit modelGroup
-   theStats =  fromMaybe (unit ^. unitDefaultStats) (modelGroup ^. stats)
-   description = toDescription unit modelGroup theStats
-   woundCount = fromMaybe 0 (readMay (theStats ^. wounds))
-   nameWithWounds = mconcat $   (if woundCount > 1 then
-                                  [T.pack (theStats ^. wounds),
-                                  "/" ,
-                                  T.pack (theStats ^. wounds),
-                                  " "]
-                                else
-                                  []) ++ [modelName]
-   nonScriptedModelCount = (modelGroup ^. modelCount) - 1
-   modelSet = do
-       json <- modelBaseJson
-       let modifiedJson = (setDescription description . setName nameWithWounds) json
-       let childScript = setScript (descriptionScript rosterId (T.pack (unit ^. unitSelectionId))) modifiedJson
-       return $ replicate (modelGroup ^. modelCount) childScript
-   result = maybe (Left (uName ++ " - " ++ T.unpack modelName)) Right modelSet
+modelSet ::  ModelFinder -> Unit -> ModelGroup -> T.Text -> T.Text -> T.Text -> IO (Maybe Value)
+modelSet finder unit modelGroup nameWithWounds description rosterId = do 
+    maybeJson <- finder unit modelGroup
+    case maybeJson of
+      Just json ->  do
+                      let modifiedJson = (setDescription description . setName nameWithWounds) json
+                      let childScript = setScript (descriptionScript rosterId (T.pack (unit ^. unitSelectionId))) modifiedJson
+                      return (Just childScript)
+      Nothing -> pure Nothing
+
+retrieveAndModifySingleGroupJSON :: T.Text -> ModelFinder -> Unit -> ModelGroup -> IO [Either String [Value]]
+retrieveAndModifySingleGroupJSON rosterId modelFinder unit modelGroup = do
+   let modelName =  modelGroup ^. name
+   let uName = unit ^. unitName
+   let theStats =  fromMaybe (unit ^. unitDefaultStats) (modelGroup ^. stats)
+   let description = toDescription unit modelGroup theStats
+   let woundCount = fromMaybe 0 (readMay (theStats ^. wounds))
+   let nameWithWounds = mconcat $ (if woundCount > 1 then
+                                    [T.pack (theStats ^. wounds),
+                                    "/" ,
+                                    T.pack (theStats ^. wounds),
+                                    " "]
+                                  else
+                                    []) ++ [modelName]
+   let nonScriptedModelCount = (modelGroup ^. modelCount) - 1
+   modelSet <- replicateM (modelGroup ^. modelCount) (modelSet modelFinder unit modelGroup nameWithWounds description rosterId)
+   return [maybe (Left (uName ++ " - " ++ T.unpack modelName)) Right (sequence modelSet)]
 
 changeFirstWhere :: (a -> Bool) -> (a -> a) -> [a] -> [a]
 changeFirstWhere pred fn [] = []
@@ -328,10 +336,10 @@ setMasterScript :: Unit -> Either String [Value] -> Either String [Value]
 setMasterScript unit (Right (v : vs)) = Right (setScript (T.pack (unit ^. script)) v : vs)
 setMasterScript unit _ = error "Predicate should have prevent there being no valid values"
 
-retrieveAndModifyModelGroupJSON :: T.Text -> ModelFinder -> Unit -> [ModelGroup] -> [Either String [Value]]
-retrieveAndModifyModelGroupJSON rosterId modelFinder unit groups = result where
-  results = map (retrieveAndModifySingleGroupJSON rosterId modelFinder unit) groups
-  result = changeFirstWhere hasValue (setMasterScript unit) (concat results)
+retrieveAndModifyModelGroupJSON :: T.Text -> ModelFinder -> Unit -> [ModelGroup] -> IO [Either String [Value]]
+retrieveAndModifyModelGroupJSON rosterId modelFinder unit groups = do
+  results <- mapM (retrieveAndModifySingleGroupJSON rosterId modelFinder unit) groups
+  return $ changeFirstWhere hasValue (setMasterScript unit) (concat results)
 
 
 zeroPos :: Pos
@@ -357,13 +365,28 @@ addUnitWeapons :: [ModelGroup] -> [Weapon] -> [ModelGroup]
 addUnitWeapons g [] = g
 addUnitWeapons g w  = foldl' (.) id (map addUnitWeapon w) (sortOn ( (* (-1)) . _modelCount) g)
 
+
+heavyWeaponExceptions :: [String]
+heavyWeaponExceptions = ["Stalker Bolt Rifle"]
+
+otherWeaponExceptions :: [String]
+otherWeaponExceptions = []
+
+weaponShouldNotBeCopied :: Weapon -> Bool
+weaponShouldNotBeCopied w = (weaponIsHeavy && weaponIsNotHeavyWeaponException) || (not weaponIsHeavy && weaponIsNotOtherWeaponException)  where
+  weaponIsHeavy = "Heavy" `isPrefixOf` _type w
+  weaponIsNotHeavyWeaponException = _weaponName w `notElem` heavyWeaponExceptions
+  weaponIsNotOtherWeaponException = _weaponName w `notElem` otherWeaponExceptions
+
+
 addUnitWeapon :: Weapon -> [ModelGroup] -> [ModelGroup]
 addUnitWeapon w (g : groups)
-  | wepC == 1 = Debug.trace ("Single wep special case " ++ _weaponName w) $ g {_weapons = w{ _count = 1} : _weapons g, _modelCount = modelC } : addUnitWeapon w groups
+  | wepC == 1 && not (weaponShouldNotBeCopied w) = Debug.trace ("Single wep special case " ++ _weaponName w) $ g {_weapons = w{ _count = 1} : _weapons g, _modelCount = modelC } : addUnitWeapon w groups
   | wepC < modelC = Debug.trace ("Fewer weps than models" ++ _weaponName w) [g {_weapons = w{ _count = 1} : _weapons g, _modelCount = wepC }, g{_modelCount = remModels}] ++ groups
   | wepC `mod` modelC == 0 = Debug.trace ("Divisble weps per model" ++ _weaponName w) $ g {_weapons = w{_count = wepsPerModel} : _weapons g} : groups
   | wepC > modelC = Debug.trace ("More weps than models" ++ _weaponName w) $ addUnitWeapon w{ _count = modelC} [g] ++ addUnitWeapon w{ _count = wepC - modelC} groups where
     wepC = _count w
+    wepType = _type w
     modelC = _modelCount g
     remModels = modelC - wepC
     wepsPerModel = wepC `quot` modelC
@@ -387,16 +410,16 @@ makeUnit options rosterId = proc el -> do
 asRoster :: [Value] -> Value
 asRoster values = object ["ObjectStates" .= values]
 
-process :: T.Text -> ModelFinder -> Value -> [Unit] -> RosterTranslation
-process rosterId modelData baseData units = result where
-  unitsAndErrors = retrieveAndModifyUnitJSON rosterId modelData units
-  validUnits = filter (/= []) (fmap (join . rights) unitsAndErrors)
-  invalidUnits = filter (/= []) $ (lefts . join) unitsAndErrors
-  positioned = assignPositionsToUnits zeroPos validUnits
-  unstuck = concatMap (map destick) positioned
-  based = addBase baseData unstuck
-  roster = asRoster based
-  result = RosterTranslation (Just roster) (nub invalidUnits)
+process :: T.Text -> ModelFinder -> Value -> [Unit] -> IO RosterTranslation
+process rosterId modelData baseData units = do
+  unitsAndErrors <- retrieveAndModifyUnitJSON rosterId modelData units
+  let validUnits = filter (/= []) (fmap (join . rights) unitsAndErrors)
+  let invalidUnits = filter (/= []) $ (lefts . join) unitsAndErrors
+  let positioned = assignPositionsToUnits zeroPos validUnits
+  let unstuck = concatMap (map destick) positioned
+  let based = addBase baseData unstuck
+  let roster = asRoster based
+  return $ RosterTranslation (Just roster) (nub invalidUnits)
 
 zeroStats :: Stats
 zeroStats = Stats "" "" "" "" "" "" "" "" ""
@@ -421,11 +444,22 @@ processRoster options xml rosterId = do
   let doc = readString [withParseHTML yes, withWarnings no] xml
   runX $ doc >>> withForceName (findSelectionsRepresentingModels >>> makeUnit options rosterId)
 
-assignmentToPair :: ModelAssignment -> (ModelDescriptor, Value)
-assignmentToPair (ModelAssignment desc val) = (desc, val)
+assignmentToPair :: ModelAssignment -> (ModelDescriptor, Vec.Vector Value)
+assignmentToPair (ModelAssignment desc (Array val)) = (desc,  val)
 
-createTTS :: T.Text -> BaseData -> [Unit] -> RosterNamesResponse -> RosterTranslation
+finder :: HM.HashMap ModelDescriptor (Vec.Vector Value) -> ModelFinder
+finder map unit modelGroup = do
+  let values = HM.lookup (createModelDescriptor unit modelGroup) map
+  let choose vs = if not (null  vs) then 
+          evalRandIO $ do
+                r <- getRandomR (0, length vs - 1)
+                return $ Just (vs Vec.! Debug.traceShowId r)
+        else
+          return Nothing
+  join <$> mapM choose values
+
+
+createTTS :: T.Text -> BaseData -> [Unit] -> RosterNamesResponse -> IO RosterTranslation
 createTTS rosterId baseData units (RosterNamesResponse assignments) = result where
   map = HM.fromList (fmap assignmentToPair assignments)
-  mf unit modelGroup = HM.lookup (createModelDescriptor unit modelGroup) map
-  result = process rosterId mf baseData units
+  result = process rosterId (finder map) baseData units

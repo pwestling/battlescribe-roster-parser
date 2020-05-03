@@ -73,7 +73,7 @@ asUrl : String -> List ( String, String ) -> String
 asUrl base params =
     base ++ "?" ++ String.join "&" (List.map (\( s1, s2 ) -> s1 ++ "=" ++ s2) params)
 
-localMode = False
+localMode = True
 serverAddress = if localMode then "http://localhost:8080/roster" else "https://backend.battlescribe2tts.net/roster"
 
 update : Msg -> Model -> ( Model, Cmd Msg )

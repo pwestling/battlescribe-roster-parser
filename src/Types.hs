@@ -89,7 +89,7 @@ makeLenses ''Stats
 makeLenses ''ModelGroup
 makeLenses ''Unit
 
-type ModelFinder = Unit -> ModelGroup -> Maybe Value
+type ModelFinder = Unit -> ModelGroup -> IO (Maybe Value)
 type BaseData = Value
 
 data RosterTranslation = RosterTranslation {
@@ -125,14 +125,14 @@ deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''RosterNamesRequest
 data ModelAssignment = ModelAssignment {
     _descriptor :: ModelDescriptor,
     _modelJSON  :: Value
-}
+} deriving (Generic, Show)
 
 makeLenses ''ModelAssignment
 deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''ModelAssignment
 
 newtype RosterNamesResponse = RosterNamesResponse {
     _modelAssignments :: [ModelAssignment]
-} deriving Generic
+} deriving (Generic, Show)
 
 makeLenses ''RosterNamesResponse
 deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''RosterNamesResponse
