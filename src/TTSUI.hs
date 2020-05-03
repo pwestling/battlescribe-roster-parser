@@ -241,6 +241,7 @@ end
 
 function scheduleUpdateIfInUnit(obj)
 if obj.getVar("$descriptionId") == desc() then
+  collectUnitModels()
   local id = desc() .. "countModels"
   Timer.destroy(id)
   Timer.create(
@@ -368,10 +369,11 @@ end
 function onDestroy()
   local id = desc() .. "countModels"
   Timer.destroy(id)
+  self.clone({})
   for k,v in pairs(Player.getColors()) do
     UI.hide(createName(v))
   end
-  broadcastToAll("Script owner for $name has been destroyed. Scripts for this unit will no longer function.")
+  broadcastToAll("Script owner for $name has been destroyed. Recreating model so that scripts continue to function.")
 end
 
 function closeUI(player, val, id)
