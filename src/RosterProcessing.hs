@@ -127,7 +127,7 @@ findModels :: ArrowXml a => String -> a XmlTree XmlTree
 findModels topId = listA (
       multi (isSelection >>> filterA (isType "model")) <+>
       multi (isSelection >>> isNotTop >>> filterA hasUnitProfile) 
-      <+> (deep (isSelection >>> inheritsSomeProfile (isSelection >>> hasWeaponsAndIsntInsideModel))
+      <+> deep (isSelection >>> inheritsSomeProfile (isSelection >>> hasWeaponsAndIsntInsideModel))
       ) >>>
       arr nub >>> unlistA >>> printNameAndId "Models: " where
         isSelection = isElem >>> hasName "selection"
@@ -167,7 +167,7 @@ getAbilities = listA $ profileOfThisModel "Abilities" >>>
     returnA -< (Ability name id (fromMaybe "" desc))
 
 hasNoProfiles :: ArrowXml a => a XmlTree XmlTree
-hasNoProfiles = neg $ da "upgrades: " >>> deep (da "part: " >>> hasName "profile" >>> da "profile: " >>> hasName "profile")
+hasNoProfiles = neg $ deep ( hasName "profile" )
 
 getUpgrades :: ArrowXml a => a XmlTree [Upgrade]
 getUpgrades = listA $ this /> hasName "selections" /> hasName "selection" >>>  isType "upgrade"  >>> filterA hasNoProfiles >>>
