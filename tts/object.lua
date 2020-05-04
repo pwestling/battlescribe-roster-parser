@@ -250,13 +250,8 @@ function processNames(webReq)
   local newButtons = {}
   local heightInc = 400
   local widthInc = 900
-  local colHeight = 5
-  if #buttonNames > 25 then
-    colHeight = 8
-  end
-  if #buttonNames > 40 then
-    colHeight = 10
-  end
+  local colHeight = math.max(5, math.ceil(#buttonNames / 4))
+
   for k, v in pairs(buttonNames) do
     local buttonColor = DEFAULT_BUTTON
     if rosterMapping[v] ~= nil then
