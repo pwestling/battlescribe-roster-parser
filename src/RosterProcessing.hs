@@ -446,6 +446,7 @@ processRoster options xml rosterId = do
 
 assignmentToPair :: ModelAssignment -> (ModelDescriptor, Vec.Vector Value)
 assignmentToPair (ModelAssignment desc (Array val)) = (desc,  val)
+assignmentToPair (ModelAssignment desc val) = (desc,  Vec.singleton val)
 
 finder :: HM.HashMap ModelDescriptor (Vec.Vector Value) -> ModelFinder
 finder map unit modelGroup = do
