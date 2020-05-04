@@ -369,11 +369,15 @@ end
 function onDestroy()
   local id = desc() .. "countModels"
   Timer.destroy(id)
-  self.clone({})
+  collectUnitModels()
+  if #unitModels > 1 then
+    print(JSON.encode(self.getPosition()))
+    self.clone({position = self.getPosition()})
+    broadcastToAll("Script owner for $name has been destroyed. Recreating model so that scripts continue to function. You can delete this model if you delete all other models in its unit first.")
+  end
   for k,v in pairs(Player.getColors()) do
     UI.hide(createName(v))
   end
-  broadcastToAll("Script owner for $name has been destroyed. Recreating model so that scripts continue to function.")
 end
 
 function closeUI(player, val, id)
