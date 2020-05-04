@@ -78,7 +78,7 @@ function verifyVersion(req)
 end
 
 function setModel(player, value, id)
-  nextModelTarget = self.UI.getAttribute(id, "modelName")
+  nextModelTarget = self.UI.getValue(id)
   print("Target is " .. nextModelTarget)
   local shortName = self.UI.getAttribute(id, "shortName")
   nextModelButton = id
@@ -114,6 +114,7 @@ function processPickups()
     copy.Width = width
     table.insert(modelList, copy)
   end
+  print("Desc: " .. JSON.encode(descriptorMapping[nextModelTarget]))
   local data = {
     name = nextModelTarget,
     descriptor = descriptorMapping[nextModelTarget],
@@ -171,6 +172,7 @@ function onObjectEnterContainer(thisContainer, addedObject)
         }
       )
     end
+    print("Adding descriptor for " .. name .. ": " .. JSON.encode(data.descriptor))
     descriptorMapping[name] = data.descriptor
     rosterMapping[name] = data.json
     storedDataMapping[name] = addedObject.guid
@@ -217,7 +219,7 @@ function getList(header, l)
     result = "\n" .. header .. ": " .. result
   end
   if #result > 128 then
-    result = string.sub(result, 1, 128) .. "..."
+    result = string.sub(result, 1, 90) .. "..."
   end
   return result
 end
@@ -239,6 +241,7 @@ function processNames(webReq)
     table.insert(buttonNames, { name = name, lineHeight = lineHeight})
     shortNames[name] = v.modelName
     descriptorMapping[name] = v
+    print("Desc for " .. name .. " is " .. JSON.encode(v))
   end
   local zOffset = -3
   local xOffset = 3
