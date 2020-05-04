@@ -125,9 +125,9 @@ printNameAndId header = (this &&& getNameAttrValue &&& getAttrValue "id")
 
 findModels :: ArrowXml a => String -> a XmlTree XmlTree
 findModels topId = listA (
-      multi (isSelection >>> filterA (isType "model")) <+>
-      multi (isSelection >>> isNotTop >>> filterA hasUnitProfile) 
-      <+> deep (isSelection >>> inheritsSomeProfile (isSelection >>> hasWeaponsAndIsntInsideModel))
+      (multi (isSelection >>> filterA (isType "model")) <+>
+      multi (isSelection >>> isNotTop >>> filterA hasUnitProfile)) `orElse`
+      deep (isSelection >>> inheritsSomeProfile (isSelection >>> hasWeaponsAndIsntInsideModel))
       ) >>>
       arr nub >>> unlistA >>> printNameAndId "Models: " where
         isSelection = isElem >>> hasName "selection"
