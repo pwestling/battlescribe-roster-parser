@@ -216,6 +216,9 @@ will be created corresponding to the various selections in your army. To tell th
 use for a particular selection, first click the button, then pick up the model you want to use. The button should change 
 colors to indicate the model has been saved.
 
+If you want to use multiple models for a selection, simple box select all of the models and pick them 
+up together. Models will be assigned randomly to squad members.
+
 Once all models have been selected, click the "Create Army" button. The models for your army will be 
 spawned into the game, organized by unit, with their names and descriptions filled in from your Battlescribe data. 
 You're ready to play!
@@ -235,6 +238,10 @@ Tabletop Simulator options.
 An example datasheet:
 
 ![Example Datasheet](assets/ttsui.jpeg "Example Datasheet")
+
+### Wounds
+
+You can use Scripting Button 2 to decrease a model's wounds by 1 (indicated in it's name), or Scripting Button 3 to increase the wounds by 1.
 
 ### Unit Colors and Coherency
 
