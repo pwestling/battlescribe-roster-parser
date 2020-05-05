@@ -10,7 +10,6 @@ descriptorMapping = {}
 code = ""
 rosterMapping = {}
 buttonMapping = {}
-storedDataMapping = {}
 createArmyLock = false
 
 function onScriptingButtonDown(index, peekerColor)
@@ -36,17 +35,21 @@ function tempLock()
   )
 end
 
-function onLoad()
-  local contained = self.getObjects()
-  for k, v in pairs(contained) do
-    local name = v.name
-    local data = JSON.decode(v.description)
-    rosterMapping[name] = data.json
-    descriptorMapping[name] = data.descriptor
-    storedDataMapping[name] = v.guid
+function onLoad(statestr)
+  if statestr ~= nil and #statestr > 0 then
+    local state = JSON.decode(statestr)
+    rosterMapping = state.rosterMapping
+    descriptorMapping = state.descriptorMapping
   end
   checkVersion()
   Wait.time(announce, 4)
+end
+
+function onSave()
+  return JSON.encode({
+    rosterMapping = rosterMapping,
+    descriptorMapping = descriptorMapping,
+  })
 end
 
 function announce()
@@ -122,18 +125,13 @@ function processPickups()
   }
   local jsonData = JSON.encode(data)
   local this = self
-  local nameCopy = nextModelTarget .. ""
-  spawnObject(
-    {
-      type = "Notecard",
-      callback_function = function(spawned)
-        spawned.setVar("bs2tts-allowed", "true")
-        spawned.setName(nameCopy)
-        spawned.setDescription(jsonData)
-        this.putObject(spawned)
-      end
-    }
-  )
+  local name = nextModelTarget .. ""
+ 
+  descriptorMapping[name] = data.descriptor
+  rosterMapping[name] = data.json
+  if buttonMapping[name] ~= nil then
+    thisContainer.UI.setAttribute(buttonMapping[name], "colors", ACTIVATED_BUTTON)
+  end
   nextModelTarget = ""
   nextModelButton = ""
   pickedUp = {}
@@ -142,44 +140,6 @@ end
 
 function filterObjectEnter(obj)
   return obj.getVar("bs2tts-allowed") == true
-end
-
-function onObjectLeaveContainer(thisContainer, takenObject)
-  if thisContainer.getGUID() == self.getGUID() then
-    tempLock()
-    local name = takenObject.getName()
-    rosterMapping[name] = nil
-    storedDataMapping[name] = nil
-    if buttonMapping[name] ~= nil then
-      thisContainer.UI.setAttribute(buttonMapping[name], "colors", DEFAULT_BUTTON)
-    end
-  end
-end
-
-function onObjectEnterContainer(thisContainer, addedObject)
-  if thisContainer.getGUID() == self.getGUID() then
-    tempLock()
-    local name = addedObject.getName()
-    local data = JSON.decode(addedObject.getDescription())
-    if storedDataMapping[name] ~= nil then
-      print("Removing old entry for: " .. name)
-      self.takeObject(
-        {
-          guid = storedDataMapping[name],
-          callback_function = function(obj)
-            obj.destruct()
-          end
-        }
-      )
-    end
-    print("Adding descriptor for " .. name .. ": " .. JSON.encode(data.descriptor))
-    descriptorMapping[name] = data.descriptor
-    rosterMapping[name] = data.json
-    storedDataMapping[name] = addedObject.guid
-    if buttonMapping[name] ~= nil then
-      thisContainer.UI.setAttribute(buttonMapping[name], "colors", ACTIVATED_BUTTON)
-    end
-  end
 end
 
 function setCode(player, value, id)
@@ -254,7 +214,7 @@ function processNames(webReq)
 
   for k, v in pairs(buttonNames) do
     local buttonColor = DEFAULT_BUTTON
-    if rosterMapping[v] ~= nil then
+    if rosterMapping[v["name"]] ~= nil then
       buttonColor = ACTIVATED_BUTTON
     end
     local buttonId = "select " .. v["name"] .. " " .. index
@@ -352,7 +312,6 @@ function createArmy(player, value, id)
           modelJSON = json,
           descriptor = descriptorMapping[name]
         }
-        print(JSON.encode(descriptorMapping[name]))
         table.insert(mappingResponse.modelAssignments, assignment)
       end
       local jsonToSend = JSON.encode(mappingResponse)
