@@ -123,10 +123,20 @@ printNameAndId :: ArrowXml a => String -> a XmlTree XmlTree
 printNameAndId header = (this &&& getNameAttrValue &&& getAttrValue "id")
                         >>> arr (\(v,(n,i)) -> Debug.trace (header ++ "{ Name => " ++ n ++", Id => " ++ i ++ "}") v)
 
+isModelOrUnit :: ArrowXml a => a XmlTree XmlTree
+isModelOrUnit = isType "Unit" <+> isType "model"
+
+containsNoModelsOrUnits :: ArrowXml a => a XmlTree XmlTree
+containsNoModelsOrUnits = neg $ deep (isType "Unit" <+> isType "model")
+
+deepWithout :: (Tree t, ArrowXml a) => a (t b) (t b) -> a (t b) (t b) -> a (t b) (t b)
+deepWithout guard predicate = deep (guard <+> predicate) >>> filterA (neg guard)
+
 findModels :: ArrowXml a => String -> a XmlTree XmlTree
 findModels topId = listA (
       (multi (isSelection >>> filterA (isType "model")) <+>
-      multi (isSelection >>> isNotTop >>> filterA hasUnitProfile)) `orElse`
+      multi (isSelection >>> isNotTop >>> filterA hasUnitProfile) <+> 
+      deepWithout isModelOrUnit (isSelection >>> isNotTop >>> filterA containsNoModelsOrUnits >>> filterA hasWeaponSelection)) `orElse`
       deep (isSelection >>> inheritsSomeProfile (isSelection >>> hasWeaponsAndIsntInsideModel)) `orElse` 
       multi (isSelection >>> filterA hasUnitProfile)) >>>
       arr nub >>> unlistA >>> printNameAndId "Models: " where
@@ -366,22 +376,15 @@ addUnitWeapons g [] = g
 addUnitWeapons g w  = foldl' (.) id (map addUnitWeapon w) (sortOn ( (* (-1)) . _modelCount) g)
 
 
-heavyWeaponExceptions :: [String]
-heavyWeaponExceptions = ["Stalker Bolt Rifle"]
+copiableWeapons :: [String]
+copiableWeapons = ["Stalker Bolt Rifle", "Bolt rifle", "Auto Bolt Rifle"]
 
-otherWeaponExceptions :: [String]
-otherWeaponExceptions = []
-
-weaponShouldNotBeCopied :: Weapon -> Bool
-weaponShouldNotBeCopied w = (weaponIsHeavy && weaponIsNotHeavyWeaponException) || (not weaponIsHeavy && weaponIsNotOtherWeaponException)  where
-  weaponIsHeavy = "Heavy" `isPrefixOf` _type w
-  weaponIsNotHeavyWeaponException = _weaponName w `notElem` heavyWeaponExceptions
-  weaponIsNotOtherWeaponException = _weaponName w `notElem` otherWeaponExceptions
-
+weaponShouldBeCopied :: Weapon -> Bool
+weaponShouldBeCopied w = _weaponName w `elem` copiableWeapons
 
 addUnitWeapon :: Weapon -> [ModelGroup] -> [ModelGroup]
 addUnitWeapon w (g : groups)
-  | wepC == 1 && not (weaponShouldNotBeCopied w) = Debug.trace ("Single wep special case " ++ _weaponName w) $ g {_weapons = w{ _count = 1} : _weapons g, _modelCount = modelC } : addUnitWeapon w groups
+  | wepC == 1 && weaponShouldBeCopied w = Debug.trace ("Single wep special case " ++ _weaponName w) $ g {_weapons = w{ _count = 1} : _weapons g, _modelCount = modelC } : addUnitWeapon w groups
   | wepC < modelC = Debug.trace ("Fewer weps than models" ++ _weaponName w) [g {_weapons = w{ _count = 1} : _weapons g, _modelCount = wepC }, g{_modelCount = remModels}] ++ groups
   | wepC `mod` modelC == 0 = Debug.trace ("Divisble weps per model" ++ _weaponName w) $ g {_weapons = w{_count = wepsPerModel} : _weapons g} : groups
   | wepC > modelC = Debug.trace ("More weps than models" ++ _weaponName w) $ addUnitWeapon w{ _count = modelC} [g] ++ addUnitWeapon w{ _count = wepC - modelC} groups where
