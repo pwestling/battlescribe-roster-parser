@@ -5,7 +5,7 @@
 {-# LANGUAGE ScopedTypeVariables   #-}
 {-# LANGUAGE TypeOperators         #-}
 
-module Main where
+module Server where
 
 import           Codec.Archive.Zip
 import           Control.Lens

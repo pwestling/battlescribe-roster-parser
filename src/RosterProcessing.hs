@@ -132,12 +132,24 @@ containsNoModelsOrUnits = neg $ deep (isType "Unit" <+> isType "model")
 deepWithout :: (Tree t, ArrowXml a) => a (t b) (t b) -> a (t b) (t b) -> a (t b) (t b)
 deepWithout guard predicate = deep (guard <+> predicate) >>> filterA (neg guard)
 
+isSpecialCaseSelection :: ArrowXml a => a XmlTree XmlTree
+isSpecialCaseSelection = deep $ isElem >>> hasName "selection" >>> hasAttrValue "name" (`elem` exceptions) where
+  exceptions = [
+    "Ravenwing Talonmaster"
+    ]
+
 findModels :: ArrowXml a => String -> a XmlTree XmlTree
-findModels topId = listA (
-      (multi (isSelection >>> filterA (isType "model")) <+>
-      multi (isSelection >>> isNotTop >>> filterA hasUnitProfile) <+> 
-      deepWithout isModelOrUnit (isSelection >>> isNotTop >>> filterA containsNoModelsOrUnits >>> filterA hasWeaponSelection)) `orElse`
+findModels topId = 
+      listA (
+      isSpecialCaseSelection `orElse`
+
+      (multi (isSelection >>> filterA (isType "model"))
+      <+> multi (isSelection >>> isNotTop >>> filterA hasUnitProfile) 
+      <+>  deepWithout isModelOrUnit (isSelection >>> isNotTop >>> filterA containsNoModelsOrUnits >>> filterA hasWeaponSelection)
+      ) `orElse`
+
       deep (isSelection >>> inheritsSomeProfile (isSelection >>> hasWeaponsAndIsntInsideModel)) `orElse` 
+
       multi (isSelection >>> filterA hasUnitProfile)) >>>
       arr nub >>> unlistA >>> printNameAndId "Models: " where
         isSelection = isElem >>> hasName "selection"
@@ -377,7 +389,12 @@ addUnitWeapons g w  = foldl' (.) id (map addUnitWeapon w) (sortOn ( (* (-1)) . _
 
 
 copiableWeapons :: [String]
-copiableWeapons = ["Stalker Bolt Rifle", "Bolt rifle", "Auto Bolt Rifle"]
+copiableWeapons = ["Stalker Bolt Rifle", 
+                   "Bolt rifle", 
+                   "Auto Bolt Rifle", 
+                   "Plasma incinerator",
+                   "Heavy Plasma Incinerator", 
+                   "Assault Plasma Incinerator"]
 
 weaponShouldBeCopied :: Weapon -> Bool
 weaponShouldBeCopied w = _weaponName w `elem` copiableWeapons

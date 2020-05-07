@@ -1,6 +1,7 @@
 tts-examples
 *.ros
 *.rosz
+!test_rosters/*.rosz
 *.txt
 *.testros.test
 frontend/elm-stuff/

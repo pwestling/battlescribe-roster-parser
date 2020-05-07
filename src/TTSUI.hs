@@ -290,6 +290,7 @@ function operateOnModels(fn)
 end
 
 function updateModelCount()
+  collectUnitModels()
   local modelCounts = {}
   if unitModels then
     for k, model in pairs(unitModels) do
