@@ -12,6 +12,7 @@ import           Control.Arrow.ListArrow
 import           Control.Lens               hiding (deep, (.=))
 import           Control.Monad
 import           Control.Monad.List
+import           Control.Monad.Random
 import           Data.Aeson
 import           Data.Aeson.Lens
 import qualified Data.ByteString            as BS
@@ -26,6 +27,7 @@ import           Data.Maybe
 import           Data.Monoid
 import qualified Data.Text                  as T
 import           Data.Text.Encoding
+import qualified Data.Vector                as Vec
 import qualified Debug.Trace                as Debug
 import           Safe
 import           System.Environment
@@ -35,8 +37,6 @@ import           TTSJson
 import           TTSUI
 import           Types
 import           XmlHelper
-import           Control.Monad.Random
-import qualified Data.Vector as Vec
 
 
 textColor :: String -> String -> String
@@ -138,17 +138,27 @@ isSpecialCaseSelection = deep $ isElem >>> hasName "selection" >>> hasAttrValue 
     "Ravenwing Talonmaster"
     ]
 
+isSpecialCaseSubGroup :: ArrowXml a => a XmlTree XmlTree
+isSpecialCaseSubGroup = deep $ isElem >>> hasName "selection" >>> hasAttrValue "name" (`elem` exceptions) where
+  exceptions = [
+    "Space Marine w/Special Weapon",
+    "Grot Oiler",
+    "Big Mek W/ Shokk Attack Gun",
+    "Big Mek W/ Kustom Force Field"
+    ]
+
 findModels :: ArrowXml a => String -> a XmlTree XmlTree
-findModels topId = 
+findModels topId =
       listA (
       isSpecialCaseSelection `orElse`
 
       (multi (isSelection >>> filterA (isType "model"))
-      <+> multi (isSelection >>> isNotTop >>> filterA hasUnitProfile) 
-      <+>  deepWithout isModelOrUnit (isSelection >>> isNotTop >>> filterA containsNoModelsOrUnits >>> filterA hasWeaponSelection)
+      <+> multi (isSelection >>> isNotTop >>> filterA hasUnitProfile)
+      <+> isSpecialCaseSubGroup
+      -- <+>  deepWithout isModelOrUnit (isSelection >>> isNotTop >>> filterA containsNoModelsOrUnits >>> filterA hasWeaponSelection)
       ) `orElse`
 
-      deep (isSelection >>> inheritsSomeProfile (isSelection >>> hasWeaponsAndIsntInsideModel)) `orElse` 
+      deep (isSelection >>> inheritsSomeProfile (isSelection >>> hasWeaponsAndIsntInsideModel)) `orElse`
 
       multi (isSelection >>> filterA hasUnitProfile)) >>>
       arr nub >>> unlistA >>> printNameAndId "Models: " where
@@ -221,7 +231,8 @@ getWeapon modelCount = proc (partial, el) -> do
   ap <- getWeaponStat "AP" -< el
   damage <- getWeaponStat "D" -< el
   special <- getWeaponStat "Abilities" -< el
-  returnA -< Weapon (_partialWeaponName partial) range weaponType str ap damage special (_partialWeaponCount partial) (_partialWeaponId partial)
+  name <- getNameAttrValue `orElse` arr (const (_partialWeaponName partial)) -<< el
+  returnA -< Weapon name range weaponType str ap damage special (_partialWeaponCount partial) (_partialWeaponId partial)
 
 profileOfThisModel :: ArrowXml a => String -> a XmlTree XmlTree
 profileOfThisModel profileType = this />
@@ -257,8 +268,11 @@ weaponPartial modelCount = proc el -> do
 getWeapons :: ArrowXml a => Int -> a XmlTree [Weapon]
 getWeapons modelCount = listA $ profileOfThisModelWithSelectionData "Weapon" (weaponPartial modelCount) >>> getWeapon modelCount
 
-getWeaponsShallow :: ArrowXml a => Int -> a XmlTree [Weapon]
-getWeaponsShallow modelCount = listA $ profileOfThisModelWithSelectionDataShallow "Weapon" (weaponPartial modelCount) >>> getWeapon modelCount
+getWeaponsShallow :: ArrowXml a => [String] -> Int -> a XmlTree [Weapon]
+-- getWeaponsShallow foundGroups modelCount = listA $ profileOfThisModelWithSelectionDataShallow "Weapon" (weaponPartial modelCount) >>> getWeapon modelCount
+getWeaponsShallow foundGroups modelCount = listA $ this /> deepWithout blockFoundGroups (hasName "selection" >>> filterA anyWeaponSelection) >>> (weaponPartial modelCount &&& anyWeaponSelection) >>> getWeapon modelCount where
+  blockFoundGroups = hasAttrValue "id" (`elem` foundGroups)
+  anyWeaponSelection = hasName "selection" /> hasName "profiles" /> hasName "profile" >>> isType "Weapon"
 
 getNameAndMultiplier :: String -> (String, Int)
 getNameAndMultiplier name = result where
@@ -319,7 +333,7 @@ mapRight f (Left t)  = Left t
 mapRight f (Right t) = Right (f t)
 
 modelSet ::  ModelFinder -> Unit -> ModelGroup -> T.Text -> T.Text -> T.Text -> IO (Maybe Value)
-modelSet finder unit modelGroup nameWithWounds description rosterId = do 
+modelSet finder unit modelGroup nameWithWounds description rosterId = do
     maybeJson <- finder unit modelGroup
     case maybeJson of
       Just json ->  do
@@ -389,12 +403,18 @@ addUnitWeapons g w  = foldl' (.) id (map addUnitWeapon w) (sortOn ( (* (-1)) . _
 
 
 copiableWeapons :: [String]
-copiableWeapons = ["Stalker Bolt Rifle", 
-                   "Bolt rifle", 
-                   "Auto Bolt Rifle", 
-                   "Plasma incinerator",
-                   "Heavy Plasma Incinerator", 
-                   "Assault Plasma Incinerator"]
+copiableWeapons = ["Stalker Bolt Rifle",
+                   "Bolt rifle",
+                   "Auto Bolt Rifle",
+                   "Plasma incinerator, Standard",
+                   "Plasma incinerator, Supercharge",
+                   "Heavy Plasma Incinerator, Standard",
+                   "Heavy Plasma Incinerator, Supercharged",
+                   "Assault Plasma Incinerator, Standard",
+                   "Assault Plasma Incinerator, Supercharge",
+                   "Fragstorm Grenade Launcher",
+                   "Auto Boltstorm Gauntlets (Shooting)",
+                   "Auto Boltstorm Gauntlets (Melee)"]
 
 weaponShouldBeCopied :: Weapon -> Bool
 weaponShouldBeCopied w = _weaponName w `elem` copiableWeapons
@@ -402,9 +422,9 @@ weaponShouldBeCopied w = _weaponName w `elem` copiableWeapons
 addUnitWeapon :: Weapon -> [ModelGroup] -> [ModelGroup]
 addUnitWeapon w (g : groups)
   | wepC == 1 && weaponShouldBeCopied w = Debug.trace ("Single wep special case " ++ _weaponName w) $ g {_weapons = w{ _count = 1} : _weapons g, _modelCount = modelC } : addUnitWeapon w groups
-  | wepC < modelC = Debug.trace ("Fewer weps than models" ++ _weaponName w) [g {_weapons = w{ _count = 1} : _weapons g, _modelCount = wepC }, g{_modelCount = remModels}] ++ groups
-  | wepC `mod` modelC == 0 = Debug.trace ("Divisble weps per model" ++ _weaponName w) $ g {_weapons = w{_count = wepsPerModel} : _weapons g} : groups
-  | wepC > modelC = Debug.trace ("More weps than models" ++ _weaponName w) $ addUnitWeapon w{ _count = modelC} [g] ++ addUnitWeapon w{ _count = wepC - modelC} groups where
+  | wepC < modelC = Debug.trace ("Fewer weps than models " ++ _weaponName w) [g {_weapons = w{ _count = 1} : _weapons g, _modelCount = wepC }, g{_modelCount = remModels}] ++ groups
+  | wepC `mod` modelC == 0 = Debug.trace ("Divisble weps per model " ++ _weaponName w) $ g {_weapons = w{_count = wepsPerModel} : _weapons g} : groups
+  | wepC > modelC = Debug.trace ("More weps than models " ++ _weaponName w) $ addUnitWeapon w{ _count = modelC} [g] ++ addUnitWeapon w{ _count = wepC - modelC} groups where
     wepC = _count w
     wepType = _type w
     modelC = _modelCount g
@@ -421,7 +441,7 @@ makeUnit options rosterId = proc el -> do
   models <- listA (findModels selectionId) -<< el
   modelGroups <- mapA (getModelGroup stats) -<< models
   let groupSelectionIds = map _modelGroupId modelGroups
-  let weaponFinder = if selectionId `elem` groupSelectionIds then arr (const []) else getWeaponsShallow 1
+  let weaponFinder = if selectionId `elem` groupSelectionIds then arr (const []) else getWeaponsShallow groupSelectionIds 1
   weapons <- weaponFinder >>> da "Unit Level Weapons: " -<< el
   let finalModelGroups = addUnitWeapons modelGroups weapons
   script <- scriptFromXml options rosterId name selectionId -<< el
@@ -471,7 +491,7 @@ assignmentToPair (ModelAssignment desc val) = (desc,  Vec.singleton val)
 finder :: HM.HashMap ModelDescriptor (Vec.Vector Value) -> ModelFinder
 finder map unit modelGroup = do
   let values = HM.lookup (createModelDescriptor unit modelGroup) map
-  let choose vs = if not (null  vs) then 
+  let choose vs = if not (null  vs) then
           evalRandIO $ do
                 r <- getRandomR (0, length vs - 1)
                 return $ Just (vs Vec.! Debug.traceShowId r)
