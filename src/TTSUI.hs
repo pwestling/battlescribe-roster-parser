@@ -277,7 +277,7 @@ function operateOnModels(fn)
     collectUnitModels()
   end
   local originModel = nil
-  local dist = 10000
+  local dist = 100000000000
   for k, model in pairs(unitModels) do
     local newDist = distance2D({x=0,y=0,z=0}, model.getPosition())
     if not model.is_face_down and newDist < dist then
@@ -297,6 +297,7 @@ function updateModelCount()
       model.highlightOff()
     end
   end
+
   local getModelNames = function(model)
     if not modelCounts[model.getName()] then
       modelCounts[model.getName()] = 0
@@ -306,11 +307,13 @@ function updateModelCount()
       model.highlightOn(highlighting)
     end
   end
+
   operateOnModels(getModelNames)
   local label = ""
   local keys = {}
   for k in pairs(modelCounts) do table.insert(keys, k) end
   table.sort(keys)
+
   for index,k in pairs(keys) do
     local v = modelCounts[k]
     modelName = string.gsub(k, "[0-9]+/[0-9]+","")
@@ -373,8 +376,8 @@ function onDestroy()
   collectUnitModels()
   if #unitModels > 1 then
     print(JSON.encode(self.getPosition()))
-    self.clone({position = self.getPosition()})
-    broadcastToAll("Script owner for $name has been destroyed. Recreating model so that scripts continue to function. You can delete this model if you delete all other models in its unit first.")
+    local newobj = self.clone({position = {x = 10000, y = 10000, z = 10000}})
+    newobj.setLock(true)
   end
   for k,v in pairs(Player.getColors()) do
     UI.hide(createName(v))

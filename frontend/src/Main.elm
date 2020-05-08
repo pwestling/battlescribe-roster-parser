@@ -16,11 +16,14 @@ import Markdown
 import Maybe exposing (withDefault)
 import Html.Parser
 import Html.Parser.Util
+import Url exposing (Url)
 
 
 main : Program () Model Msg
 main =
-    Browser.document { init = \_ -> init, view = viewWithTitle, update = update, subscriptions = subs }
+    Browser.application { init = \_ -> \url -> \_ -> init url, view = viewWithTitle, update = update, subscriptions = subs,
+      onUrlChange = \_ -> NoOp
+    , onUrlRequest = \_ -> NoOp }
 
 
 type alias RosterId =
@@ -44,14 +47,18 @@ type alias Model =
     , addScript : Bool
     , uiWidth : String
     , uiHeight : String
+    , localMode : Bool
+    , appHost : String
     }
 
 
-init : ( Model, Cmd Msg )
-init =
+init : Url -> ( Model, Cmd Msg )
+init url =
     let
         ( navbarState, navbarCmd ) =
             Navbar.initialState NavbarMsg
+        localMode = url.host == "localhost"
+        appHost = url.host
     in
     ( { rosterCode = Nothing
       , navbarState = navbarState
@@ -59,6 +66,8 @@ init =
       , addScript = True
       , uiWidth = "700"
       , uiHeight = "450"
+      , localMode = localMode
+      , appHost = appHost
       }
     , navbarCmd
     )
@@ -73,8 +82,7 @@ asUrl : String -> List ( String, String ) -> String
 asUrl base params =
     base ++ "?" ++ String.join "&" (List.map (\( s1, s2 ) -> s1 ++ "=" ++ s2) params)
 
-localMode = False
-serverAddress = if localMode then "http://localhost:8080/roster" else "https://backend.battlescribe2tts.net/roster"
+serverAddress localMode = if localMode then "http://localhost:8080/roster" else "https://backend.battlescribe2tts.net/roster"
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -89,7 +97,7 @@ update msg model =
                     , Http.post
                         { url =
                             asUrl 
-                            serverAddress
+                            (serverAddress model.localMode)
                                 [ ( "addScripts"
                                   , if model.addScript then
                                         "true"
@@ -138,7 +146,7 @@ subscriptions model =
 
 viewWithTitle : Model -> Browser.Document Msg
 viewWithTitle model =
-    { title = "Battlescribe2TTS", body = [ view model ] }
+    { title = "Battlescribe2TTS" ++ (if model.localMode then " Local" else ""), body = [ view model ] }
 
 
 view : Model -> Html Msg
@@ -158,7 +166,7 @@ navbar model =
         |> Navbar.withAnimation
         |> Navbar.brand [ href "#" ]
             [ img [ src "assets/bs2tts.png", style "width" "30%" ] []
-            , span [ style "font-size" "3em", style "margin" "1em" ] [ text "Battlescribe2TTS" ]
+            , span [ style "font-size" "3em", style "margin" "1em" ] [ text ("Battlescribe2TTS" ++ (if model.localMode then " Local" else "")) ]
             ]
         |> Navbar.view model.navbarState
 
