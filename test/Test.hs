@@ -1,6 +1,7 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE OverloadedStrings     #-}
 
+
 import Test.Hspec
 import Types
 import RosterProcessing (processRoster)
@@ -8,6 +9,8 @@ import           Codec.Archive.Zip
 import qualified Data.ByteString.Lazy                 as B
 import qualified Data.ByteString.Lazy.Char8           as C8
 import           Data.Aeson
+import           Data.Data
+import           Data.Generics
 
 
 {-# ANN module ("HLint: ignore Redundant do" :: String) #-}
@@ -35,6 +38,12 @@ processUnits fileName count = do
    shouldSatisfy (fmap _unitName units) (\u -> length u == count)
    return units
 
+hasStat :: ModelGroup -> (Stats -> String) -> String -> IO ()
+hasStat unit statGetter val = do
+    let maybeStats =  _stats unit
+    case maybeStats of
+      Just stats -> statGetter stats `shouldBe` val
+      Nothing -> expectationFailure "Model should have stats"
 
 hasWeaponNamed :: ModelGroup -> String -> IO ()
 hasWeaponNamed unit weaponName = do
@@ -50,6 +59,17 @@ hasWeapons unit weapons = do
   mapM_ (hasWeaponNamed unit) weapons
   length (_weapons unit) `shouldBe` length weapons
 
+isEquivalent :: ModelGroup -> ModelGroup -> IO ()
+isEquivalent m1 m2 = do
+  let cleanWeapons mg = mg { _weapons = fmap (\x -> x {_id = ""} :: Weapon) (_weapons mg)}
+  let cleanUpgrades mg = mg {_upgrades = fmap (\x -> x {_id = ""} :: Upgrade) (_upgrades mg)}
+  let cleanAbilities mg = mg {_abilities = fmap (\x -> x {_id = ""} :: Ability) (_abilities mg)}
+  let clean = cleanWeapons . cleanAbilities . cleanUpgrades
+  let m1clean = clean $ m1 {_modelGroupId = ""}
+  let m2clean = clean $ m2 {_modelGroupId = ""}
+  m1clean `shouldBe` m2clean
+
+
 hasAbilities :: ModelGroup -> [String] -> IO ()
 hasAbilities unit abilities = do
   print $ fmap _abilityName  (_abilities unit)
@@ -64,6 +84,11 @@ hasGroups :: Unit -> Int -> IO()
 hasGroups unit count = do
     print $ fmap _name (_subGroups unit)
     shouldSatisfy (fmap _name (_subGroups unit)) (\u -> length u == count)
+
+printUnits :: [Unit] -> IO ()
+printUnits units = putStrLn $ C8.unpack $ encode cleanUnits where
+  cleanUnits = fmap cleanUnit units
+  cleanUnit unit = unit { _script = ""}
 
 main :: IO ()
 main = hspec $ do
@@ -188,3 +213,34 @@ main = hspec $ do
         grot `hasCount` 1
         grot `hasWeapons` []
         grot `hasAbilities` ["Grot Oiler"]
+      it "creates Painboy correctly" $ do
+        unit <- processUnit "Painboy"
+        unit `hasGroups` 2
+        let [grot, painboy] = _subGroups unit
+        grot `hasCount` 1
+        grot `hasWeapons` []
+        painboy `hasCount` 1
+        painboy `hasWeapons` ["Power Klaw", "'Urty Syringe"]
+      it "creates Thunderfire correctly" $ do
+        unit <- processUnit "ThunderfireCannon"
+        unit `hasGroups` 2
+        let [cannon, techmarine] = _subGroups unit
+        techmarine `hasCount` 1
+        techmarine `hasWeapons` ["Bolt pistol", "Flamer", "Plasma cutter, Standard", "Plasma cutter, Supercharge", "Servo-arm"]
+        hasStat techmarine _strength "4"
+        cannon `hasCount` 1
+        cannon `hasWeapons` ["Thunderfire Cannon"]
+        hasStat cannon _strength "3"
+      it "creates Ravenwing Bikes correctly" $ do
+        unit <- processUnit "RavenwingBikeSquad"
+        unit `hasGroups` 4
+        let [sargeant, biker1, biker2, attackbike] = _subGroups unit
+        sargeant `hasCount` 1
+        sargeant `hasWeapons` ["Bolt pistol", "Frag grenade", "Krak grenade", "Twin boltgun"]
+        hasStat sargeant _leadership "8"
+        biker1 `isEquivalent` biker2
+        biker1 `hasCount` 1
+        biker1 `hasWeapons` ["Bolt pistol", "Frag grenade", "Krak grenade", "Twin boltgun"]
+        hasStat biker1 _leadership "7"
+        attackbike `hasCount` 1
+        attackbike `hasWeapons` ["Heavy bolter", "Bolt pistol", "Twin boltgun"]

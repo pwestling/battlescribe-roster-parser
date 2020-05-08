@@ -22,12 +22,12 @@ data Ability = Ability{
     _abilityName :: String,
     _id          :: String,
     _description :: String
-} deriving (Show, Eq)
+} deriving (Show, Eq, Generic)
 
 data Upgrade = Upgrade{
     _upgradeName :: String,
     _id          :: String
-} deriving (Show, Eq)
+} deriving (Show, Eq, Generic)
 
 data ModelGroup = ModelGroup {
     _modelGroupId :: String,
@@ -56,7 +56,7 @@ data Unit = Unit {
     _unitSelectionId  :: String,
     _unitName         :: String,
     _forceName        :: String,
-    _unitDefaultStats :: Stats,
+    _unitDefaultStats :: [(String, Stats)],
     _subGroups        :: [ModelGroup],
     _unitAbilities    :: [Ability],
     _unitWeapons      :: [Weapon],

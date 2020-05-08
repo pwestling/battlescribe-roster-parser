@@ -139,12 +139,18 @@ isSpecialCaseSelection = deep $ isElem >>> hasName "selection" >>> hasAttrValue 
     ]
 
 isSpecialCaseSubGroup :: ArrowXml a => a XmlTree XmlTree
-isSpecialCaseSubGroup = deep $ isElem >>> hasName "selection" >>> hasAttrValue "name" (`elem` exceptions) where
+isSpecialCaseSubGroup = multi $ isElem >>> hasName "selection" >>> (hasAttrValue "name" (`elem` exceptions) `orElse` hasAttrValue "entryid" (`elem` exceptionIds)) where
   exceptions = [
     "Space Marine w/Special Weapon",
     "Grot Oiler",
     "Big Mek W/ Shokk Attack Gun",
-    "Big Mek W/ Kustom Force Field"
+    "Big Mek W/ Kustom Force Field",
+    "Grot Orderly (Index)",
+    "Painboy",
+    "Techmarine Gunner"  
+    ]
+  exceptionIds = [
+    "e050-9739-5f42-0094::f1a3-48e8-0804-fb8e" -- Thunderfire Cannon
     ]
 
 findModels :: ArrowXml a => String -> a XmlTree XmlTree
@@ -208,9 +214,9 @@ getUpgrades = listA $ this /> hasName "selections" /> hasName "selection" >>>  i
     id <- getAttrValue "id" -< el
     returnA -< (Upgrade name id)
 
-getStats :: ArrowXml a => a XmlTree Stats
-getStats = (profileOfThisModel "Unit"  `orElse` profileOfThisModel "Model") />
-           hasName "characteristics" >>>
+getStats :: ArrowXml a => a XmlTree (String, Stats)
+getStats = (profileOfThisModel "Unit"  `orElse` profileOfThisModel "Model") >>>
+           (getNameAttrValue &&& (this /> hasName "characteristics" >>>
               proc el -> do
               move <- getStat "M" -< el
               ws <- getStat "WS" -< el
@@ -221,7 +227,7 @@ getStats = (profileOfThisModel "Unit"  `orElse` profileOfThisModel "Model") />
               a <- getStat "A" -< el
               ld <- getStat "Ld" -< el
               sa <- getStatF (`elem` ["Save", "Sv"]) -< el
-              returnA -< (Stats move ws bs s t w a ld sa)
+              returnA -< (Stats move ws bs s t w a ld sa)))
 
 getWeapon :: ArrowXml a => Int -> a (PartialWeapon, XmlTree) Weapon
 getWeapon modelCount = proc (partial, el) -> do
@@ -239,21 +245,16 @@ profileOfThisModel profileType = this />
                     ((hasName "selections" /> hasName "selection" >>> isType "upgrade" /> hasName "profiles" /> hasName "profile" >>> isType profileType)
                     <+> (hasName "profiles" /> hasName "profile" >>> isType profileType))
 
+profileOfThisModelWithSelectionDataDeep :: ArrowXml a => String -> a XmlTree b -> a XmlTree (b, XmlTree)
+profileOfThisModelWithSelectionDataDeep profileType selectionFn = this />
+                    (hasName "selections" /> hasName "selection" >>> isType "upgrade" >>>
+                    (profileOfThisModelWithSelectionDataDeep profileType selectionFn <+>
+                    (selectionFn &&& (this /> hasName "profiles" /> hasName "profile" >>> isType profileType))))
 
-profileOfThisModelWithSelectionDataHelper arr =
-    this /> hasName "selections" /> hasName "selection" >>> isType "upgrade"
-      >>> (this /> hasName "selections" >>> profileOfThisModelWithSelectionDataHelper arr `orElse` arr)
 
 profileOfThisModelWithSelectionData :: ArrowXml a => String -> a XmlTree b -> a XmlTree (b, XmlTree)
-profileOfThisModelWithSelectionData profileType selectionFn = this />
-                    (hasName "selections" /> hasName "selection" >>> isType "upgrade" >>>
-                    profileOfThisModelWithSelectionData profileType selectionFn <+>
-                    (selectionFn &&& (this /> hasName "profiles" /> hasName "profile" >>> isType profileType)))
-
-profileOfThisModelWithSelectionDataShallow :: ArrowXml a => String -> a XmlTree b -> a XmlTree (b, XmlTree)
-profileOfThisModelWithSelectionDataShallow profileType selectionFn = this />
-                    (hasName "selections" /> hasName "selection" >>> isType "upgrade" >>>
-                    (selectionFn &&& (this /> hasName "profiles" /> hasName "profile" >>> isType profileType)))
+profileOfThisModelWithSelectionData profileType selectionFn = profileOfThisModelWithSelectionDataDeep profileType selectionFn `orElse` 
+                    (this >>> (selectionFn &&& (this /> hasName "profiles" /> hasName "profile" >>> isType profileType)))
 
 data PartialWeapon = PartialWeapon {_partialWeaponId :: String, _partialWeaponName :: String, _partialWeaponCount :: Int}
 
@@ -269,7 +270,6 @@ getWeapons :: ArrowXml a => Int -> a XmlTree [Weapon]
 getWeapons modelCount = listA $ profileOfThisModelWithSelectionData "Weapon" (weaponPartial modelCount) >>> getWeapon modelCount
 
 getWeaponsShallow :: ArrowXml a => [String] -> Int -> a XmlTree [Weapon]
--- getWeaponsShallow foundGroups modelCount = listA $ profileOfThisModelWithSelectionDataShallow "Weapon" (weaponPartial modelCount) >>> getWeapon modelCount
 getWeaponsShallow foundGroups modelCount = listA $ this /> deepWithout blockFoundGroups (hasName "selection" >>> filterA anyWeaponSelection) >>> (weaponPartial modelCount &&& anyWeaponSelection) >>> getWeapon modelCount where
   blockFoundGroups = hasAttrValue "id" (`elem` foundGroups)
   anyWeaponSelection = hasName "selection" /> hasName "profiles" /> hasName "profile" >>> isType "Weapon"
@@ -280,12 +280,17 @@ getNameAndMultiplier name = result where
   result = if not (null digits) && "x " `isPrefixOf` rest then (drop 2 rest, read digits) else (name, 1)
 
 
-getModelGroup :: ArrowXml a => Stats -> a XmlTree ModelGroup
+filterByA :: (ArrowXml a, Show b) => (b -> Bool) -> a b b
+filterByA pred = this >>. filter pred
+
+getModelGroup :: ArrowXml a => [(String, Stats)] -> a XmlTree ModelGroup
 getModelGroup defaultStats = proc el -> do
   (name, mult) <- getNameAttrValue >>> da "Model Group: " >>> arr getNameAndMultiplier -< el
   id <- getAttrValue "id" -< el
+  defaultFirstStat <- single (arr (const defaultStats) >>> unlistA >>^ snd) `withDefault` zeroStats -< el
+  defaultMatchingStat <- (single (arr (const defaultStats) >>> da "Defaults: " >>> unlistA >>> filterByA (\p -> Debug.traceShowId (fst p == Debug.traceShowId name))) >>^ snd) `withDefault` defaultFirstStat -<< el
   count <- getAttrValue "number" >>> arr readMay >>> arr (fromMaybe 0) >>> arr (* mult)  >>> da "Model Count: " -<< el
-  stats <- listA ((getStats >>> da "Stats: ") `orElse` arr (const defaultStats))  -< el
+  stats <- listA (((getStats >>> da "Stats: ") `orElse` arr (const ("",defaultMatchingStat))) >>> arr snd)  -<< el
   weapons <- getWeapons count >>> da "Weapons: "  -<< el
   abilities <- getAbilities -< el
   upgrades <- getUpgrades  >>> da "Upgrades: "-< el
@@ -346,7 +351,7 @@ retrieveAndModifySingleGroupJSON :: T.Text -> ModelFinder -> Unit -> ModelGroup 
 retrieveAndModifySingleGroupJSON rosterId modelFinder unit modelGroup = do
    let modelName =  modelGroup ^. name
    let uName = unit ^. unitName
-   let theStats =  fromMaybe (unit ^. unitDefaultStats) (modelGroup ^. stats)
+   let theStats =  fromMaybe ((snd . head) (unit ^. unitDefaultStats)) (modelGroup ^. stats)
    let description = toDescription unit modelGroup theStats
    let woundCount = fromMaybe 0 (readMay (theStats ^. wounds))
    let nameWithWounds = mconcat $ (if woundCount > 1 then
@@ -437,7 +442,7 @@ makeUnit options rosterId = proc el -> do
   name <- getNameAttrValue >>> da "Unit Name: " -< el
   selectionId <- getAttrValue "id" -< el
   abilities <- getAbilities -< el
-  stats <- listA getStats >>> arr listToMaybe >>> arr (fromMaybe zeroStats)  -< el
+  stats <- listA (getStats `orElse` arr (const ("None", zeroStats)))  -< el
   models <- listA (findModels selectionId) -<< el
   modelGroups <- mapA (getModelGroup stats) -<< models
   let groupSelectionIds = map _modelGroupId modelGroups
