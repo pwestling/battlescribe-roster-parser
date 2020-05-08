@@ -4948,11 +4948,11 @@ function _File_toUrl(blob)
 	});
 }
 
+var author$project$Frontend$NoOp = {$: 'NoOp'};
 var author$project$Frontend$NavbarMsg = function (a) {
 	return {$: 'NavbarMsg', a: a};
 };
 var elm$core$Basics$True = {$: 'True'};
-var elm$core$Maybe$Nothing = {$: 'Nothing'};
 var elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var elm$core$Array$foldr = F3(
 	function (func, baseCase, _n0) {
@@ -5033,6 +5033,8 @@ var elm$core$Set$toList = function (_n0) {
 	var dict = _n0.a;
 	return elm$core$Dict$keys(dict);
 };
+var elm$core$Basics$eq = _Utils_equal;
+var elm$core$Maybe$Nothing = {$: 'Nothing'};
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -5251,7 +5253,6 @@ var elm$core$Array$compressNodes = F2(
 			}
 		}
 	});
-var elm$core$Basics$eq = _Utils_equal;
 var elm$core$Tuple$first = function (_n0) {
 	var x = _n0.a;
 	return x;
@@ -5778,14 +5779,16 @@ var rundis$elm_bootstrap$Bootstrap$Navbar$initialState = function (toMsg) {
 		state,
 		A2(rundis$elm_bootstrap$Bootstrap$Navbar$initWindowSize, toMsg, state));
 };
-var author$project$Frontend$init = function () {
+var author$project$Frontend$init = function (url) {
+	var localMode = url.host === 'localhost';
+	var appHost = url.host;
 	var _n0 = rundis$elm_bootstrap$Bootstrap$Navbar$initialState(author$project$Frontend$NavbarMsg);
 	var navbarState = _n0.a;
 	var navbarCmd = _n0.b;
 	return _Utils_Tuple2(
-		{addScript: true, message: elm$core$Maybe$Nothing, navbarState: navbarState, rosterCode: elm$core$Maybe$Nothing, uiHeight: '450', uiWidth: '700'},
+		{addScript: true, appHost: appHost, localMode: localMode, message: elm$core$Maybe$Nothing, navbarState: navbarState, rosterCode: elm$core$Maybe$Nothing, uiHeight: '450', uiWidth: '700'},
 		navbarCmd);
-}();
+};
 var elm$core$Platform$Sub$batch = _Platform_batch;
 var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$Frontend$subs = function (_n0) {
@@ -5816,6 +5819,9 @@ var author$project$Frontend$rosterDecoder = A2(
 		return {id: id};
 	},
 	A2(elm$json$Json$Decode$field, 'id', elm$json$Json$Decode$string));
+var author$project$Frontend$serverAddress = function (localMode) {
+	return localMode ? 'http://localhost:8080/roster' : 'https://backend.battlescribe2tts.net/roster';
+};
 var elm$core$Basics$not = _Basics_not;
 var elm$core$Debug$toString = _Debug_toString;
 var elm$core$List$head = function (list) {
@@ -6662,7 +6668,7 @@ var author$project$Frontend$update = F2(
 								expect: A2(elm$http$Http$expectJson, author$project$Frontend$GotTTSJson, author$project$Frontend$rosterDecoder),
 								url: A2(
 									author$project$Frontend$asUrl,
-									'https://backend.battlescribe2tts.net/roster',
+									author$project$Frontend$serverAddress(model.localMode),
 									_List_fromArray(
 										[
 											_Utils_Tuple2(
@@ -14371,7 +14377,7 @@ var author$project$Frontend$instructions = A2(
 					A2(elm$html$Html$Attributes$style, 'margin-top', '2em'),
 					A2(elm$html$Html$Attributes$style, 'margin-bottom', '5em')
 				]),
-			A2(pablohirafuji$elm_markdown$Markdown$toHtml, elm$core$Maybe$Nothing, '\n## How To Use\n        \nThis website is designed to be used with the in-game tool for Tabletop Simulator provided \n[here](https://steamcommunity.com/sharedfiles/filedetails/?id=1793303279). This tool helps with \nimporting Warhammer 40k rosters created in the [Battlescribe](https://battlescribe.net/) army builder tool into TTS.\n\nTo use this tool first create a roster with [Battlescribe](https://battlescribe.net/) and save \nthe roster file (the file created should have the .rosz extension). Use the button above to upload \nthe .rosz file. When the roster is uploaded, you\'ll be provided a code - copy this to your clipboard. \nYour code will remain valid for 1 hour\n\nIn Tabletop Simulator, paste the code into the Battlescribe2TTS tool and then click "Submit Code". A series of buttons \nwill be created corresponding to the various selections in your army. To tell the tool which in-game model to \nuse for a particular selection, first click the button, then pick up the model you want to use. The button should change \ncolors to indicate the model has been saved.\n\nOnce all models have been selected, click the "Create Army" button. The models for your army will be \nspawned into the game, organized by unit, with their names and descriptions filled in from your Battlescribe data. \nYou\'re ready to play!\n\nAn example roster created using this tool:\n\n![Example Roster](assets/example-roster.png "Example Roster")\n\n## In-Game Scripting\n\n### Datasheets\n\nEvery unit can have a full datasheet brought up by pressing Scripting Button 1 over a model from the unit. \nScripting Button 1 is the "1" key on the keypad by default, but you can map it to some other key in the \nTabletop Simulator options.\n\nAn example datasheet:\n\n![Example Datasheet](assets/ttsui.jpeg "Example Datasheet")\n\n### Coherency\n\nThe datasheet will give a read out of all the models in the unit that are in coherency. Models closer to the \ncenter of the table are preferred, and models are not counted if they are flipped over, so you can remove models \nfrom the table or flip them upside down with the flip key to remove them from the unit count. The highlight button \nwill toggle a highlight on the models the script believes are in coherency.\n\n## Saved Models\n\nWhen you select a model with the Battlescribe2TTS tool, the model you\'ve selected is saved \ninto the tool. You can avoid having to re-select models for similar armies in the future by \nadding the tool to your "Saved Objects" after selecting models. Your selections will be saved \nand automatically populated in the future for matching units\n\n## Reporting Issues\n\nIf you have issues trying to use this tool, please create an issue on \n[github](https://github.com/pwestling/battlescribe-roster-parser/issues). Please note that \nnone of this is supported by the Battlescribe or Tabletop Simulator teams in any way, so don\'t complain to them!\n        '))
+			A2(pablohirafuji$elm_markdown$Markdown$toHtml, elm$core$Maybe$Nothing, '\n## How To Use\n        \nThis website is designed to be used with the in-game tool for Tabletop Simulator provided \n[here](https://steamcommunity.com/sharedfiles/filedetails/?id=1793303279). This tool helps with \nimporting Warhammer 40k rosters created in the [Battlescribe](https://battlescribe.net/) army builder tool into TTS.\n\nTo use this tool first create a roster with [Battlescribe](https://battlescribe.net/) and save \nthe roster file (the file created should have the .rosz extension). Use the button above to upload \nthe .rosz file. When the roster is uploaded, you\'ll be provided a code - copy this to your clipboard. \nYour code will remain valid for 1 hour\n\nIn Tabletop Simulator, paste the code into the Battlescribe2TTS tool and then click "Submit Code". A series of buttons \nwill be created corresponding to the various selections in your army. To tell the tool which in-game model to \nuse for a particular selection, first click the button, then pick up the model you want to use. The button should change \ncolors to indicate the model has been saved.\n\nIf you want to use multiple models for a selection, simple box select all of the models and pick them \nup together. Models will be assigned randomly to squad members.\n\nOnce all models have been selected, click the "Create Army" button. The models for your army will be \nspawned into the game, organized by unit, with their names and descriptions filled in from your Battlescribe data. \nYou\'re ready to play!\n\nAn example roster created using this tool:\n\n![Example Roster](assets/example-roster.png "Example Roster")\n\n## In-Game Scripting\n\n### Datasheets\n\nEvery unit can have a full datasheet brought up by pressing Scripting Button 1 over a model from the unit. \nScripting Button 1 is the "1" key on the keypad by default, but you can map it to some other key in the \nTabletop Simulator options.\n\nAn example datasheet:\n\n![Example Datasheet](assets/ttsui.jpeg "Example Datasheet")\n\n### Wounds\n\nYou can use Scripting Button 2 to decrease a model\'s wounds by 1 (indicated in it\'s name), or Scripting Button 3 to increase the wounds by 1.\n\n### Unit Colors and Coherency\n\nThe datasheet will give a read out of all the models in the unit that are in coherency. Models closer to the \ncenter of the table are preferred, and models are not counted if they are flipped over, so you can remove models \nfrom the table or flip them upside down with the flip key to remove them from the unit count. \n\nThe colored buttons at the bottom of the sheet will toggle a colored highlight on the models the script believes are in coherency. \nYou can use the colors to help distinguish models from different units.\n\n## Saved Models\n\nWhen you select a model with the Battlescribe2TTS tool, the model you\'ve selected is saved \ninto the tool. You can avoid having to re-select models for similar armies in the future by \nadding the tool to your "Saved Objects" after selecting models. Your selections will be saved \nand automatically populated in the future for matching units\n\n## Reporting Issues\n\nIf you have issues trying to use this tool, please create an issue on \n[github](https://github.com/pwestling/battlescribe-roster-parser/issues). Please note that \nnone of this is supported by the Battlescribe or Tabletop Simulator teams in any way, so don\'t complain to them!\n        '))
 		]));
 var elm$html$Html$span = _VirtualDom_node('span');
 var rundis$elm_bootstrap$Bootstrap$Navbar$Brand = function (a) {
@@ -15249,7 +15255,8 @@ var author$project$Frontend$navbar = function (model) {
 						]),
 					_List_fromArray(
 						[
-							elm$html$Html$text('Battlescribe2TTS')
+							elm$html$Html$text(
+							'Battlescribe2TTS' + (model.localMode ? ' Local' : ''))
 						]))
 				]),
 			rundis$elm_bootstrap$Bootstrap$Navbar$withAnimation(
@@ -15519,14 +15526,24 @@ var author$project$Frontend$viewWithTitle = function (model) {
 			[
 				author$project$Frontend$view(model)
 			]),
-		title: 'Battlescribe2TTS'
+		title: 'Battlescribe2TTS' + (model.localMode ? ' Local' : '')
 	};
 };
-var elm$browser$Browser$document = _Browser_document;
-var author$project$Frontend$main = elm$browser$Browser$document(
+var elm$browser$Browser$application = _Browser_application;
+var author$project$Frontend$main = elm$browser$Browser$application(
 	{
 		init: function (_n0) {
-			return author$project$Frontend$init;
+			return function (url) {
+				return function (_n1) {
+					return author$project$Frontend$init(url);
+				};
+			};
+		},
+		onUrlChange: function (_n2) {
+			return author$project$Frontend$NoOp;
+		},
+		onUrlRequest: function (_n3) {
+			return author$project$Frontend$NoOp;
 		},
 		subscriptions: author$project$Frontend$subs,
 		update: author$project$Frontend$update,
