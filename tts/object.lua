@@ -2,12 +2,14 @@ ACTIVATED_BUTTON = "rgb(1,0.6,1)|rgb(1,0.4,1)|rgb(1,0.2,1)|rgb(1,0.2,1)"
 DEFAULT_BUTTON = "#FFFFFF|#FFFFFF|#C8C8C8|rgba(0.78,0.78,0.78,0.5)"
 prodServerURL = "https://backend.battlescribe2tts.net"
 serverURL = prodServerURL
-version = "1.6"
+version = "1.7"
 
 nextModelTarget = ""
 nextModelButton = ""
 descriptorMapping = {}
 code = ""
+recordCode=""
+recordTime=os.time()
 rosterMapping = {}
 buttonMapping = {}
 createArmyLock = false
@@ -40,8 +42,22 @@ function onLoad(statestr)
     local state = JSON.decode(statestr)
     rosterMapping = state.rosterMapping
     descriptorMapping = state.descriptorMapping
+    recordCode = state.recordCode
+    recordTime = state.recordTime
+    if recordCode == nil then
+      recordCode = ""
+      recordTime = os.time()
+    end
   end
   checkVersion()
+  local inputValue=""
+  local xmlString='<Panel width = "600" height = "600" position = "500 0 -300"> <VerticalLayout> <Text fontSize="50" color="rgb(1,1,1)">Battlescribe Army Creator</Text> <InputField  onValueChanged="setCode" placeholder="code" fontSize="50" id="code-input">'..recordCode..'</InputField> <Button onClick="submitCode" fontSize="50">Submit Code</Button> <Button onClick="createArmy" id="create-army" fontSize="50">Create Army</Button>   </VerticalLayout> </Panel>'
+  if isRecordedCodeValid() then
+     inputValue= recordCode
+     code=recordCode
+     printToAll("Autosetting recorded code", "Teal")
+  end
+  self.UI.setXml(xmlString)
   Wait.time(announce, 4)
 end
 
@@ -49,6 +65,8 @@ function onSave()
   return JSON.encode({
     rosterMapping = rosterMapping,
     descriptorMapping = descriptorMapping,
+    recordCode = recordCode,
+    recordTime = recordTime,
   })
 end
 
@@ -95,11 +113,11 @@ function onObjectPickUp(colorName, obj)
   if nextModelTarget ~= "" then
     obj.highlightOn({1, 0, 1}, 5)
     self.UI.setAttribute(nextModelButton, "colors", ACTIVATED_BUTTON)
-    table.insert(pickedUp, obj)
+    table.insert(pickedUp, obj.getGUID())
     if timerId ~= nil then
       Wait.stop(timerId)
     end
-    timerId = Wait.frames(function() 
+    timerId = Wait.frames(function()
       processPickups()
     end,10)
   end
@@ -108,10 +126,14 @@ end
 function processPickups()
   local modelList = {}
   print("Processing " .. tostring(#pickedUp) .. " pickups for " .. nextModelTarget)
-  for k, obj in pairs(pickedUp) do
+  for k, objGUID in pairs(pickedUp) do
+    local obj = getObjectFromGUID(objGUID)
     local bounds = obj.getBoundsNormalized()
     local width = math.max(bounds.size.x, bounds.size.z) * 1.2
+    local script  = obj.script_code
+    obj.script_code = ""
     local copy = JSON.decode(obj.getJSON())
+    obj.script_code = script
     copy.Nickname = nextModelTarget
     copy.States = nil
     copy.Width = width
@@ -126,7 +148,7 @@ function processPickups()
   local jsonData = JSON.encode(data)
   local this = self
   local name = nextModelTarget .. ""
- 
+
   descriptorMapping[name] = data.descriptor
   rosterMapping[name] = data.json
   if buttonMapping[name] ~= nil then
@@ -142,8 +164,32 @@ function filterObjectEnter(obj)
   return obj.getVar("bs2tts-allowed") == true
 end
 
+function doNothing()
+end
+
 function setCode(player, value, id)
-  code = value
+    if string.len(value) < 8 then
+      doNothing()
+      --printToAll("Skipping code!", "Red")
+      return
+    end
+    code = value
+    --printToAll("Setting code: "..code, "Yellow")
+    if code ~= recordCode or os.difftime(os.time(), recordTime) > 3600 then
+          recordCode= code
+          --printToAll("Recording code: "..recordCode, "Green")
+          recordTime = os.time()
+          self.script_state=onSave()
+    end
+end
+
+function isRecordedCodeValid()
+    --if code ~= recordCode or os.difftime(os.time(), recordTime) > 3600 then
+    if os.difftime(os.time(), recordTime) > 3600 then
+        return false
+    else
+        return true
+    end
 end
 
 function getCode()
@@ -197,7 +243,7 @@ function processNames(webReq)
     local weapons = getList("Weapons",v.modelWeapons)
     local abilities = getList("Abilities",v.modelAbilities)
     local upgrades = getList("Upgrades",v.modelUpgrades)
-    local name = "Model: " .. v.modelName .. weapons .. upgrades .. abilities 
+    local name = "Model: " .. v.modelName .. weapons .. upgrades .. abilities
     table.insert(buttonNames, { name = name, lineHeight = lineHeight})
     shortNames[name] = v.modelName
     descriptorMapping[name] = v
