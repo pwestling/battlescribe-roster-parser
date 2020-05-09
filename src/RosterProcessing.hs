@@ -145,6 +145,8 @@ isSpecialCaseSubGroup = multi $ isElem >>> hasName "selection" >>> (hasAttrValue
     "Grot Oiler",
     "Big Mek W/ Shokk Attack Gun",
     "Big Mek W/ Kustom Force Field",
+    "Big Mek in Mega Armour",
+    "Big Mek [Legends]",
     "Grot Orderly (Index)",
     "Painboy",
     "Techmarine Gunner"  

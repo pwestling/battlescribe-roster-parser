@@ -193,8 +193,8 @@ main = hspec $ do
         sargeant `hasCount` 1
         sargeant `hasWeapons` ["Auto Boltstorm Gauntlets (Shooting)", "Auto Boltstorm Gauntlets (Melee)","Fragstorm Grenade Launcher"]
       it "creates BigMeks correctly" $ do
-        units <- processUnits "BigMeks" 3
-        let [oiler, noOiler, forceField] = units
+        units <- processUnits "BigMeks" 5
+        let [oiler, noOiler, forceField, megaarmor, legends] = units
         forceField `hasGroups` 1
         let [forceFieldModel] = _subGroups forceField
         forceFieldModel `hasCount` 1
@@ -213,6 +213,22 @@ main = hspec $ do
         grot `hasCount` 1
         grot `hasWeapons` []
         grot `hasAbilities` ["Grot Oiler"]
+        legends `hasGroups` 2
+        let [grotL, mekL] = _subGroups legends
+        mekL `hasCount` 1
+        mekL `hasWeapons` ["Choppa", "Slugga", "Stikkbomb"] 
+        mekL `hasAbilities` ["Big Mekaniak"]
+        grotL `hasCount` 1
+        grotL `hasWeapons` []
+        grotL `hasAbilities` ["Grot Oiler"]
+        megaarmor `hasGroups` 2
+        let [grotA, mekA] = _subGroups megaarmor
+        mekA `hasCount` 1
+        mekA `hasWeapons` ["Kustom Mega-blasta", "Power Klaw"]
+        mekA `hasAbilities` ["Big Mekaniak"]
+        grotA `hasCount` 1
+        grotA `hasWeapons` []
+        grotA `hasAbilities` ["Grot Oiler"]
       it "creates Painboy correctly" $ do
         unit <- processUnit "Painboy"
         unit `hasGroups` 2
