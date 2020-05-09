@@ -260,3 +260,14 @@ main = hspec $ do
         hasStat biker1 _leadership "7"
         attackbike `hasCount` 1
         attackbike `hasWeapons` ["Heavy bolter", "Bolt pistol", "Twin boltgun"]
+      it "creates Wulfen correctly" $ do
+        unit <- processUnit "Wulfen"
+        unit `hasGroups` 3
+        let [frostaxes, thunderhammers, leader] = _subGroups unit
+        frostaxes `hasCount` 2
+        frostaxes `hasWeapons` ["Great frost axe"]
+        thunderhammers `hasCount` 2
+        thunderhammers `hasWeapons` ["Thunder hammer"]
+        leader `hasCount` 1
+        leader `hasWeapons` ["Frost claws"]
+       

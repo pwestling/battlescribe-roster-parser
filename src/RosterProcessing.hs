@@ -38,7 +38,6 @@ import           TTSUI
 import           Types
 import           XmlHelper
 
-
 textColor :: String -> String -> String
 textColor c s = "["++c++"]"++s++"[-]"
 
@@ -404,10 +403,19 @@ addBase baseData vals = modelsAndBase where
                              setTransform "posY" 1.5) vals
   modelsAndBase = scaledBase : respositionedModels
 
+multiCompare :: Ord b => [a -> b] -> a -> a -> Ordering
+multiCompare (comp : comparators) a1 a2 = case compare (comp a1) (comp a2) of
+  EQ -> multiCompare comparators a1 a2
+  LT -> LT
+  GT -> GT 
+multiCompare [] a1 a2 = EQ
+
 addUnitWeapons :: [ModelGroup] -> [Weapon] -> [ModelGroup]
 addUnitWeapons g [] = g
-addUnitWeapons g w  = foldl' (.) id (map addUnitWeapon w) (sortOn ( (* (-1)) . _modelCount) g)
-
+addUnitWeapons g w  = foldl' (.) id addWeapons (sort g) where
+  comparator = multiCompare [_modelCount, negate . length . _weapons]
+  sort = sortBy (flip comparator)
+  addWeapons =  map ((. sort) . addUnitWeapon) w
 
 copiableWeapons :: [String]
 copiableWeapons = ["Stalker Bolt Rifle",
