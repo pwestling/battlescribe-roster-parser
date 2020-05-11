@@ -3,6 +3,7 @@ tts-examples
 *.rosz
 !test_rosters/*.rosz
 *.txt
+!ads.txt
 *.testros.test
 frontend/elm-stuff/
 .vscode

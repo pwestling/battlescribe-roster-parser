@@ -204,7 +204,7 @@ instructions : Html Msg
 instructions =
     div [] <| [
     div [style "margin-top" "0.5em"] [
-        text "Battlescribe2TTS is free forever: it's a personal passion project, but if you want to give me money anyway click here: ", 
+        text "Battlescribe2TTS is free forever. Ads help support our server costs. This is a personal passion project, but if you want to give me money anyway click here: ", 
         div [style "display" "inline-block", style "vertical-align" "middle"] (textHtml donateButton)],
     div [ style "margin-top" "2em", style "margin-bottom" "5em" ] <|
         Markdown.toHtml Nothing """
