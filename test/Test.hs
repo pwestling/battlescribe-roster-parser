@@ -306,7 +306,7 @@ main = hspec $ do
         printUnits [unit]
         unit `hasGroups` 4
         unit `hasUnitAbilities` ["Daemonic", "Unstoppable Ferocity", "Murderous Tide","Daemonic Ritual"]
-        let [icon, letters, leader, instrument] = _subGroups unit
+        let [icon, letters, instrument, leader] = _subGroups unit
         letters `hasCount` 7
         letters `hasWeapons` ["Hellblade"]
         letters `hasAbilities` []

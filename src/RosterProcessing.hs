@@ -424,7 +424,7 @@ multiCompare [] a1 a2 = EQ
 addUnitWeapons :: [Weapon] -> [ModelGroup] -> [ModelGroup]
 addUnitWeapons [] g = g
 addUnitWeapons w g  = chain addWeapons (sort g) where
-  comparator = multiCompare [_modelCount, negate . getLeadership, negate . length . _weapons]
+  comparator = multiCompare [_modelCount, negate . extractStat _leadership, negate . extractStat _attacks, negate . length . _weapons]
   sort = sortBy (flip comparator)
   addWeapons =  map ((. sort) . addUnitWeapon) w
 
@@ -464,13 +464,13 @@ addUnitWeapon w (g : groups)
 addUnitWeapon w [] = []
 
 
-getLeadership :: ModelGroup -> Int
-getLeadership = fromMaybe 0 . join . fmap (readMay . _leadership) . _stats
+extractStat :: (Stats -> String) -> ModelGroup -> Int
+extractStat getter = fromMaybe 0 . join . fmap (readMay . getter) . _stats
 
 addWargear :: [Ability] -> [ModelGroup] -> [ModelGroup]
 addWargear abilities groups = chain addWargears (sort groups) where
     wargear = filter isWargear abilities
-    comparator = multiCompare [_modelCount, negate . getLeadership ,negate . length . _abilities]
+    comparator = multiCompare [_modelCount, negate . extractStat _leadership, negate . extractStat _attacks, negate . length . _abilities]
     sort = sortBy (flip comparator)
     addWargears =  map ((. sort) . addSingleWargear) wargear
 
