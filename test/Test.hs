@@ -69,12 +69,25 @@ isEquivalent m1 m2 = do
   let m2clean = clean $ m2 {_modelGroupId = ""}
   m1clean `shouldBe` m2clean
 
+areEquivalent :: [ModelGroup] -> IO ()
+areEquivalent (m : ms) = mapM_ (isEquivalent m) ms
+areEquivalent _ = pure ()
 
 hasAbilities :: ModelGroup -> [String] -> IO ()
 hasAbilities unit abilities = do
   print $ fmap _abilityName  (_abilities unit)
   mapM_ (hasAbilityNamed unit) abilities
   length (_abilities unit) `shouldBe` length abilities
+
+hasUnitAbilityNamed :: Unit -> String -> IO ()
+hasUnitAbilityNamed unit abilityName = do
+    fmap _abilityName (_unitAbilities unit) `shouldContain` [abilityName]
+
+hasUnitAbilities :: Unit -> [String] -> IO ()
+hasUnitAbilities unit abilities = do
+  print $ fmap _abilityName  (_unitAbilities unit)
+  mapM_ (hasUnitAbilityNamed unit) abilities
+  length (_unitAbilities unit) `shouldBe` length abilities
 
 hasCount :: ModelGroup -> Int -> IO ()
 hasCount group count = do
@@ -270,4 +283,20 @@ main = hspec $ do
         thunderhammers `hasWeapons` ["Thunder hammer"]
         leader `hasCount` 1
         leader `hasWeapons` ["Frost claws"]
+      it "creates Plague Marines correctly" $ do
+        unit <- processUnit "PlagueMarines"
+        printUnits [unit]
+        unit `hasGroups` 7
+        unit `hasUnitAbilities` ["Hateful Assault", "Death to the False Emperor", "Disgustingly Resilient", "Icon of Despair", "Vectors of Death and Disease"]
+        let [champ, flail1, flail2, knife, axe1, axe2, axe3] = _subGroups unit
+        areEquivalent [axe1,axe2,axe3]
+        areEquivalent [flail1,flail2]
+        champ `hasCount` 1
+        champ `hasWeapons` ["Plasma gun, Standard","Plasma gun, Supercharge", "Plaguesword", "Krak grenade", "Blight Grenade"]
+        flail1 `hasCount` 1
+        flail1 `hasWeapons` ["Flail of Corruption", "Plague knife", "Krak grenade", "Blight Grenade"]
+        axe1 `hasCount` 1
+        axe1 `hasWeapons` ["Bubotic Axe", "Plague knife", "Krak grenade", "Blight Grenade"]
+        knife `hasCount` 1
+        knife `hasWeapons` ["Plague knife", "Krak grenade", "Blight Grenade"]
        

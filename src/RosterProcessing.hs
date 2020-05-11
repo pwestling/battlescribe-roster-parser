@@ -134,7 +134,9 @@ deepWithout guard predicate = deep (guard <+> predicate) >>> filterA (neg guard)
 isSpecialCaseSelection :: ArrowXml a => a XmlTree XmlTree
 isSpecialCaseSelection = deep $ isElem >>> hasName "selection" >>> hasAttrValue "name" (`elem` exceptions) where
   exceptions = [
-    "Ravenwing Talonmaster"
+    "Ravenwing Talonmaster",
+    "Plague Champion",
+    "Plague Marine w/ melee weapons"
     ]
 
 isSpecialCaseSubGroup :: ArrowXml a => a XmlTree XmlTree
@@ -193,12 +195,12 @@ getWeaponStat statName = this /> hasName "characteristics" />
                           getBatScribeValue
 
 getAbilityDescription :: ArrowXml a => a XmlTree (Maybe String)
-getAbilityDescription = listA (this /> hasName "characteristics" />
+getAbilityDescription = listA ((this /> hasName "characteristics" />
                                 hasName "characteristic" >>> hasNameAttrValue (== "Description") >>>
-                                getBatScribeValue) >>> arr listToMaybe
+                                getBatScribeValue) <+> (this /> hasName "description" /> getText )) >>> arr listToMaybe
 
 getAbilities :: ArrowXml a => a XmlTree [Ability]
-getAbilities = listA $ profileOfThisModel "Abilities" >>>
+getAbilities = listA $ (profileOfThisModel "Abilities" <+> ruleOfThisModel) >>>
     proc el -> do
     name <- getNameAttrValue -< el
     id <- getAttrValue "id" -< el
@@ -240,6 +242,9 @@ getWeapon modelCount = proc (partial, el) -> do
   special <- getWeaponStat "Abilities" -< el
   name <- getNameAttrValue `orElse` arr (const (_partialWeaponName partial)) -<< el
   returnA -< Weapon name range weaponType str ap damage special (_partialWeaponCount partial) (_partialWeaponId partial)
+
+ruleOfThisModel :: ArrowXml a => a XmlTree XmlTree
+ruleOfThisModel = this /> hasName "rules" /> hasName "rule"
 
 profileOfThisModel :: ArrowXml a => String -> a XmlTree XmlTree
 profileOfThisModel profileType = this />
