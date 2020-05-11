@@ -301,4 +301,22 @@ main = hspec $ do
         axe1 `hasWeapons` ["Bubotic Axe", "Plague knife", "Krak grenade", "Blight Grenade"]
         knife `hasCount` 1
         knife `hasWeapons` ["Plague knife", "Krak grenade", "Blight Grenade"]
-       
+      it "creates Bloodletters correctly" $ do
+        unit <- processUnit "Bloodletters"
+        printUnits [unit]
+        unit `hasGroups` 4
+        unit `hasUnitAbilities` ["Daemonic", "Unstoppable Ferocity", "Murderous Tide","Daemonic Ritual"]
+        let [icon, letters, leader, instrument] = _subGroups unit
+        letters `hasCount` 7
+        letters `hasWeapons` ["Hellblade"]
+        letters `hasAbilities` []
+        hasStat letters _attacks "1"
+        icon `hasCount` 1
+        icon `hasWeapons` ["Hellblade"]
+        icon `hasAbilities` ["Daemonic Icon"]
+        instrument `hasCount` 1
+        instrument `hasWeapons` ["Hellblade"]
+        instrument `hasAbilities` ["Instrument of Chaos"]
+        leader `hasCount` 1        
+        leader `hasWeapons` ["Hellblade"]
+        hasStat leader _attacks "2"

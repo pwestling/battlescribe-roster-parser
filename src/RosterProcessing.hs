@@ -447,7 +447,7 @@ weaponShouldBeCopied w = _weaponName w `elem` copiableWeapons
 
 isWargear :: Ability -> Bool
 isWargear ability = any (hasPrefix (_abilityName ability)) prefixes where
-  prefixes = ["Icon", "Instrument"]
+  prefixes = ["Icon", "Instrument", "Daemonic Icon"]
   hasPrefix = flip isPrefixOf
 
 addUnitWeapon :: Weapon -> [ModelGroup] -> [ModelGroup]
