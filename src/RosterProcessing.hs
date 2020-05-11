@@ -3,6 +3,7 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE RecordWildCards       #-}
+{-# LANGUAGE QuantifiedConstraints #-}
 
 
 module RosterProcessing where
@@ -37,6 +38,11 @@ import           TTSJson
 import           TTSUI
 import           Types
 import           XmlHelper
+
+{-# ANN module ("HLint: ignore Use =<<" :: String) #-}
+
+chain :: [a -> a] -> a -> a
+chain = foldl' (.) id
 
 textColor :: String -> String -> String
 textColor c s = "["++c++"]"++s++"[-]"
@@ -415,10 +421,10 @@ multiCompare (comp : comparators) a1 a2 = case compare (comp a1) (comp a2) of
   GT -> GT 
 multiCompare [] a1 a2 = EQ
 
-addUnitWeapons :: [ModelGroup] -> [Weapon] -> [ModelGroup]
-addUnitWeapons g [] = g
-addUnitWeapons g w  = foldl' (.) id addWeapons (sort g) where
-  comparator = multiCompare [_modelCount, negate . length . _weapons]
+addUnitWeapons :: [Weapon] -> [ModelGroup] -> [ModelGroup]
+addUnitWeapons [] g = g
+addUnitWeapons w g  = chain addWeapons (sort g) where
+  comparator = multiCompare [_modelCount, negate . getLeadership, negate . length . _weapons]
   sort = sortBy (flip comparator)
   addWeapons =  map ((. sort) . addUnitWeapon) w
 
@@ -439,6 +445,11 @@ copiableWeapons = ["Stalker Bolt Rifle",
 weaponShouldBeCopied :: Weapon -> Bool
 weaponShouldBeCopied w = _weaponName w `elem` copiableWeapons
 
+isWargear :: Ability -> Bool
+isWargear ability = any (hasPrefix (_abilityName ability)) prefixes where
+  prefixes = ["Icon", "Instrument"]
+  hasPrefix = flip isPrefixOf
+
 addUnitWeapon :: Weapon -> [ModelGroup] -> [ModelGroup]
 addUnitWeapon w (g : groups)
   | wepC == 1 && weaponShouldBeCopied w = Debug.trace ("Single wep special case " ++ _weaponName w) $ g {_weapons = w{ _count = 1} : _weapons g, _modelCount = modelC } : addUnitWeapon w groups
@@ -452,6 +463,21 @@ addUnitWeapon w (g : groups)
     wepsPerModel = wepC `quot` modelC
 addUnitWeapon w [] = []
 
+
+getLeadership :: ModelGroup -> Int
+getLeadership = fromMaybe 0 . join . fmap (readMay . _leadership) . _stats
+
+addWargear :: [Ability] -> [ModelGroup] -> [ModelGroup]
+addWargear abilities groups = chain addWargears (sort groups) where
+    wargear = filter isWargear abilities
+    comparator = multiCompare [_modelCount, negate . getLeadership ,negate . length . _abilities]
+    sort = sortBy (flip comparator)
+    addWargears =  map ((. sort) . addSingleWargear) wargear
+
+addSingleWargear :: Ability -> [ModelGroup] -> [ModelGroup]
+addSingleWargear ability (g : gs) = g {_modelCount = 1, _abilities = ability : _abilities g} : g {_modelCount = _modelCount g - 1} : gs
+addSingleWargear _ gs = gs
+
 makeUnit ::  ArrowXml a => ScriptOptions -> T.Text -> a XmlTree (String -> Unit)
 makeUnit options rosterId = proc el -> do
   name <- getNameAttrValue >>> da "Unit Name: " -< el
@@ -463,9 +489,10 @@ makeUnit options rosterId = proc el -> do
   let groupSelectionIds = map _modelGroupId modelGroups
   let weaponFinder = if selectionId `elem` groupSelectionIds then arr (const []) else getWeaponsShallow groupSelectionIds 1
   weapons <- weaponFinder >>> da "Unit Level Weapons: " -<< el
-  let finalModelGroups = addUnitWeapons modelGroups weapons
+  let finalModelGroups = (filter (\u -> _modelCount u > 0) . addWargear abilities . addUnitWeapons weapons) modelGroups
+  let nonWargearAbilites = filter (not . isWargear) abilities
   script <- scriptFromXml options rosterId name selectionId -<< el
-  returnA -< \forceName -> Unit selectionId name forceName stats finalModelGroups abilities weapons script
+  returnA -< \forceName -> Unit selectionId name forceName stats finalModelGroups nonWargearAbilites weapons script
 
 asRoster :: [Value] -> Value
 asRoster values = object ["ObjectStates" .= values]

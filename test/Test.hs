@@ -134,7 +134,7 @@ main = hspec $ do
       it "creates Scarab Occult correctly" $ do
         unit <- processUnit "ScarabOccultTerminators"
         unit `hasGroups` 3
-        let [heavyWeapon, terminators, sorcerer] = _subGroups unit
+        let [terminators, heavyWeapon, sorcerer] = _subGroups unit
         terminators `hasCount` 3
         heavyWeapon `hasCount` 1
         sorcerer `hasCount` 1
@@ -180,7 +180,7 @@ main = hspec $ do
       it "creates Genestealers correctly" $ do
         unit <- processUnit "Genestealers"
         unit `hasGroups` 2
-        let [maws, normal] = _subGroups unit
+        let [normal, maws] = _subGroups unit
         normal `hasCount` 6
         maws `hasCount` 4
         normal `hasWeapons` ["Rending Claws"]
@@ -207,22 +207,23 @@ main = hspec $ do
         sargeant `hasWeapons` ["Auto Boltstorm Gauntlets (Shooting)", "Auto Boltstorm Gauntlets (Melee)","Fragstorm Grenade Launcher"]
       it "creates BigMeks correctly" $ do
         units <- processUnits "BigMeks" 5
+        printUnits units
         let [oiler, noOiler, forceField, megaarmor, legends] = units
         forceField `hasGroups` 1
         let [forceFieldModel] = _subGroups forceField
         forceFieldModel `hasCount` 1
         forceFieldModel `hasWeapons` ["Choppa", "Slugga", "Stikkbomb"] 
-        forceFieldModel `hasAbilities` ["Big Mekaniak","Kustom Force Field"]
+        forceFieldModel `hasAbilities` ["Big Mekaniak","Kustom Force Field", "'Ere We Go!", "Mob Rule","Dakka Dakka Dakka"]
         noOiler `hasGroups` 1
         let [noOilerModel] = _subGroups noOiler
         noOilerModel `hasCount` 1
         noOilerModel `hasWeapons` ["Shokk Attack Gun", "Stikkbomb", "Killsaw"] 
-        noOilerModel `hasAbilities` ["Big Mekaniak"]
+        noOilerModel `hasAbilities` ["Big Mekaniak","'Ere We Go!", "Mob Rule","Dakka Dakka Dakka"]
         oiler `hasGroups` 2
         let [grot, mek] = _subGroups oiler
         mek `hasCount` 1
         mek `hasWeapons` ["Shokk Attack Gun", "Stikkbomb", "Killsaw"] 
-        mek `hasAbilities` ["Big Mekaniak"]
+        mek `hasAbilities` ["Big Mekaniak","'Ere We Go!", "Mob Rule","Dakka Dakka Dakka"]
         grot `hasCount` 1
         grot `hasWeapons` []
         grot `hasAbilities` ["Grot Oiler"]
@@ -230,7 +231,7 @@ main = hspec $ do
         let [grotL, mekL] = _subGroups legends
         mekL `hasCount` 1
         mekL `hasWeapons` ["Choppa", "Slugga", "Stikkbomb"] 
-        mekL `hasAbilities` ["Big Mekaniak"]
+        mekL `hasAbilities` ["Big Mekaniak", "'Ere We Go!", "Mob Rule"]
         grotL `hasCount` 1
         grotL `hasWeapons` []
         grotL `hasAbilities` ["Grot Oiler"]
@@ -238,7 +239,7 @@ main = hspec $ do
         let [grotA, mekA] = _subGroups megaarmor
         mekA `hasCount` 1
         mekA `hasWeapons` ["Kustom Mega-blasta", "Power Klaw"]
-        mekA `hasAbilities` ["Big Mekaniak"]
+        mekA `hasAbilities` ["Big Mekaniak", "'Ere We Go!", "Mob Rule","Dakka Dakka Dakka"]
         grotA `hasCount` 1
         grotA `hasWeapons` []
         grotA `hasAbilities` ["Grot Oiler"]
@@ -263,7 +264,7 @@ main = hspec $ do
       it "creates Ravenwing Bikes correctly" $ do
         unit <- processUnit "RavenwingBikeSquad"
         unit `hasGroups` 4
-        let [sargeant, biker1, biker2, attackbike] = _subGroups unit
+        let [biker1, biker2, attackbike, sargeant] = _subGroups unit
         sargeant `hasCount` 1
         sargeant `hasWeapons` ["Bolt pistol", "Frag grenade", "Krak grenade", "Twin boltgun"]
         hasStat sargeant _leadership "8"
@@ -285,16 +286,17 @@ main = hspec $ do
         leader `hasWeapons` ["Frost claws"]
       it "creates Plague Marines correctly" $ do
         unit <- processUnit "PlagueMarines"
-        printUnits [unit]
         unit `hasGroups` 7
-        unit `hasUnitAbilities` ["Hateful Assault", "Death to the False Emperor", "Disgustingly Resilient", "Icon of Despair", "Vectors of Death and Disease"]
-        let [champ, flail1, flail2, knife, axe1, axe2, axe3] = _subGroups unit
+        unit `hasUnitAbilities` ["Hateful Assault", "Death to the False Emperor", "Disgustingly Resilient", "Vectors of Death and Disease"]
+        let [flail1, flail2, knife, axe1, axe2, axe3, champ] = _subGroups unit
         areEquivalent [axe1,axe2,axe3]
-        areEquivalent [flail1,flail2]
         champ `hasCount` 1
         champ `hasWeapons` ["Plasma gun, Standard","Plasma gun, Supercharge", "Plaguesword", "Krak grenade", "Blight Grenade"]
         flail1 `hasCount` 1
+        flail1 `hasAbilityNamed` "Icon of Despair"
         flail1 `hasWeapons` ["Flail of Corruption", "Plague knife", "Krak grenade", "Blight Grenade"]
+        flail2 `hasCount` 1
+        flail2 `hasWeapons` ["Flail of Corruption", "Plague knife", "Krak grenade", "Blight Grenade"]
         axe1 `hasCount` 1
         axe1 `hasWeapons` ["Bubotic Axe", "Plague knife", "Krak grenade", "Blight Grenade"]
         knife `hasCount` 1
