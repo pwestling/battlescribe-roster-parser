@@ -286,12 +286,13 @@ main = hspec $ do
         leader `hasWeapons` ["Frost claws"]
       it "creates Plague Marines correctly" $ do
         unit <- processUnit "PlagueMarines"
-        unit `hasGroups` 7
+        unit `hasGroups` 9
         unit `hasUnitAbilities` ["Hateful Assault", "Death to the False Emperor", "Disgustingly Resilient", "Vectors of Death and Disease"]
-        let [flail1, flail2, knife, axe1, axe2, axe3, champ] = _subGroups unit
+        let [flail1, flail2, gun, special, knife, axe1, axe2, axe3, champ] = _subGroups unit
         areEquivalent [axe1,axe2,axe3]
         champ `hasCount` 1
         champ `hasWeapons` ["Plasma gun, Standard","Plasma gun, Supercharge", "Plaguesword", "Krak grenade", "Blight Grenade"]
+        hasStat champ _leadership "8"
         flail1 `hasCount` 1
         flail1 `hasAbilityNamed` "Icon of Despair"
         flail1 `hasWeapons` ["Flail of Corruption", "Plague knife", "Krak grenade", "Blight Grenade"]
@@ -301,6 +302,10 @@ main = hspec $ do
         axe1 `hasWeapons` ["Bubotic Axe", "Plague knife", "Krak grenade", "Blight Grenade"]
         knife `hasCount` 1
         knife `hasWeapons` ["Plague knife", "Krak grenade", "Blight Grenade"]
+        gun `hasCount` 1
+        gun `hasWeapons` ["Boltgun", "Plague knife", "Krak grenade", "Blight Grenade"]
+        special `hasCount` 1
+        special `hasWeapons` ["Plague Spewer", "Plague knife", "Krak grenade", "Blight Grenade"]
       it "creates Bloodletters correctly" $ do
         unit <- processUnit "Bloodletters"
         printUnits [unit]

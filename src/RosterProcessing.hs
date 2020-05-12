@@ -142,7 +142,9 @@ isSpecialCaseSelection = deep $ isElem >>> hasName "selection" >>> hasAttrValue 
   exceptions = [
     "Ravenwing Talonmaster",
     "Plague Champion",
-    "Plague Marine w/ melee weapons"
+    "Plague Marine w/ melee weapons",
+    "Plague Marine w/ boltgun",
+    "Plague Marine w/ Special Weapon"
     ]
 
 isSpecialCaseSubGroup :: ArrowXml a => a XmlTree XmlTree
