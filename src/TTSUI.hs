@@ -198,34 +198,100 @@ uiCreated = {}
 
 timesActivated = 0
 
+function determineBase(model)
+
+  local validBaseMillis = {
+    {x = 25, z = 25},
+    {x = 32, z = 32},
+    {x = 40, z = 40},
+    {x = 50, z = 50},
+    {x = 60, z = 60},
+    {x = 100, z = 100},
+    {x = 25, z = 25}  }
+
+  local bounds = model.getBoundsNormalized()
+  local xBounds = bounds.size.x
+  local zBounds = bounds.size.z
+  local milliToInch = 0.0393701
+  local closestSum = 10000000000
+  local chosenBase =  {x = 25, z = 25}
+  log(bounds)
+  for k, base in pairs(validBaseMillis) do
+    local baseInchX = (milliToInch - 0.001) * base.x
+    local baseInchZ = (milliToInch - 0.001) * base.z
+    if xBounds > baseInchX and zBounds > baseInchZ then
+      local distSum = (xBounds - baseInchX) + (zBounds - baseInchZ)
+      if distSum < closestSum then
+         closestSum = distSum
+         chosenBase = base
+      end
+    end
+  end
+  log(chosenBase)
+  if chosenBase == nil then
+    chosenBase = {x = xBounds/2, z = zBounds/2}
+  else
+    chosenBase = {x = (chosenBase.x * milliToInch)/2, z = (chosenBase.z * milliToInch)/2}
+  end
+  return chosenBase
+end
+
 function onScriptingButtonDown(index, peekerColor)
   local player = Player[peekerColor]
   local name = createName(peekerColor)
-  if index == 1 and player.getHoverObject()
-                and player.getHoverObject().getVar("$descriptionId") == desc() then
-      loadUI(peekerColor)
-      Wait.frames(function()
-        updateModelCount()
-        UI.setAttribute(createName(peekerColor), "active", true)
-      end, 2)
-  end
-   if index == 2 and player.getHoverObject()
-                and player.getHoverObject().getVar("$descriptionId") == desc() then
-     local target = player.getHoverObject()
-     local name = target.getName()
-     local current, total = string.gmatch(name,"([0-9]+)/([0-9]+)")()
-     current = math.max(tonumber(current) - 1,0)
-     local newName = string.gsub(name, "([0-9]+)/([0-9]+)", tostring(current) .. "/" .. total)
-     target.setName(newName)
-  end
-   if index == 3 and player.getHoverObject()
-                and player.getHoverObject().getVar("$descriptionId") == desc() then
-     local target = player.getHoverObject()
-     local name = target.getName()
-     local current, total = string.gmatch(name,"([0-9]+)/([0-9]+)")()
-     current = tonumber(current) + 1
-     local newName = string.gsub(name, "([0-9]+)/([0-9]+)", tostring(current) .. "/" .. total)
-     target.setName(newName)
+  if player.getHoverObject() and player.getHoverObject().getVar("$descriptionId") == desc() then
+    if index == 1 then
+        loadUI(peekerColor)
+        Wait.frames(function()
+          updateModelCount()
+          UI.setAttribute(createName(peekerColor), "active", true)
+        end, 2)
+    end
+    if index == 2 or index == 3 then
+      local inc = index == 2 and -1 or 1
+      local target = player.getHoverObject()
+      local name = target.getName()
+      local current, total = string.gmatch(name,"([0-9]+)/([0-9]+)")()
+      current = math.max(tonumber(current) + inc,0)
+      local newName = string.gsub(name, "([0-9]+)/([0-9]+)", tostring(current) .. "/" .. total)
+      target.setName(newName)
+    end
+    if index == 4 or index == 5 then
+      log("Creating circle")
+      local inc = index == 4 and 1 or -1
+      local target = player.getHoverObject()
+      if target.getVar("bs2tts-aura-circle") == nil then
+        log("Initing radius")
+        target.setVar("bs2tts-aura-circle", 0)
+      end
+      local newRadius = math.max(target.getVar("bs2tts-aura-circle") + inc,0)
+      target.setVar("bs2tts-aura-circle", newRadius)
+      log("Circle radius is " .. tostring(newRadius))
+      local circ = {}
+      local base = {}
+      local baseRadiuses = determineBase(target)
+      if newRadius > 0 then
+        circ = getCircleVectorPoints(newRadius, baseRadiuses.x, baseRadiuses.z, target)
+        base = getCircleVectorPoints(0, baseRadiuses.x, baseRadiuses.z, target)
+      end
+      log("Set")
+
+      target.setVectorLines({
+        {
+            points    = circ,
+            color     = highlighting or {1,0,1},
+            thickness = 0.125 * 1/(target.getScale().x),
+            rotation  = {0,0,0},
+        },
+         {
+            points    = base,
+            color     = highlighting or {1,0,1},
+            thickness = 0.1 * 1/(target.getScale().x),
+            rotation  = {0,0,0},
+        }
+      })
+      broadcastToAll("Measuring "..tostring(newRadius).."\"")
+    end
   end
 end
 
@@ -375,7 +441,6 @@ function onDestroy()
   Timer.destroy(id)
   collectUnitModels()
   if #unitModels > 1 then
-    print(JSON.encode(self.getPosition()))
     local newobj = self.clone({position = {x = 10000, y = 10000, z = 10000}})
     newobj.setLock(true)
   end
@@ -396,6 +461,23 @@ end
 function createName(color)
   local guid = self.getGUID()
   return "bs2tts" .. "-" .. color
+end
+
+function getCircleVectorPoints(radius,baseX, baseZ, obj)
+    local result = {}
+    local scaleFactor = 1/obj.getScale().x
+    local steps = 64
+    local degrees,sin,cos,toRads = 360/steps, math.sin, math.cos, math.rad
+    log("Circ1")
+    for i = 0,steps do
+        table.insert(result, {
+            x = cos(toRads(degrees*i))*((radius+baseX)*scaleFactor),
+            z = sin(toRads(degrees*i))*((radius+baseZ)*scaleFactor),
+            y = 1
+        })
+    end
+    log("Result has " .. tostring(#result) .. " sections")
+    return result
 end
 
 |] where

@@ -439,7 +439,7 @@ copiableWeapons = ["Stalker Bolt Rifle",
                    "Heavy Plasma Incinerator, Standard",
                    "Heavy Plasma Incinerator, Supercharged",
                    "Assault Plasma Incinerator, Standard",
-                   "Assault Plasma Incinerator, Supercharge",
+                   "Assault Plasma Incinerator, Supercharged",
                    "Fragstorm Grenade Launcher",
                    "Auto Boltstorm Gauntlets (Shooting)",
                    "Auto Boltstorm Gauntlets (Melee)"]

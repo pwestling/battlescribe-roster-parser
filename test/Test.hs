@@ -162,13 +162,13 @@ main = hspec $ do
         blasters `hasWeapons` ["Plasma incinerator, Standard","Plasma incinerator, Supercharge", "Bolt pistol", "Frag grenade", "Krak grenade"]
         sargeant `hasWeapons` ["Plasma incinerator, Standard","Plasma incinerator, Supercharge", "Bolt pistol", "Frag grenade", "Krak grenade"]
       it "creates Assault Hellblasters correctly" $ do
-        unit <- processUnit "Hellblasters"
+        unit <- processUnit "AssaultHellblasters"
         unit `hasGroups` 2
         let [blasters, sargeant] = _subGroups unit
         blasters `hasCount` 4
         sargeant `hasCount` 1
-        blasters `hasWeapons` ["Plasma incinerator, Standard","Plasma incinerator, Supercharge", "Bolt pistol", "Frag grenade", "Krak grenade"]
-        sargeant `hasWeapons` ["Plasma incinerator, Standard","Plasma incinerator, Supercharge", "Bolt pistol", "Frag grenade", "Krak grenade"]
+        blasters `hasWeapons` ["Assault Plasma Incinerator, Standard","Assault Plasma Incinerator, Supercharged", "Bolt pistol", "Frag grenade", "Krak grenade"]
+        sargeant `hasWeapons` ["Assault Plasma Incinerator, Standard","Assault Plasma Incinerator, Supercharged", "Bolt pistol", "Frag grenade", "Krak grenade"]
       it "creates Heavy Hellblasters correctly" $ do
         unit <- processUnit "HeavyHellblasters"
         unit `hasGroups` 2
