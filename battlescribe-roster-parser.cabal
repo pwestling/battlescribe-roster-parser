@@ -24,7 +24,7 @@ library battlescribe-roster-parser-lib
                        servant-multipart, hedis, mtl, wai-cors, servant-auth, 
                        servant-auth-server, hashable, uuid, either, wai-extra,
                        uri-encode, ilist, MonadRandom, vector
-  exposed-modules:     Server, RosterProcessing, Types, TTSJson, XmlHelper, TTSUI
+  exposed-modules:     Server, RosterProcessing, Types, TTSJson, XmlHelper, TTSUI, ModelScript
 
 executable battlescribe-roster-parser
   hs-source-dirs:      src/main
