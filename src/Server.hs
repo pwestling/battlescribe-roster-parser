@@ -42,7 +42,7 @@ import           Types
 
 
 version :: Version
-version = Version "1.7"
+version = Version "1.8"
 
 type CreateRosterAPI = "roster"
                        :> QueryFlag "addScripts" :> QueryParam "uiWidth" Int :> QueryParam "uiHeight" Int
