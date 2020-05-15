@@ -2,7 +2,7 @@ ACTIVATED_BUTTON = "rgb(1,0.6,1)|rgb(1,0.4,1)|rgb(1,0.2,1)|rgb(1,0.2,1)"
 DEFAULT_BUTTON = "#FFFFFF|#FFFFFF|#C8C8C8|rgba(0.78,0.78,0.78,0.5)"
 prodServerURL = "https://backend.battlescribe2tts.net"
 serverURL = prodServerURL
-version = "1.7"
+version = "1.8"
 
 nextModelTarget = ""
 nextModelButton = ""
@@ -99,6 +99,10 @@ function verifyVersion(req)
 end
 
 function setModel(player, value, id)
+  if #pickedUp > 0 then
+    Wait.stop(timerId)
+    processPickups()
+  end
   nextModelTarget = self.UI.getValue(id)
   print("Target is " .. nextModelTarget)
   local shortName = self.UI.getAttribute(id, "shortName")
@@ -119,7 +123,7 @@ function onObjectPickUp(colorName, obj)
     end
     timerId = Wait.frames(function()
       processPickups()
-    end,10)
+    end,0.5)
   end
 end
 
@@ -315,6 +319,9 @@ function spawnModelRecur(id, threads, limit, index)
             y = thisPos.y + relPos.posY + 4,
             z = thisPos.z + relPos.posZ
           }
+          v.Snap = false
+          v.Grid = false
+          v.Hands = false
           local jv = JSON.encode(v)
           spawnObjectJSON(
             {
