@@ -2,7 +2,7 @@ ACTIVATED_BUTTON = "rgb(1,0.6,1)|rgb(1,0.4,1)|rgb(1,0.2,1)|rgb(1,0.2,1)"
 DEFAULT_BUTTON = "#FFFFFF|#FFFFFF|#C8C8C8|rgba(0.78,0.78,0.78,0.5)"
 prodServerURL = "https://backend.battlescribe2tts.net"
 serverURL = prodServerURL
-version = "1.8"
+version = "1.9"
 
 nextModelTarget = ""
 nextModelButton = ""
