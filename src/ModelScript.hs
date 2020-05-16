@@ -115,48 +115,85 @@ createScript ui uniqueId = [NI.text|
 
   timesActivated = 0
 
+  validBaseMillis = {
+    {x = 25, z = 25},
+    {x = 30, z = 30},
+    {x = 32, z = 32},
+    {x = 40, z = 40},
+    {x = 50, z = 50},
+    {x = 55, z = 55},
+    {x = 60, z = 60},
+    {x = 100, z = 100},
+    {x = 25, z = 25},
+    {x = 25, z = 75},
+    {x = 75, z = 25},
+    {x = 120, z = 92},
+    {x = 92, z = 120},
+    {x = 170, z = 105},
+    {x = 105, z = 170},
+  }
+
+  function assignBase(inc, model)
+   if Global.getTable("bs2tts-saved-bases") == nil then
+    Global.setTable("bs2tts-saved-bases", {})
+   end
+   local baseMap = Global.getTable("bs2tts-saved-bases")
+   local meshFile = model.getCustomObject().mesh
+   if baseMap[meshFile] == nil then
+    print("Initing base map")
+    baseMap[meshFile] = 0
+   end
+   local index = baseMap[meshFile]
+   local newIndex = math.min(math.max(1, index + inc), #validBaseMillis)
+   print("Base map index is now: " .. tostring(newIndex))
+   baseMap[meshFile] = newIndex
+   Global.setTable("bs2tts-saved-bases", baseMap)
+  end
+
   function determineBase(model)
-
-    local validBaseMillis = {
-      {x = 25, z = 25},
-      {x = 32, z = 32},
-      {x = 40, z = 40},
-      {x = 50, z = 50},
-      {x = 60, z = 60},
-      {x = 100, z = 100},
-      {x = 25, z = 25}  }
-
-    local bounds = model.getBoundsNormalized()
-    local xBounds = bounds.size.x
-    local zBounds = bounds.size.z
-    local milliToInch = 0.0393701
-    local closestSum = 10000000000
     local chosenBase =  {x = 25, z = 25}
-    log(bounds)
-    for k, base in pairs(validBaseMillis) do
-      local baseInchX = (milliToInch - 0.001) * base.x
-      local baseInchZ = (milliToInch - 0.001) * base.z
-      if xBounds > baseInchX and zBounds > baseInchZ then
-        local distSum = (xBounds - baseInchX) + (zBounds - baseInchZ)
-        if distSum < closestSum then
-          closestSum = distSum
-          chosenBase = base
+    local milliToInch = 0.0393701
+    
+    if Global.getTable("bs2tts-saved-bases") and Global.getTable("bs2tts-saved-bases")[model.getCustomObject().mesh] then
+      chosenBase = validBaseMillis[Global.getTable("bs2tts-saved-bases")[model.getCustomObject().mesh]]
+      chosenBase = {x = (chosenBase.x * milliToInch)/2, z = (chosenBase.z * milliToInch)/2}
+    else
+      local bounds = model.getBoundsNormalized()
+      local xBounds = bounds.size.x
+      local zBounds = bounds.size.z
+      local closestSum = 10000000000
+      log(bounds)
+      for k, base in pairs(validBaseMillis) do
+        local baseInchX = (milliToInch - 0.001) * base.x
+        local baseInchZ = (milliToInch - 0.001) * base.z
+        if xBounds > baseInchX and zBounds > baseInchZ then
+          local distSum = (xBounds - baseInchX) + (zBounds - baseInchZ)
+          if distSum < closestSum then
+            closestSum = distSum
+            chosenBase = base
+          end
         end
       end
-    end
-    log(chosenBase)
-    if chosenBase == nil then
-      chosenBase = {x = xBounds/2, z = zBounds/2}
-    else
-      chosenBase = {x = (chosenBase.x * milliToInch)/2, z = (chosenBase.z * milliToInch)/2}
+      log(chosenBase)
+      if chosenBase == nil then
+        chosenBase = {x = xBounds/2, z = zBounds/2}
+      else
+        chosenBase = {x = (chosenBase.x * milliToInch)/2, z = (chosenBase.z * milliToInch)/2}
+      end
     end
     return chosenBase
+  end
+
+  function onScriptingButtonDownTable(params)
+    onScriptingButtonDown(params.index, params.peekerColor)
   end
 
   function onScriptingButtonDown(index, peekerColor)
     local player = Player[peekerColor]
     local name = createName(peekerColor)
-    if player.getHoverObject() and player.getHoverObject().getVar("$descriptionId") == desc() then
+    if (player.getHoverObject() and player.getHoverObject().getVar("$descriptionId") == desc()) or
+        (#player.getSelectedObjects() > 0 and player.getSelectedObjects()[1].getVar("$descriptionId") == desc()) then
+      local target = player.getHoverObject() or  player.getSelectedObjects()[1]
       if index == 1 then
           loadUI(peekerColor)
           Wait.frames(function()
@@ -166,17 +203,18 @@ createScript ui uniqueId = [NI.text|
       end
       if index == 2 or index == 3 then
         local inc = index == 2 and -1 or 1
-        local target = player.getHoverObject()
         local name = target.getName()
         local current, total = string.gmatch(name,"([0-9]+)/([0-9]+)")()
         current = math.max(tonumber(current) + inc,0)
         local newName = string.gsub(name, "([0-9]+)/([0-9]+)", tostring(current) .. "/" .. total)
         target.setName(newName)
       end
-      if index == 4 or index == 5 then
+      if index == 4 or index == 5 or index == 8 then
         log("Creating circle")
         local inc = index == 4 and 1 or -1
-        local target = player.getHoverObject()
+        if index == 8 then
+          inc = 0
+        end
         if target.getVar("bs2tts-aura-circle") == nil then
           log("Initing radius")
           target.setVar("bs2tts-aura-circle", 0)
@@ -208,6 +246,14 @@ createScript ui uniqueId = [NI.text|
           }
         })
         broadcastToAll("Measuring "..tostring(newRadius).."\"")
+      end
+      if index == 6 or index == 7 then
+        local inc = 1
+        if index == 7 then
+          inc = -1
+        end
+        assignBase(inc, target)
+        onScriptingButtonDown(8, peekerColor)
       end
     end
   end
@@ -380,14 +426,25 @@ createScript ui uniqueId = [NI.text|
     return "bs2tts" .. "-" .. color
   end
 
+  function rotateVector2d(vec, degrees)
+    local sin,cos,toRads = math.sin, math.cos, math.rad
+    local result = {
+      x = vec.x * cos(toRads(degrees)) - vec.z * sin(toRads(degrees)),
+      z = vec.x * sin(toRads(degrees)) + vec.z * cos(toRads(degrees)),
+      y = vec.y
+    }
+    return result
+  end
+
   function getCircleVectorPoints(radius,baseX, baseZ, obj)
       local result = {}
       local scaleFactor = 1/obj.getScale().x
+      local rotationDegrees =  obj.getRotation().y
       local steps = 64
       local degrees,sin,cos,toRads = 360/steps, math.sin, math.cos, math.rad
       log("Circ1")
       for i = 0,steps do
-          table.insert(result, {
+          table.insert(result,{
               x = cos(toRads(degrees*i))*((radius+baseX)*scaleFactor),
               z = sin(toRads(degrees*i))*((radius+baseZ)*scaleFactor),
               y = 1
