@@ -23,18 +23,24 @@ unzipRoster fileName = do
   let onlyEntry = head zipEntries
   return (C8.unpack $ fromEntry onlyEntry)
 
-
-processUnit :: String -> IO Unit
-processUnit fileName = do
+processUnitWithOptions ::  ScriptOptions -> String -> IO Unit
+processUnitWithOptions options fileName  = do
    roster <- unzipRoster fileName
-   units <- processRoster (ScriptOptions True Nothing Nothing) roster "abc" 
+   units <- processRoster options roster "abc" 
    shouldSatisfy (fmap _unitName units) (\u -> length u == 1)
    return (head units)
 
+
+processUnit :: String -> IO Unit
+processUnit = processUnitWithOptions (ScriptOptions True Nothing Nothing False False False Nothing)
+
 processUnits :: String -> Int ->  IO [Unit]
-processUnits fileName count = do
+processUnits = processUnitsWithOptions (ScriptOptions True Nothing Nothing False False False Nothing)
+
+processUnitsWithOptions :: ScriptOptions -> String -> Int ->  IO [Unit]
+processUnitsWithOptions options fileName count = do
    roster <- unzipRoster fileName
-   units <- processRoster (ScriptOptions True Nothing Nothing) roster "abc" 
+   units <- processRoster options roster "abc" 
    shouldSatisfy (fmap _unitName units) (\u -> length u == count)
    return units
 
@@ -123,6 +129,32 @@ main = hspec $ do
         sargeant `hasCount` 1
         intercessor `hasWeapons` ["Stalker Bolt Rifle", "Bolt pistol", "Frag grenade", "Krak grenade"]
         sargeant `hasWeapons` ["Stalker Bolt Rifle", "Power sword", "Bolt pistol", "Frag grenade", "Krak grenade"]
+      it "excludes grenades" $ do
+        unit <- processUnitWithOptions (ScriptOptions True Nothing Nothing True False False Nothing) "AutoBoltRifleIntercessors"
+        unit `hasGroups` 2
+        let [intercessor, sargeant] = _subGroups unit
+        intercessor `hasCount` 4
+        sargeant `hasCount` 1
+        intercessor `hasWeapons` ["Auto Bolt Rifle", "Bolt pistol"]
+        sargeant `hasWeapons` ["Auto Bolt Rifle", "Power sword", "Bolt pistol"]
+      it "excludes sidearms" $ do
+        unit <- processUnitWithOptions (ScriptOptions True Nothing Nothing False True False Nothing) "AutoBoltRifleIntercessors"
+        unit `hasGroups` 2
+        let [intercessor, sargeant] = _subGroups unit
+        intercessor `hasCount` 4
+        sargeant `hasCount` 1
+        intercessor `hasWeapons` ["Auto Bolt Rifle", "Frag grenade", "Krak grenade"]
+        sargeant `hasWeapons` ["Auto Bolt Rifle", "Power sword", "Frag grenade", "Krak grenade"]
+      it "excludes Abilities" $ do
+        unit <- processUnitWithOptions (ScriptOptions True Nothing Nothing False False True Nothing) "AutoBoltRifleIntercessors"
+        unit `hasGroups` 2
+        let [intercessor, sargeant] = _subGroups unit
+        intercessor `hasCount` 4
+        sargeant `hasCount` 1
+        intercessor `hasWeapons` ["Auto Bolt Rifle", "Bolt pistol", "Frag grenade", "Krak grenade"]
+        sargeant `hasWeapons` ["Auto Bolt Rifle", "Power sword", "Bolt pistol", "Frag grenade", "Krak grenade"]
+        intercessor `hasAbilities` []
+        sargeant `hasAbilities` []
       it "assigns Auto Bolt Rifles to all Intercessors" $ do
         unit <- processUnit "AutoBoltRifleIntercessors"
         unit `hasGroups` 2

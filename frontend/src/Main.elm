@@ -9,21 +9,27 @@ import File exposing (File)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Html.Parser
+import Html.Parser.Util
 import Http exposing (..)
 import Json.Decode as D
 import List as L
 import Markdown
 import Maybe exposing (withDefault)
-import Html.Parser
-import Html.Parser.Util
+import String exposing (split)
 import Url exposing (Url)
 
 
 main : Program () Model Msg
 main =
-    Browser.application { init = \_ -> \url -> \_ -> init url, view = viewWithTitle, update = update, subscriptions = subs,
-      onUrlChange = \_ -> NoOp
-    , onUrlRequest = \_ -> NoOp }
+    Browser.application
+        { init = \_ -> \url -> \_ -> init url
+        , view = viewWithTitle
+        , update = update
+        , subscriptions = subs
+        , onUrlChange = \_ -> NoOp
+        , onUrlRequest = \_ -> NoOp
+        }
 
 
 type alias RosterId =
@@ -35,6 +41,10 @@ type Msg
     | UploadRoster (List File)
     | GotTTSJson (Result Error RosterId)
     | ToggleScripting
+    | ToggleGrenades
+    | ToggleSidearms
+    | ToggleAbilities
+    | SetModelNames String
     | SetUiWidth String
     | SetUiHeight String
     | NavbarMsg Navbar.State
@@ -49,6 +59,10 @@ type alias Model =
     , uiHeight : String
     , localMode : Bool
     , appHost : String
+    , excludeGrenades : Bool
+    , excludeSidearms : Bool
+    , excludeAbilities : Bool
+    , modelNames : String
     }
 
 
@@ -57,8 +71,12 @@ init url =
     let
         ( navbarState, navbarCmd ) =
             Navbar.initialState NavbarMsg
-        localMode = url.host == "localhost"
-        appHost = url.host
+
+        localMode =
+            url.host == "localhost"
+
+        appHost =
+            url.host
     in
     ( { rosterCode = Nothing
       , navbarState = navbarState
@@ -68,6 +86,10 @@ init url =
       , uiHeight = "450"
       , localMode = localMode
       , appHost = appHost
+      , excludeGrenades = False
+      , excludeSidearms = False
+      , excludeAbilities = False
+      , modelNames = ""
       }
     , navbarCmd
     )
@@ -82,7 +104,14 @@ asUrl : String -> List ( String, String ) -> String
 asUrl base params =
     base ++ "?" ++ String.join "&" (List.map (\( s1, s2 ) -> s1 ++ "=" ++ s2) params)
 
-serverAddress localMode = if localMode then "http://localhost:8080/roster" else "https://backend.battlescribe2tts.net/roster"
+
+serverAddress localMode =
+    if localMode then
+        "http://localhost:8080/roster"
+
+    else
+        "https://battlescribe2tts-backend-ymofho42gq-uc.a.run.app/roster"
+
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -96,8 +125,8 @@ update msg model =
                     ( { model | message = Just "Uploading..." }
                     , Http.post
                         { url =
-                            asUrl 
-                            (serverAddress model.localMode)
+                            asUrl
+                                (serverAddress model.localMode)
                                 [ ( "addScripts"
                                   , if model.addScript then
                                         "true"
@@ -107,6 +136,28 @@ update msg model =
                                   )
                                 , ( "uiWidth", model.uiWidth )
                                 , ( "uiHeight", model.uiHeight )
+                                , ( "modelNames", model.modelNames )
+                                , ( "excludeGrenades"
+                                  , if model.excludeGrenades then
+                                        "true"
+
+                                    else
+                                        "false"
+                                  )
+                                , ( "excludeSidearms"
+                                  , if model.excludeSidearms then
+                                        "true"
+
+                                    else
+                                        "false"
+                                  )
+                                , ( "excludeAbilities"
+                                  , if model.excludeAbilities then
+                                        "true"
+
+                                    else
+                                        "false"
+                                  )
                                 ]
                         , body = multipartBody [ filePart "roster" file ]
                         , expect = Http.expectJson GotTTSJson rosterDecoder
@@ -132,6 +183,18 @@ update msg model =
         ToggleScripting ->
             ( { model | addScript = not model.addScript }, Cmd.none )
 
+        ToggleGrenades ->
+            ( { model | excludeGrenades = not model.excludeGrenades }, Cmd.none )
+
+        ToggleSidearms ->
+            ( { model | excludeSidearms = not model.excludeSidearms }, Cmd.none )
+
+        ToggleAbilities ->
+            ( { model | excludeAbilities = not model.excludeAbilities }, Cmd.none )
+
+        SetModelNames names ->
+            ( { model | modelNames = names }, Cmd.none )
+
         SetUiHeight y ->
             ( { model | uiHeight = y }, Cmd.none )
 
@@ -146,7 +209,16 @@ subscriptions model =
 
 viewWithTitle : Model -> Browser.Document Msg
 viewWithTitle model =
-    { title = "Battlescribe2TTS" ++ (if model.localMode then " Local" else ""), body = [ view model ] }
+    { title =
+        "Battlescribe2TTS"
+            ++ (if model.localMode then
+                    " Local"
+
+                else
+                    ""
+               )
+    , body = [ view model ]
+    }
 
 
 view : Model -> Html Msg
@@ -166,48 +238,71 @@ navbar model =
         |> Navbar.withAnimation
         |> Navbar.brand [ href "#" ]
             [ img [ src "assets/bs2tts.png", style "width" "30%" ] []
-            , span [ style "font-size" "3em", style "margin" "1em" ] [ text ("Battlescribe2TTS" ++ (if model.localMode then " Local" else "")) ]
+            , span [ style "font-size" "3em", style "margin" "1em" ]
+                [ text
+                    ("Battlescribe2TTS"
+                        ++ (if model.localMode then
+                                " Local"
+
+                            else
+                                ""
+                           )
+                    )
+                ]
             ]
         |> Navbar.view model.navbarState
 
 
 uploadPage : Model -> Html Msg
 uploadPage model =
-    div [style "display" "flex"]
-        [ span [ style "padding" "1em", style "margin-top" "1em" ]
-            [ span [ style "font-size" "2em", style "margin-right" "2em" ]
-                [ text "Upload Roster" ]
-            , input
-                [ type_ "file"
-                , multiple False
-                , on "change" (D.map UploadRoster filesDecoder)
+    div [ style "width" "100%", style "display" "flex", style "flex-direction" "column" ]
+        [ div [ style "display" "flex", style "flex-direction" "row" ]
+            [ span [ style "padding" "1em", style "margin-top" "1em", style "flex-grow" "1" ]
+                [ span [ style "font-size" "2em", style "margin-right" "2em" ]
+                    [ text "Upload Roster" ]
+                , input
+                    [ type_ "file"
+                    , multiple False
+                    , on "change" (D.map UploadRoster filesDecoder)
+                    ]
+                    []
                 ]
-                []
-            , div [ style "display" "block", style "float" "right", style "font-size" "0.7em", style "background-color" "rgb(50, 115, 115);" ]
-                [ div [ style "font-size" "1.4em" ] [ text "Advanced Options" ]
-                , div [] [ checkbox ToggleScripting "Enable Model Scripting" model.addScript ]
+            , case model.rosterCode of
+                Just id ->
+                    div [ style "font-size" "2.5em", style "padding" "1em" ] [ text ("Your roster code is: " ++ id) ]
+
+                Nothing ->
+                    div [] []
+            ]
+        , div [ style "display" "flex", style "flex-direction" "row" ]
+            [   div [style "flex-grow" "5"] [],
+                div [style "width" "30vw", style "flex-grow" "1", style "display" "flex", style "flex-direction" " column"] [  div [ style "font-weight" "500", style "font-size" "1.4em" ] [ text "Advanced Options" ],
+                div [style "display" "flex", style "flex-direction" "row"] [
+                div [style "padding-right" "1em"] [textbox SetModelNames "Model Names" "If the script is incorrectly splitting up models and weapons, you can enter model names here (one per line) to try to correct the issue" model.modelNames],
+                div [ style "display" "block", style "font-size" "0.7em", style "background-color" "rgb(50, 115, 115);" ]
+                [ div [] [ checkbox ToggleScripting "Enable Model Scripting" model.addScript ]
+                , div [] [ checkbox ToggleGrenades "Exclude Grenades from Weapons" model.excludeGrenades ]
+                , div [] [ checkbox ToggleSidearms "Exclude Sidearm Pistols from Weapons" model.excludeSidearms ]
+                , div [] [ checkbox ToggleAbilities "Exclude Abilities from Descriptions" model.excludeAbilities ]
                 , div [] [ textinput SetUiWidth "UI Width" model.uiWidth ]
                 , div [] [ textinput SetUiHeight "UI Height" model.uiHeight ]
                 ]
+                ]
+                ]
             ]
-        , case model.rosterCode of
-            Just id ->
-                div [ style "font-size" "2.5em", style "padding" "1em" ] [ text ("Your roster code is: " ++ id) ]
-
-            Nothing ->
-                div [] []
         , div [] [ text (withDefault "" model.message) ]
         ]
 
 
 instructions : Html Msg
 instructions =
-    div [] <| [
-    div [style "margin-top" "0.5em"] [
-        text "Battlescribe2TTS is free forever. Ads help support our server costs. This is a personal passion project, but if you want to give me money anyway click here: ", 
-        div [style "display" "inline-block", style "vertical-align" "middle"] (textHtml donateButton)],
-    div [ style "margin-top" "2em", style "margin-bottom" "5em" ] <|
-        Markdown.toHtml Nothing """
+    div [] <|
+        [ div [ style "margin-top" "0.5em" ]
+            [ text "Battlescribe2TTS is free forever. Ads help support our server costs. This is a personal passion project, but if you want to give me money anyway click here: "
+            , div [ style "display" "inline-block", style "vertical-align" "middle" ] (textHtml donateButton)
+            ]
+        , div [ style "margin-top" "2em", style "margin-bottom" "5em" ] <|
+            Markdown.toHtml Nothing """
 ## How To Use
         
 This website is designed to be used with the in-game tool for Tabletop Simulator provided 
@@ -272,7 +367,8 @@ and automatically populated in the future for matching units
 If you have issues trying to use this tool, please create an issue on 
 [github](https://github.com/pwestling/battlescribe-roster-parser/issues). Please note that 
 none of this is supported by the Battlescribe or Tabletop Simulator teams in any way, so don't complain to them!
-        """]
+        """
+        ]
 
 
 checkbox : msg -> String -> Bool -> Html msg
@@ -293,6 +389,22 @@ textinput msg name currentValue =
         ]
 
 
+textbox : (String -> msg) -> String -> String -> String -> Html msg
+textbox msg name caption currentValue =
+    let
+        lineHeight =
+            L.length (split "\n" currentValue) + 1
+    in
+    div []
+        [ label
+            [ style "padding" "0.1em" ]
+            [ text name
+            ]
+        , textarea [ onInput msg, rows lineHeight, value currentValue, style "width" "20vw", style "display" "block" ] []
+        , div [style "opacity" "0.7", style "font-size" "0.7em", style "width" "20vw"] [text caption]
+        ]
+
+
 filesDecoder : D.Decoder (List File)
 filesDecoder =
     D.at [ "target", "files" ] (D.list File.decoder)
@@ -307,7 +419,8 @@ rosterDecoder =
         )
 
 
-donateButton = """
+donateButton =
+    """
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 <input type="hidden" name="cmd" value="_donations" />
 <input type="hidden" name="business" value="9F3TY5GV3ZHEG" />
@@ -316,6 +429,7 @@ donateButton = """
 <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
 </form>
 """
+
 
 textHtml : String -> List (Html.Html msg)
 textHtml t =

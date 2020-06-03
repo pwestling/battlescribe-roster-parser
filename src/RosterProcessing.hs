@@ -148,8 +148,8 @@ isSpecialCaseSelection = deep $ isElem >>> hasName "selection" >>> hasAttrValue 
     "Plague Marine w/ Special Weapon"
     ]
 
-isSpecialCaseSubGroup :: ArrowXml a => a XmlTree XmlTree
-isSpecialCaseSubGroup = multi $ isElem >>> hasName "selection" >>> (hasAttrValue "name" (`elem` exceptions) `orElse` hasAttrValue "entryid" (`elem` exceptionIds)) where
+isSpecialCaseSubGroup :: ArrowXml a => ScriptOptions -> a XmlTree XmlTree
+isSpecialCaseSubGroup options = multi $ isElem >>> hasName "selection" >>> (hasAttrValue "name" (`elem` exceptions) `orElse` hasAttrValue "entryid" (`elem` exceptionIds)) where
   exceptions = [
     "Space Marine w/Special Weapon",
     "Grot Oiler",
@@ -160,19 +160,19 @@ isSpecialCaseSubGroup = multi $ isElem >>> hasName "selection" >>> (hasAttrValue
     "Grot Orderly (Index)",
     "Painboy",
     "Techmarine Gunner"  
-    ]
+    ] ++ maybe [] (map T.unpack . T.splitOn "\n" . T.pack) (modelNames options)
   exceptionIds = [
     "e050-9739-5f42-0094::f1a3-48e8-0804-fb8e" -- Thunderfire Cannon
     ]
 
-findModels :: ArrowXml a => String -> a XmlTree XmlTree
-findModels topId =
+findModels :: ArrowXml a => ScriptOptions -> String -> a XmlTree XmlTree
+findModels options topId =
       listA (
       isSpecialCaseSelection `orElse`
 
       (multi (isSelection >>> filterA (isType "model"))
       <+> multi (isSelection >>> isNotTop >>> filterA hasUnitProfile)
-      <+> isSpecialCaseSubGroup
+      <+> isSpecialCaseSubGroup options
       -- <+>  deepWithout isModelOrUnit (isSelection >>> isNotTop >>> filterA containsNoModelsOrUnits >>> filterA hasWeaponSelection)
       ) `orElse`
 
@@ -298,16 +298,16 @@ getNameAndMultiplier name = result where
 filterByA :: (ArrowXml a, Show b) => (b -> Bool) -> a b b
 filterByA pred = this >>. filter pred
 
-getModelGroup :: ArrowXml a => [(String, Stats)] -> a XmlTree ModelGroup
-getModelGroup defaultStats = proc el -> do
+getModelGroup :: ArrowXml a => ScriptOptions -> [(String, Stats)] -> a XmlTree ModelGroup
+getModelGroup options defaultStats = proc el -> do
   (name, mult) <- getNameAttrValue >>> da "Model Group: " >>> arr getNameAndMultiplier -< el
   id <- getAttrValue "id" -< el
   defaultFirstStat <- single (arr (const defaultStats) >>> unlistA >>^ snd) `withDefault` zeroStats -< el
   defaultMatchingStat <- (single (arr (const defaultStats) >>> da "Defaults: " >>> unlistA >>> filterByA (\p -> Debug.traceShowId (fst p == Debug.traceShowId name))) >>^ snd) `withDefault` defaultFirstStat -<< el
   count <- getAttrValue "number" >>> arr readMay >>> arr (fromMaybe 0) >>> arr (* mult)  >>> da "Model Count: " -<< el
   stats <- listA (((getStats >>> da "Stats: ") `orElse` arr (const ("",defaultMatchingStat))) >>> arr snd)  -<< el
-  weapons <- getWeapons count >>> da "Weapons: "  -<< el
-  abilities <- getAbilities -< el
+  weapons <- getWeapons count >>> arr (excludeWeapons options) >>> da "Weapons: "  -<< el
+  abilities <- getAbilities >>> arr (removeAbilities options) -< el
   upgrades <- getUpgrades  >>> da "Upgrades: "-< el
   returnA -< ModelGroup id (T.pack name) count (listToMaybe stats) weapons abilities upgrades
 
@@ -481,17 +481,36 @@ addSingleWargear :: Ability -> [ModelGroup] -> [ModelGroup]
 addSingleWargear ability (g : gs) = g {_modelCount = 1, _abilities = ability : _abilities g} : g {_modelCount = _modelCount g - 1} : gs
 addSingleWargear _ gs = gs
 
+removeGrenades :: ScriptOptions -> [Weapon] -> [Weapon]
+removeGrenades (ScriptOptions _ _ _ excludeGrenades _ _ _) weapons = if excludeGrenades then filter (not . isGrenade) weapons else weapons where
+  isGrenade weapon = "Grenade" `isInfixOf`_type weapon
+
+removeSidearmPistols :: ScriptOptions -> [Weapon] -> [Weapon]
+removeSidearmPistols (ScriptOptions _ _ _ _ excludeSidearms _ _) weapons = if excludeSidearms then filter (not . isSidearm) weapons else weapons where
+  isWeak weapon = maybe False (< 5) (readMay (_weaponStrength weapon))
+  isPistol weapon = "Pistol" `isInfixOf` _type weapon
+  nonPistolRanged weapon = not (isPistol weapon) && _range weapon /= "Melee"
+  hasNonPistolRanged = any nonPistolRanged weapons
+  isSidearm weapon = hasNonPistolRanged && isWeak weapon && isPistol weapon
+
+excludeWeapons ::  ScriptOptions -> [Weapon] -> [Weapon]
+excludeWeapons options = removeGrenades options . removeSidearmPistols options
+
+removeAbilities :: ScriptOptions -> [Ability] -> [Ability]
+removeAbilities (ScriptOptions _ _ _ _ _ excludeAbilities _) abilities = if excludeAbilities then [] else abilities
+
+
 makeUnit ::  ArrowXml a => ScriptOptions -> T.Text -> a XmlTree (String -> Unit)
 makeUnit options rosterId = proc el -> do
   name <- getNameAttrValue >>> da "Unit Name: " -< el
   selectionId <- getAttrValue "id" -< el
-  abilities <- getAbilities -< el
+  abilities <- getAbilities >>> arr (removeAbilities options) -< el
   stats <- listA (getStats `orElse` arr (const ("None", zeroStats)))  -< el
-  models <- listA (findModels selectionId) -<< el
-  modelGroups <- mapA (getModelGroup stats) -<< models
+  models <- listA (findModels options selectionId) -<< el
+  modelGroups <- mapA (getModelGroup options stats) -<< models
   let groupSelectionIds = map _modelGroupId modelGroups
   let weaponFinder = if selectionId `elem` groupSelectionIds then arr (const []) else getWeaponsShallow groupSelectionIds 1
-  weapons <- weaponFinder >>> da "Unit Level Weapons: " -<< el
+  weapons <- weaponFinder >>> da "Unit Level Weapons: " >>> arr (excludeWeapons options) -<< el
   let finalModelGroups = (filter (\u -> _modelCount u > 0) . addWargear abilities . addUnitWeapons weapons) modelGroups
   let nonWargearAbilites = filter (not . isWargear) abilities
   script <- scriptFromXml options rosterId name selectionId -<< el

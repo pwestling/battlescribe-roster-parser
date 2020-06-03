@@ -4952,6 +4952,7 @@ var author$project$Frontend$NoOp = {$: 'NoOp'};
 var author$project$Frontend$NavbarMsg = function (a) {
 	return {$: 'NavbarMsg', a: a};
 };
+var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
 var elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var elm$core$Array$foldr = F3(
@@ -5065,7 +5066,6 @@ var elm$core$Basics$never = function (_n0) {
 var elm$core$Maybe$Just = function (a) {
 	return {$: 'Just', a: a};
 };
-var elm$core$Basics$False = {$: 'False'};
 var elm$core$Result$isOk = function (result) {
 	if (result.$ === 'Ok') {
 		return true;
@@ -5786,7 +5786,7 @@ var author$project$Frontend$init = function (url) {
 	var navbarState = _n0.a;
 	var navbarCmd = _n0.b;
 	return _Utils_Tuple2(
-		{addScript: true, appHost: appHost, localMode: localMode, message: elm$core$Maybe$Nothing, navbarState: navbarState, rosterCode: elm$core$Maybe$Nothing, uiHeight: '450', uiWidth: '700'},
+		{addScript: true, appHost: appHost, excludeAbilities: false, excludeGrenades: false, excludeSidearms: false, localMode: localMode, message: elm$core$Maybe$Nothing, modelNames: '', navbarState: navbarState, rosterCode: elm$core$Maybe$Nothing, uiHeight: '450', uiWidth: '700'},
 		navbarCmd);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5820,7 +5820,7 @@ var author$project$Frontend$rosterDecoder = A2(
 	},
 	A2(elm$json$Json$Decode$field, 'id', elm$json$Json$Decode$string));
 var author$project$Frontend$serverAddress = function (localMode) {
-	return localMode ? 'http://localhost:8080/roster' : 'https://backend.battlescribe2tts.net/roster';
+	return localMode ? 'http://localhost:8080/roster' : 'https://battlescribe2tts-backend-ymofho42gq-uc.a.run.app/roster';
 };
 var elm$core$Basics$not = _Basics_not;
 var elm$core$Debug$toString = _Debug_toString;
@@ -6675,7 +6675,17 @@ var author$project$Frontend$update = F2(
 											'addScripts',
 											model.addScript ? 'true' : 'false'),
 											_Utils_Tuple2('uiWidth', model.uiWidth),
-											_Utils_Tuple2('uiHeight', model.uiHeight)
+											_Utils_Tuple2('uiHeight', model.uiHeight),
+											_Utils_Tuple2('modelNames', model.modelNames),
+											_Utils_Tuple2(
+											'excludeGrenades',
+											model.excludeGrenades ? 'true' : 'false'),
+											_Utils_Tuple2(
+											'excludeSidearms',
+											model.excludeSidearms ? 'true' : 'false'),
+											_Utils_Tuple2(
+											'excludeAbilities',
+											model.excludeAbilities ? 'true' : 'false')
 										]))
 							}));
 				} else {
@@ -6717,6 +6727,31 @@ var author$project$Frontend$update = F2(
 					_Utils_update(
 						model,
 						{addScript: !model.addScript}),
+					elm$core$Platform$Cmd$none);
+			case 'ToggleGrenades':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{excludeGrenades: !model.excludeGrenades}),
+					elm$core$Platform$Cmd$none);
+			case 'ToggleSidearms':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{excludeSidearms: !model.excludeSidearms}),
+					elm$core$Platform$Cmd$none);
+			case 'ToggleAbilities':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{excludeAbilities: !model.excludeAbilities}),
+					elm$core$Platform$Cmd$none);
+			case 'SetModelNames':
+				var names = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{modelNames: names}),
 					elm$core$Platform$Cmd$none);
 			case 'SetUiHeight':
 				var y = msg.a;
@@ -15262,13 +15297,19 @@ var author$project$Frontend$navbar = function (model) {
 			rundis$elm_bootstrap$Bootstrap$Navbar$withAnimation(
 				rundis$elm_bootstrap$Bootstrap$Navbar$config(author$project$Frontend$NavbarMsg))));
 };
+var author$project$Frontend$SetModelNames = function (a) {
+	return {$: 'SetModelNames', a: a};
+};
 var author$project$Frontend$SetUiHeight = function (a) {
 	return {$: 'SetUiHeight', a: a};
 };
 var author$project$Frontend$SetUiWidth = function (a) {
 	return {$: 'SetUiWidth', a: a};
 };
+var author$project$Frontend$ToggleAbilities = {$: 'ToggleAbilities'};
+var author$project$Frontend$ToggleGrenades = {$: 'ToggleGrenades'};
 var author$project$Frontend$ToggleScripting = {$: 'ToggleScripting'};
+var author$project$Frontend$ToggleSidearms = {$: 'ToggleSidearms'};
 var author$project$Frontend$UploadRoster = function (a) {
 	return {$: 'UploadRoster', a: a};
 };
@@ -15322,6 +15363,13 @@ var author$project$Frontend$filesDecoder = A2(
 	_List_fromArray(
 		['target', 'files']),
 	elm$json$Json$Decode$list(elm$file$File$decoder));
+var elm$html$Html$textarea = _VirtualDom_node('textarea');
+var elm$html$Html$Attributes$rows = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'rows',
+		elm$core$String$fromInt(n));
+};
 var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
 var elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
@@ -15350,6 +15398,50 @@ var elm$html$Html$Events$onInput = function (tagger) {
 			elm$html$Html$Events$alwaysStop,
 			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
 };
+var author$project$Frontend$textbox = F4(
+	function (msg, name, caption, currentValue) {
+		var lineHeight = elm$core$List$length(
+			A2(elm$core$String$split, '\n', currentValue)) + 1;
+		return A2(
+			elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$label,
+					_List_fromArray(
+						[
+							A2(elm$html$Html$Attributes$style, 'padding', '0.1em')
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text(name)
+						])),
+					A2(
+					elm$html$Html$textarea,
+					_List_fromArray(
+						[
+							elm$html$Html$Events$onInput(msg),
+							elm$html$Html$Attributes$rows(lineHeight),
+							elm$html$Html$Attributes$value(currentValue),
+							A2(elm$html$Html$Attributes$style, 'width', '20vw'),
+							A2(elm$html$Html$Attributes$style, 'display', 'block')
+						]),
+					_List_Nil),
+					A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2(elm$html$Html$Attributes$style, 'opacity', '0.7'),
+							A2(elm$html$Html$Attributes$style, 'font-size', '0.7em'),
+							A2(elm$html$Html$Attributes$style, 'width', '20vw')
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text(caption)
+						]))
+				]));
+	});
 var author$project$Frontend$textinput = F3(
 	function (msg, name, currentValue) {
 		return A2(
@@ -15377,16 +15469,18 @@ var author$project$Frontend$uploadPage = function (model) {
 		elm$html$Html$div,
 		_List_fromArray(
 			[
-				A2(elm$html$Html$Attributes$style, 'display', 'flex')
+				A2(elm$html$Html$Attributes$style, 'width', '100%'),
+				A2(elm$html$Html$Attributes$style, 'display', 'flex'),
+				A2(elm$html$Html$Attributes$style, 'flex-direction', 'column')
 			]),
 		_List_fromArray(
 			[
 				A2(
-				elm$html$Html$span,
+				elm$html$Html$div,
 				_List_fromArray(
 					[
-						A2(elm$html$Html$Attributes$style, 'padding', '1em'),
-						A2(elm$html$Html$Attributes$style, 'margin-top', '1em')
+						A2(elm$html$Html$Attributes$style, 'display', 'flex'),
+						A2(elm$html$Html$Attributes$style, 'flex-direction', 'row')
 					]),
 				_List_fromArray(
 					[
@@ -15394,33 +15488,80 @@ var author$project$Frontend$uploadPage = function (model) {
 						elm$html$Html$span,
 						_List_fromArray(
 							[
-								A2(elm$html$Html$Attributes$style, 'font-size', '2em'),
-								A2(elm$html$Html$Attributes$style, 'margin-right', '2em')
+								A2(elm$html$Html$Attributes$style, 'padding', '1em'),
+								A2(elm$html$Html$Attributes$style, 'margin-top', '1em'),
+								A2(elm$html$Html$Attributes$style, 'flex-grow', '1')
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('Upload Roster')
+								A2(
+								elm$html$Html$span,
+								_List_fromArray(
+									[
+										A2(elm$html$Html$Attributes$style, 'font-size', '2em'),
+										A2(elm$html$Html$Attributes$style, 'margin-right', '2em')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Upload Roster')
+									])),
+								A2(
+								elm$html$Html$input,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$type_('file'),
+										elm$html$Html$Attributes$multiple(false),
+										A2(
+										elm$html$Html$Events$on,
+										'change',
+										A2(elm$json$Json$Decode$map, author$project$Frontend$UploadRoster, author$project$Frontend$filesDecoder))
+									]),
+								_List_Nil)
 							])),
+						function () {
+						var _n0 = model.rosterCode;
+						if (_n0.$ === 'Just') {
+							var id = _n0.a;
+							return A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										A2(elm$html$Html$Attributes$style, 'font-size', '2.5em'),
+										A2(elm$html$Html$Attributes$style, 'padding', '1em')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Your roster code is: ' + id)
+									]));
+						} else {
+							return A2(elm$html$Html$div, _List_Nil, _List_Nil);
+						}
+					}()
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'display', 'flex'),
+						A2(elm$html$Html$Attributes$style, 'flex-direction', 'row')
+					]),
+				_List_fromArray(
+					[
 						A2(
-						elm$html$Html$input,
+						elm$html$Html$div,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$type_('file'),
-								elm$html$Html$Attributes$multiple(false),
-								A2(
-								elm$html$Html$Events$on,
-								'change',
-								A2(elm$json$Json$Decode$map, author$project$Frontend$UploadRoster, author$project$Frontend$filesDecoder))
+								A2(elm$html$Html$Attributes$style, 'flex-grow', '5')
 							]),
 						_List_Nil),
 						A2(
 						elm$html$Html$div,
 						_List_fromArray(
 							[
-								A2(elm$html$Html$Attributes$style, 'display', 'block'),
-								A2(elm$html$Html$Attributes$style, 'float', 'right'),
-								A2(elm$html$Html$Attributes$style, 'font-size', '0.7em'),
-								A2(elm$html$Html$Attributes$style, 'background-color', 'rgb(50, 115, 115);')
+								A2(elm$html$Html$Attributes$style, 'width', '30vw'),
+								A2(elm$html$Html$Attributes$style, 'flex-grow', '1'),
+								A2(elm$html$Html$Attributes$style, 'display', 'flex'),
+								A2(elm$html$Html$Attributes$style, 'flex-direction', ' column')
 							]),
 						_List_fromArray(
 							[
@@ -15428,6 +15569,7 @@ var author$project$Frontend$uploadPage = function (model) {
 								elm$html$Html$div,
 								_List_fromArray(
 									[
+										A2(elm$html$Html$Attributes$style, 'font-weight', '500'),
 										A2(elm$html$Html$Attributes$style, 'font-size', '1.4em')
 									]),
 								_List_fromArray(
@@ -15436,46 +15578,79 @@ var author$project$Frontend$uploadPage = function (model) {
 									])),
 								A2(
 								elm$html$Html$div,
-								_List_Nil,
 								_List_fromArray(
 									[
-										A3(author$project$Frontend$checkbox, author$project$Frontend$ToggleScripting, 'Enable Model Scripting', model.addScript)
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_Nil,
+										A2(elm$html$Html$Attributes$style, 'display', 'flex'),
+										A2(elm$html$Html$Attributes$style, 'flex-direction', 'row')
+									]),
 								_List_fromArray(
 									[
-										A3(author$project$Frontend$textinput, author$project$Frontend$SetUiWidth, 'UI Width', model.uiWidth)
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A3(author$project$Frontend$textinput, author$project$Frontend$SetUiHeight, 'UI Height', model.uiHeight)
+										A2(
+										elm$html$Html$div,
+										_List_fromArray(
+											[
+												A2(elm$html$Html$Attributes$style, 'padding-right', '1em')
+											]),
+										_List_fromArray(
+											[
+												A4(author$project$Frontend$textbox, author$project$Frontend$SetModelNames, 'Model Names', 'If the script is incorrectly splitting up models and weapons, you can enter model names here (one per line) to try to correct the issue', model.modelNames)
+											])),
+										A2(
+										elm$html$Html$div,
+										_List_fromArray(
+											[
+												A2(elm$html$Html$Attributes$style, 'display', 'block'),
+												A2(elm$html$Html$Attributes$style, 'font-size', '0.7em'),
+												A2(elm$html$Html$Attributes$style, 'background-color', 'rgb(50, 115, 115);')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$div,
+												_List_Nil,
+												_List_fromArray(
+													[
+														A3(author$project$Frontend$checkbox, author$project$Frontend$ToggleScripting, 'Enable Model Scripting', model.addScript)
+													])),
+												A2(
+												elm$html$Html$div,
+												_List_Nil,
+												_List_fromArray(
+													[
+														A3(author$project$Frontend$checkbox, author$project$Frontend$ToggleGrenades, 'Exclude Grenades from Weapons', model.excludeGrenades)
+													])),
+												A2(
+												elm$html$Html$div,
+												_List_Nil,
+												_List_fromArray(
+													[
+														A3(author$project$Frontend$checkbox, author$project$Frontend$ToggleSidearms, 'Exclude Sidearm Pistols from Weapons', model.excludeSidearms)
+													])),
+												A2(
+												elm$html$Html$div,
+												_List_Nil,
+												_List_fromArray(
+													[
+														A3(author$project$Frontend$checkbox, author$project$Frontend$ToggleAbilities, 'Exclude Abilities from Descriptions', model.excludeAbilities)
+													])),
+												A2(
+												elm$html$Html$div,
+												_List_Nil,
+												_List_fromArray(
+													[
+														A3(author$project$Frontend$textinput, author$project$Frontend$SetUiWidth, 'UI Width', model.uiWidth)
+													])),
+												A2(
+												elm$html$Html$div,
+												_List_Nil,
+												_List_fromArray(
+													[
+														A3(author$project$Frontend$textinput, author$project$Frontend$SetUiHeight, 'UI Height', model.uiHeight)
+													]))
+											]))
 									]))
 							]))
 					])),
-				function () {
-				var _n0 = model.rosterCode;
-				if (_n0.$ === 'Just') {
-					var id = _n0.a;
-					return A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								A2(elm$html$Html$Attributes$style, 'font-size', '2.5em'),
-								A2(elm$html$Html$Attributes$style, 'padding', '1em')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('Your roster code is: ' + id)
-							]));
-				} else {
-					return A2(elm$html$Html$div, _List_Nil, _List_Nil);
-				}
-			}(),
 				A2(
 				elm$html$Html$div,
 				_List_Nil,

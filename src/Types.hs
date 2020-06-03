@@ -159,5 +159,9 @@ deriveJSON defaultOptions{fieldLabelModifier = drop 1} ''ItemCount
 data ScriptOptions = ScriptOptions {
     shouldAddScripts :: Bool,
     uiWidth          :: Maybe Int,
-    uiHeight         :: Maybe Int
+    uiHeight         :: Maybe Int,
+    excludeGrenades  :: Bool,
+    excludeSidearms :: Bool,
+    excludeAbilities :: Bool,
+    modelNames :: Maybe String
 }
