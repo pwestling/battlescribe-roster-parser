@@ -1,2 +1,1 @@
-gcloud config configurations activate personal
-gcloud compute ssh pwestlingg@multi-use-docker --zone us-east1-b --project oneoff-project --command="cd /home/pwestl && bash ./deploy-bs2tts-frontend.sh"
+gcloud run deploy battlescribe2tts-frontend --image gcr.io/oneoff-project/bs2tts-frontend:latest --allow-unauthenticated --platform managed --region us-central1
