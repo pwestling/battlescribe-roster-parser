@@ -163,5 +163,7 @@ data ScriptOptions = ScriptOptions {
     excludeGrenades  :: Bool,
     excludeSidearms :: Bool,
     excludeAbilities :: Bool,
-    modelNames :: Maybe String
+    modelsToFind :: Maybe String,
+    modelsToConsolidate :: Maybe String
+
 }

@@ -14395,7 +14395,7 @@ var author$project$Frontend$instructions = A2(
 				]),
 			_List_fromArray(
 				[
-					elm$html$Html$text('Battlescribe2TTS is free forever. Ads help support our server costs. This is a personal passion project, but if you want to give me money anyway click here: '),
+					elm$html$Html$text('Battlescribe2TTS is free forever. This is a personal passion project, but if you want to give me money anyway click here: '),
 					A2(
 					elm$html$Html$div,
 					_List_fromArray(

@@ -44,7 +44,8 @@ type Msg
     | ToggleGrenades
     | ToggleSidearms
     | ToggleAbilities
-    | SetModelNames String
+    | SetModelsToFind String
+    | SetModelsToConsolidate String
     | SetUiWidth String
     | SetUiHeight String
     | NavbarMsg Navbar.State
@@ -62,7 +63,8 @@ type alias Model =
     , excludeGrenades : Bool
     , excludeSidearms : Bool
     , excludeAbilities : Bool
-    , modelNames : String
+    , modelsToFind : String
+    , modelsToConsolidate : String
     }
 
 
@@ -89,7 +91,8 @@ init url =
       , excludeGrenades = False
       , excludeSidearms = False
       , excludeAbilities = False
-      , modelNames = ""
+      , modelsToFind = ""
+      , modelsToConsolidate = ""
       }
     , navbarCmd
     )
@@ -136,7 +139,8 @@ update msg model =
                                   )
                                 , ( "uiWidth", model.uiWidth )
                                 , ( "uiHeight", model.uiHeight )
-                                , ( "modelNames", model.modelNames )
+                                , ( "modelsToFind", model.modelsToFind )
+                                , ( "modelsToConsolidate", model.modelsToConsolidate )
                                 , ( "excludeGrenades"
                                   , if model.excludeGrenades then
                                         "true"
@@ -192,8 +196,11 @@ update msg model =
         ToggleAbilities ->
             ( { model | excludeAbilities = not model.excludeAbilities }, Cmd.none )
 
-        SetModelNames names ->
-            ( { model | modelNames = names }, Cmd.none )
+        SetModelsToFind names ->
+            ( { model | modelsToFind = names }, Cmd.none )
+
+        SetModelsToConsolidate names ->
+            ( { model | modelsToConsolidate = names }, Cmd.none )
 
         SetUiHeight y ->
             ( { model | uiHeight = y }, Cmd.none )
@@ -275,10 +282,12 @@ uploadPage model =
                     div [] []
             ]
         , div [ style "display" "flex", style "flex-direction" "row" ]
-            [   div [style "flex-grow" "5"] [],
+            [   
+                -- div [style "flex-grow" "1"] [],
                 div [style "width" "30vw", style "flex-grow" "1", style "display" "flex", style "flex-direction" " column"] [  div [ style "font-weight" "500", style "font-size" "1.4em" ] [ text "Advanced Options" ],
                 div [style "display" "flex", style "flex-direction" "row"] [
-                div [style "padding-right" "1em"] [textbox SetModelNames "Model Names" "If the script is incorrectly splitting up models and weapons, you can enter model names here (one per line) to try to correct the issue" model.modelNames],
+                div [style "padding-right" "1em"] [textbox SetModelsToConsolidate  "Models To Keep Whole" "If the script is incorrectly splitting up models and weapons, you can enter model names here (one per line) to try to correct the issue" model.modelsToConsolidate],
+                div [style "padding-right" "1em"] [textbox SetModelsToFind  "Models to Find" "If the script is not finding a model in your army, you can enter model names here (one per line) to try to correct the issue" model.modelsToFind],
                 div [ style "display" "block", style "font-size" "0.7em", style "background-color" "rgb(50, 115, 115);" ]
                 [ div [] [ checkbox ToggleScripting "Enable Model Scripting" model.addScript ]
                 , div [] [ checkbox ToggleGrenades "Exclude Grenades from Weapons" model.excludeGrenades ]

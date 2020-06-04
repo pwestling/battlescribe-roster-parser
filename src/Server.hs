@@ -45,7 +45,7 @@ version :: Version
 version = Version "1.10"
 
 type CreateRosterAPI = "roster"
-                       :> QueryFlag "addScripts" :> QueryParam "uiWidth" Int :> QueryParam "uiHeight" Int :> QueryParam "modelNames" String
+                       :> QueryFlag "addScripts" :> QueryParam "uiWidth" Int :> QueryParam "uiHeight" Int :> QueryParam "modelsToFind" String :> QueryParam "modelsToConsolidate" String
                        :> QueryFlag "excludeGrenades" :> QueryFlag "excludeSidearms" :> QueryFlag "excludeAbilities" 
                        :> MultipartForm Mem (MultipartData Mem) :> Post '[JSON] RosterId
 type GetRosterAPI = "roster" :> Capture "id" T.Text :> "names" :> Get '[JSON] RosterNamesRequest
@@ -77,14 +77,14 @@ getUploadZipContents multipartData = do
   onlyEntry <- headMay zipEntries
   return (fromEntry onlyEntry)
 
-createRoster :: Connection -> Bool -> Maybe Int -> Maybe Int -> Maybe String -> Bool -> Bool -> Bool -> MultipartData Mem -> Handler RosterId
-createRoster redisConn addScripts uiWidth uiHeight modelNames excludeGrenades excludeSidearms excludeAbilities multipartData = do
+createRoster :: Connection -> Bool -> Maybe Int -> Maybe Int -> Maybe String -> Maybe String -> Bool -> Bool -> Bool -> MultipartData Mem -> Handler RosterId
+createRoster redisConn addScripts uiWidth uiHeight modelsToFind modelsToConsolidate excludeGrenades excludeSidearms excludeAbilities multipartData = do
   let contents = C8.unpack <$> getUploadZipContents multipartData
   fullUUID <- liftIO nextRandom
   let id = T.take 8 $ toText fullUUID
   case contents of
     Just xml -> do
-      unitData <- liftIO $ processRoster (ScriptOptions addScripts uiWidth uiHeight excludeGrenades excludeSidearms excludeAbilities modelNames) xml id
+      unitData <- liftIO $ processRoster (ScriptOptions addScripts uiWidth uiHeight excludeGrenades excludeSidearms excludeAbilities modelsToFind modelsToConsolidate) xml id
       storeInRedis redisConn id unitData
       return $ RosterId id
     Nothing -> throwError err400 {

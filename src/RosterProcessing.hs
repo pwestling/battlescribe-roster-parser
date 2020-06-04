@@ -138,15 +138,15 @@ containsNoModelsOrUnits = neg $ deep (isType "Unit" <+> isType "model")
 deepWithout :: (Tree t, ArrowXml a) => a (t b) (t b) -> a (t b) (t b) -> a (t b) (t b)
 deepWithout guard predicate = deep (guard <+> predicate) >>> filterA (neg guard)
 
-isSpecialCaseSelection :: ArrowXml a => a XmlTree XmlTree
-isSpecialCaseSelection = deep $ isElem >>> hasName "selection" >>> hasAttrValue "name" (`elem` exceptions) where
+isSpecialCaseSelection :: ArrowXml a => ScriptOptions -> a XmlTree XmlTree
+isSpecialCaseSelection options = deep $ isElem >>> hasName "selection" >>> hasAttrValue "name" (`elem` exceptions) where
   exceptions = [
     "Ravenwing Talonmaster",
     "Plague Champion",
     "Plague Marine w/ melee weapons",
     "Plague Marine w/ boltgun",
     "Plague Marine w/ Special Weapon"
-    ]
+    ] ++ maybe [] (map T.unpack . T.splitOn "\n" . T.pack) (modelsToConsolidate options)
 
 isSpecialCaseSubGroup :: ArrowXml a => ScriptOptions -> a XmlTree XmlTree
 isSpecialCaseSubGroup options = multi $ isElem >>> hasName "selection" >>> (hasAttrValue "name" (`elem` exceptions) `orElse` hasAttrValue "entryid" (`elem` exceptionIds)) where
@@ -160,7 +160,7 @@ isSpecialCaseSubGroup options = multi $ isElem >>> hasName "selection" >>> (hasA
     "Grot Orderly (Index)",
     "Painboy",
     "Techmarine Gunner"  
-    ] ++ maybe [] (map T.unpack . T.splitOn "\n" . T.pack) (modelNames options)
+    ] ++ maybe [] (map T.unpack . T.splitOn "\n" . T.pack) (modelsToFind options)
   exceptionIds = [
     "e050-9739-5f42-0094::f1a3-48e8-0804-fb8e" -- Thunderfire Cannon
     ]
@@ -168,7 +168,7 @@ isSpecialCaseSubGroup options = multi $ isElem >>> hasName "selection" >>> (hasA
 findModels :: ArrowXml a => ScriptOptions -> String -> a XmlTree XmlTree
 findModels options topId =
       listA (
-      isSpecialCaseSelection `orElse`
+      isSpecialCaseSelection options `orElse`
 
       (multi (isSelection >>> filterA (isType "model"))
       <+> multi (isSelection >>> isNotTop >>> filterA hasUnitProfile)
@@ -482,11 +482,11 @@ addSingleWargear ability (g : gs) = g {_modelCount = 1, _abilities = ability : _
 addSingleWargear _ gs = gs
 
 removeGrenades :: ScriptOptions -> [Weapon] -> [Weapon]
-removeGrenades (ScriptOptions _ _ _ excludeGrenades _ _ _) weapons = if excludeGrenades then filter (not . isGrenade) weapons else weapons where
+removeGrenades (ScriptOptions _ _ _ excludeGrenades _ _ _ _) weapons = if excludeGrenades then filter (not . isGrenade) weapons else weapons where
   isGrenade weapon = "Grenade" `isInfixOf`_type weapon
 
 removeSidearmPistols :: ScriptOptions -> [Weapon] -> [Weapon]
-removeSidearmPistols (ScriptOptions _ _ _ _ excludeSidearms _ _) weapons = if excludeSidearms then filter (not . isSidearm) weapons else weapons where
+removeSidearmPistols (ScriptOptions _ _ _ _ excludeSidearms _ _ _) weapons = if excludeSidearms then filter (not . isSidearm) weapons else weapons where
   isWeak weapon = maybe False (< 5) (readMay (_weaponStrength weapon))
   isPistol weapon = "Pistol" `isInfixOf` _type weapon
   nonPistolRanged weapon = not (isPistol weapon) && _range weapon /= "Melee"
@@ -497,7 +497,7 @@ excludeWeapons ::  ScriptOptions -> [Weapon] -> [Weapon]
 excludeWeapons options = removeGrenades options . removeSidearmPistols options
 
 removeAbilities :: ScriptOptions -> [Ability] -> [Ability]
-removeAbilities (ScriptOptions _ _ _ _ _ excludeAbilities _) abilities = if excludeAbilities then [] else abilities
+removeAbilities (ScriptOptions _ _ _ _ _ excludeAbilities _ _) abilities = if excludeAbilities then [] else abilities
 
 
 makeUnit ::  ArrowXml a => ScriptOptions -> T.Text -> a XmlTree (String -> Unit)
