@@ -32,10 +32,10 @@ processUnitWithOptions options fileName  = do
 
 
 processUnit :: String -> IO Unit
-processUnit = processUnitWithOptions (ScriptOptions True Nothing Nothing False False False Nothing)
+processUnit = processUnitWithOptions (ScriptOptions True Nothing Nothing False False False Nothing Nothing)
 
 processUnits :: String -> Int ->  IO [Unit]
-processUnits = processUnitsWithOptions (ScriptOptions True Nothing Nothing False False False Nothing)
+processUnits = processUnitsWithOptions (ScriptOptions True Nothing Nothing False False False Nothing Nothing)
 
 processUnitsWithOptions :: ScriptOptions -> String -> Int ->  IO [Unit]
 processUnitsWithOptions options fileName count = do
@@ -130,7 +130,7 @@ main = hspec $ do
         intercessor `hasWeapons` ["Stalker Bolt Rifle", "Bolt pistol", "Frag grenade", "Krak grenade"]
         sargeant `hasWeapons` ["Stalker Bolt Rifle", "Power sword", "Bolt pistol", "Frag grenade", "Krak grenade"]
       it "excludes grenades" $ do
-        unit <- processUnitWithOptions (ScriptOptions True Nothing Nothing True False False Nothing) "AutoBoltRifleIntercessors"
+        unit <- processUnitWithOptions (ScriptOptions True Nothing Nothing True False False Nothing Nothing) "AutoBoltRifleIntercessors"
         unit `hasGroups` 2
         let [intercessor, sargeant] = _subGroups unit
         intercessor `hasCount` 4
@@ -138,7 +138,7 @@ main = hspec $ do
         intercessor `hasWeapons` ["Auto Bolt Rifle", "Bolt pistol"]
         sargeant `hasWeapons` ["Auto Bolt Rifle", "Power sword", "Bolt pistol"]
       it "excludes sidearms" $ do
-        unit <- processUnitWithOptions (ScriptOptions True Nothing Nothing False True False Nothing) "AutoBoltRifleIntercessors"
+        unit <- processUnitWithOptions (ScriptOptions True Nothing Nothing False True False Nothing Nothing) "AutoBoltRifleIntercessors"
         unit `hasGroups` 2
         let [intercessor, sargeant] = _subGroups unit
         intercessor `hasCount` 4
@@ -146,7 +146,7 @@ main = hspec $ do
         intercessor `hasWeapons` ["Auto Bolt Rifle", "Frag grenade", "Krak grenade"]
         sargeant `hasWeapons` ["Auto Bolt Rifle", "Power sword", "Frag grenade", "Krak grenade"]
       it "excludes Abilities" $ do
-        unit <- processUnitWithOptions (ScriptOptions True Nothing Nothing False False True Nothing) "AutoBoltRifleIntercessors"
+        unit <- processUnitWithOptions (ScriptOptions True Nothing Nothing False False True Nothing Nothing) "AutoBoltRifleIntercessors"
         unit `hasGroups` 2
         let [intercessor, sargeant] = _subGroups unit
         intercessor `hasCount` 4
@@ -357,3 +357,14 @@ main = hspec $ do
         leader `hasCount` 1        
         leader `hasWeapons` ["Hellblade"]
         hasStat leader _attacks "2"
+      it "create Triarch Praetorians correctly" $ do
+        units <- processUnits "TriarchPraetorians" 2
+        printUnits units
+        let [voidbladeUnit, rodUnit] = units
+        let [voidblade] = _subGroups voidbladeUnit
+        voidblade `hasCount` 5
+        voidblade `hasWeapons` ["Voidblade", "Particle Caster"]
+        let [rod] = _subGroups rodUnit
+        rod `hasCount` 5
+        rod `hasWeapons` ["Rod of Covenant (Melee)", "Rod of Covenant (Shooting)"]
+

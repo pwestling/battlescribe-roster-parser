@@ -443,7 +443,11 @@ copiableWeapons = ["Stalker Bolt Rifle",
                    "Assault Plasma Incinerator, Supercharged",
                    "Fragstorm Grenade Launcher",
                    "Auto Boltstorm Gauntlets (Shooting)",
-                   "Auto Boltstorm Gauntlets (Melee)"]
+                   "Auto Boltstorm Gauntlets (Melee)",
+                   "Rod of Covenant (Melee)",
+                   "Rod of Covenant (Shooting)",
+                   "Voidblade",
+                   "Particle Caster"]
 
 weaponShouldBeCopied :: Weapon -> Bool
 weaponShouldBeCopied w = _weaponName w `elem` copiableWeapons

@@ -5786,7 +5786,7 @@ var author$project$Frontend$init = function (url) {
 	var navbarState = _n0.a;
 	var navbarCmd = _n0.b;
 	return _Utils_Tuple2(
-		{addScript: true, appHost: appHost, excludeAbilities: false, excludeGrenades: false, excludeSidearms: false, localMode: localMode, message: elm$core$Maybe$Nothing, modelNames: '', navbarState: navbarState, rosterCode: elm$core$Maybe$Nothing, uiHeight: '450', uiWidth: '700'},
+		{addScript: true, appHost: appHost, excludeAbilities: false, excludeGrenades: false, excludeSidearms: false, localMode: localMode, message: elm$core$Maybe$Nothing, modelsToConsolidate: '', modelsToFind: '', navbarState: navbarState, rosterCode: elm$core$Maybe$Nothing, uiHeight: '450', uiWidth: '700'},
 		navbarCmd);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -6676,7 +6676,8 @@ var author$project$Frontend$update = F2(
 											model.addScript ? 'true' : 'false'),
 											_Utils_Tuple2('uiWidth', model.uiWidth),
 											_Utils_Tuple2('uiHeight', model.uiHeight),
-											_Utils_Tuple2('modelNames', model.modelNames),
+											_Utils_Tuple2('modelsToFind', model.modelsToFind),
+											_Utils_Tuple2('modelsToConsolidate', model.modelsToConsolidate),
 											_Utils_Tuple2(
 											'excludeGrenades',
 											model.excludeGrenades ? 'true' : 'false'),
@@ -6746,12 +6747,19 @@ var author$project$Frontend$update = F2(
 						model,
 						{excludeAbilities: !model.excludeAbilities}),
 					elm$core$Platform$Cmd$none);
-			case 'SetModelNames':
+			case 'SetModelsToFind':
 				var names = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{modelNames: names}),
+						{modelsToFind: names}),
+					elm$core$Platform$Cmd$none);
+			case 'SetModelsToConsolidate':
+				var names = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{modelsToConsolidate: names}),
 					elm$core$Platform$Cmd$none);
 			case 'SetUiHeight':
 				var y = msg.a;
@@ -15297,8 +15305,11 @@ var author$project$Frontend$navbar = function (model) {
 			rundis$elm_bootstrap$Bootstrap$Navbar$withAnimation(
 				rundis$elm_bootstrap$Bootstrap$Navbar$config(author$project$Frontend$NavbarMsg))));
 };
-var author$project$Frontend$SetModelNames = function (a) {
-	return {$: 'SetModelNames', a: a};
+var author$project$Frontend$SetModelsToConsolidate = function (a) {
+	return {$: 'SetModelsToConsolidate', a: a};
+};
+var author$project$Frontend$SetModelsToFind = function (a) {
+	return {$: 'SetModelsToFind', a: a};
 };
 var author$project$Frontend$SetUiHeight = function (a) {
 	return {$: 'SetUiHeight', a: a};
@@ -15551,13 +15562,6 @@ var author$project$Frontend$uploadPage = function (model) {
 						elm$html$Html$div,
 						_List_fromArray(
 							[
-								A2(elm$html$Html$Attributes$style, 'flex-grow', '5')
-							]),
-						_List_Nil),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
 								A2(elm$html$Html$Attributes$style, 'width', '30vw'),
 								A2(elm$html$Html$Attributes$style, 'flex-grow', '1'),
 								A2(elm$html$Html$Attributes$style, 'display', 'flex'),
@@ -15593,7 +15597,17 @@ var author$project$Frontend$uploadPage = function (model) {
 											]),
 										_List_fromArray(
 											[
-												A4(author$project$Frontend$textbox, author$project$Frontend$SetModelNames, 'Model Names', 'If the script is incorrectly splitting up models and weapons, you can enter model names here (one per line) to try to correct the issue', model.modelNames)
+												A4(author$project$Frontend$textbox, author$project$Frontend$SetModelsToConsolidate, 'Models To Keep Whole', 'If the script is incorrectly splitting up models and weapons, you can enter model names here (one per line) to try to correct the issue', model.modelsToConsolidate)
+											])),
+										A2(
+										elm$html$Html$div,
+										_List_fromArray(
+											[
+												A2(elm$html$Html$Attributes$style, 'padding-right', '1em')
+											]),
+										_List_fromArray(
+											[
+												A4(author$project$Frontend$textbox, author$project$Frontend$SetModelsToFind, 'Models to Find', 'If the script is not finding a model in your army, you can enter model names here (one per line) to try to correct the issue', model.modelsToFind)
 											])),
 										A2(
 										elm$html$Html$div,
