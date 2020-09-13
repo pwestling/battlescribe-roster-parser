@@ -460,8 +460,8 @@ weaponShouldBeCopied :: Weapon -> Bool
 weaponShouldBeCopied w = _weaponName w `caseInsensitiveElem` copiableWeapons
 
 isWargear :: Ability -> Bool
-isWargear ability = any (hasPrefix (_abilityName ability)) prefixes where
-  prefixes = ["Icon", "Instrument", "Daemonic Icon"]
+isWargear ability = any (hasPrefix (stringToLower (_abilityName ability))) prefixes where
+  prefixes = map stringToLower ["Icon", "Instrument", "Daemonic Icon"]
   hasPrefix = flip isPrefixOf
 
 addUnitWeapon :: Weapon -> [ModelGroup] -> [ModelGroup]
@@ -494,13 +494,13 @@ addSingleWargear _ gs = gs
 
 removeGrenades :: ScriptOptions -> [Weapon] -> [Weapon]
 removeGrenades (ScriptOptions _ _ _ excludeGrenades _ _ _ _) weapons = if excludeGrenades then filter (not . isGrenade) weapons else weapons where
-  isGrenade weapon = "Grenade" `isInfixOf`_type weapon
+  isGrenade weapon = "grenade" `isInfixOf` stringToLower (_type weapon)
 
 removeSidearmPistols :: ScriptOptions -> [Weapon] -> [Weapon]
 removeSidearmPistols (ScriptOptions _ _ _ _ excludeSidearms _ _ _) weapons = if excludeSidearms then filter (not . isSidearm) weapons else weapons where
   isWeak weapon = maybe False (< 5) (readMay (_weaponStrength weapon))
-  isPistol weapon = "Pistol" `isInfixOf` _type weapon
-  nonPistolRanged weapon = not (isPistol weapon) && _range weapon /= "Melee"
+  isPistol weapon = "pistol" `isInfixOf` stringToLower (_type weapon)
+  nonPistolRanged weapon = not (isPistol weapon) && stringToLower (_range weapon) /= "melee"
   hasNonPistolRanged = any nonPistolRanged weapons
   isSidearm weapon = hasNonPistolRanged && isWeak weapon && isPistol weapon
 
