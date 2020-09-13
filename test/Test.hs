@@ -11,6 +11,7 @@ import qualified Data.ByteString.Lazy.Char8           as C8
 import           Data.Aeson
 import           Data.Data
 import           Data.Generics
+import           Text.XML.HXT.Core
 
 
 {-# ANN module ("HLint: ignore Redundant do" :: String) #-}
@@ -53,15 +54,15 @@ hasStat unit statGetter val = do
 
 hasWeaponNamed :: ModelGroup -> String -> IO ()
 hasWeaponNamed unit weaponName = do
-    fmap _weaponName (_weapons unit) `shouldContain` [weaponName]
+    fmap (stringToLower . _weaponName) (_weapons unit) `shouldContain` [stringToLower weaponName]
 
 hasAbilityNamed :: ModelGroup -> String -> IO ()
 hasAbilityNamed unit abilityName = do
-    fmap _abilityName (_abilities unit) `shouldContain` [abilityName]
+    fmap (stringToLower . _abilityName) (_abilities unit) `shouldContain` [stringToLower abilityName]
 
 hasWeapons :: ModelGroup -> [String] -> IO ()
 hasWeapons unit weapons = do
-  print $ fmap _weaponName  (_weapons unit)
+  print $ fmap (stringToLower . _weaponName)  (_weapons unit)
   mapM_ (hasWeaponNamed unit) weapons
   length (_weapons unit) `shouldBe` length weapons
 
@@ -81,17 +82,17 @@ areEquivalent _ = pure ()
 
 hasAbilities :: ModelGroup -> [String] -> IO ()
 hasAbilities unit abilities = do
-  print $ fmap _abilityName  (_abilities unit)
+  print $ fmap (stringToLower . _abilityName)  (_abilities unit)
   mapM_ (hasAbilityNamed unit) abilities
   length (_abilities unit) `shouldBe` length abilities
 
 hasUnitAbilityNamed :: Unit -> String -> IO ()
 hasUnitAbilityNamed unit abilityName = do
-    fmap _abilityName (_unitAbilities unit) `shouldContain` [abilityName]
+    fmap (stringToLower . _abilityName) (_unitAbilities unit) `shouldContain` [stringToLower abilityName]
 
 hasUnitAbilities :: Unit -> [String] -> IO ()
 hasUnitAbilities unit abilities = do
-  print $ fmap _abilityName  (_unitAbilities unit)
+  print $ fmap (stringToLower . _abilityName)  (_unitAbilities unit)
   mapM_ (hasUnitAbilityNamed unit) abilities
   length (_unitAbilities unit) `shouldBe` length abilities
 
@@ -367,4 +368,21 @@ main = hspec $ do
         let [rod] = _subGroups rodUnit
         rod `hasCount` 5
         rod `hasWeapons` ["Rod of Covenant (Melee)", "Rod of Covenant (Shooting)"]
-
+      it "creates 9th ed Plague Marines correctly" $ do
+        unit <- processUnit "PlagueMarines9th"
+        printUnits [unit]
+        unit `hasGroups` 5
+        unit `hasUnitAbilities` ["Hateful Assault", "Death to the False Emperor", "Disgustingly Resilient", "Vectors of Death and Disease"]
+        let [launcher1, launcher2, knife1, knife2, champ] = _subGroups unit
+        areEquivalent [launcher1,launcher2]
+        areEquivalent [knife1,knife2]
+        champ `hasCount` 1
+        champ `hasWeapons` ["Power fist", "Boltgun", "Plague knife", "Krak grenade", "Blight Grenade"]
+        hasStat champ _leadership "8"
+        hasStat champ _attacks "2"
+        knife1 `hasCount` 1
+        knife1 `hasWeapons` ["Plague knife", "Krak grenade", "Blight Grenade"]
+        hasStat knife1 _attacks "2"
+        launcher1 `hasCount` 1
+        launcher1 `hasWeapons` ["Blight Launcher", "Plague knife", "Krak grenade", "Blight Grenade"]
+        hasStat launcher1 _attacks "1"

@@ -138,8 +138,12 @@ containsNoModelsOrUnits = neg $ deep (isType "Unit" <+> isType "model")
 deepWithout :: (Tree t, ArrowXml a) => a (t b) (t b) -> a (t b) (t b) -> a (t b) (t b)
 deepWithout guard predicate = deep (guard <+> predicate) >>> filterA (neg guard)
 
+caseInsensitiveElem :: String -> [String] -> Bool
+caseInsensitiveElem needle rawStack = stringToLower needle `elem` stack where
+  stack = map stringToLower rawStack
+
 isSpecialCaseSelection :: ArrowXml a => ScriptOptions -> a XmlTree XmlTree
-isSpecialCaseSelection options = deep $ isElem >>> hasName "selection" >>> hasAttrValue "name" (`elem` exceptions) where
+isSpecialCaseSelection options = deep $ isElem >>> hasName "selection" >>> hasAttrValue "name" (`caseInsensitiveElem` exceptions) where
   exceptions = [
     "Ravenwing Talonmaster",
     "Plague Champion",
@@ -149,7 +153,7 @@ isSpecialCaseSelection options = deep $ isElem >>> hasName "selection" >>> hasAt
     ] ++ maybe [] (map T.unpack . T.splitOn "\n" . T.pack) (modelsToConsolidate options)
 
 isSpecialCaseSubGroup :: ArrowXml a => ScriptOptions -> a XmlTree XmlTree
-isSpecialCaseSubGroup options = multi $ isElem >>> hasName "selection" >>> (hasAttrValue "name" (`elem` exceptions) `orElse` hasAttrValue "entryid" (`elem` exceptionIds)) where
+isSpecialCaseSubGroup options = multi $ isElem >>> hasName "selection" >>> (hasAttrValue "name" (`caseInsensitiveElem` exceptions) `orElse` hasAttrValue "entryid" (`caseInsensitiveElem` exceptionIds)) where
   exceptions = [
     "Space Marine w/Special Weapon",
     "Grot Oiler",
@@ -286,7 +290,7 @@ getWeapons modelCount = listA $ profileOfThisModelWithSelectionData "Weapon" (we
 
 getWeaponsShallow :: ArrowXml a => [String] -> Int -> a XmlTree [Weapon]
 getWeaponsShallow foundGroups modelCount = listA $ this /> deepWithout blockFoundGroups (hasName "selection" >>> filterA anyWeaponSelection) >>> (weaponPartial modelCount &&& anyWeaponSelection) >>> getWeapon modelCount where
-  blockFoundGroups = hasAttrValue "id" (`elem` foundGroups)
+  blockFoundGroups = hasAttrValue "id" (\x -> (Debug.traceShowId x) `elem` foundGroups)
   anyWeaponSelection = hasName "selection" /> hasName "profiles" /> hasName "profile" >>> isType "Weapon"
 
 getNameAndMultiplier :: String -> (String, Int)
@@ -512,7 +516,7 @@ makeUnit options rosterId = proc el -> do
   stats <- listA (getStats `orElse` arr (const ("None", zeroStats)))  -< el
   models <- listA (findModels options selectionId) -<< el
   modelGroups <- mapA (getModelGroup options stats) -<< models
-  let groupSelectionIds = map _modelGroupId modelGroups
+  let groupSelectionIds = Debug.traceShowId $ map _modelGroupId modelGroups
   let weaponFinder = if selectionId `elem` groupSelectionIds then arr (const []) else getWeaponsShallow groupSelectionIds 1
   weapons <- weaponFinder >>> da "Unit Level Weapons: " >>> arr (excludeWeapons options) -<< el
   let finalModelGroups = (filter (\u -> _modelCount u > 0) . addWargear abilities . addUnitWeapons weapons) modelGroups
