@@ -386,3 +386,6 @@ main = hspec $ do
         launcher1 `hasCount` 1
         launcher1 `hasWeapons` ["Blight Launcher", "Plague knife", "Krak grenade", "Blight Grenade"]
         hasStat launcher1 _attacks "1"
+      it "creates GK correctly" $ do
+        units <- processUnits "GreyKnights" 2
+        printUnits units

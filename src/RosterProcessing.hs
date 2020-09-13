@@ -451,10 +451,13 @@ copiableWeapons = ["Stalker Bolt Rifle",
                    "Rod of Covenant (Melee)",
                    "Rod of Covenant (Shooting)",
                    "Voidblade",
-                   "Particle Caster"]
+                   "Particle Caster",
+                   "Krak Grenade",
+                   "Frag Grenade",
+                   "Psyk-out Grenade"]
 
 weaponShouldBeCopied :: Weapon -> Bool
-weaponShouldBeCopied w = _weaponName w `elem` copiableWeapons
+weaponShouldBeCopied w = _weaponName w `caseInsensitiveElem` copiableWeapons
 
 isWargear :: Ability -> Bool
 isWargear ability = any (hasPrefix (_abilityName ability)) prefixes where
