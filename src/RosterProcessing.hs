@@ -97,7 +97,7 @@ dedupeWeapons weapons = HM.elems grouped where
 
 weaponStr :: Weapon -> String
 weaponStr Weapon{..} = textColor "c6c930" (countString _count ++  _weaponName ++ "\r\n")
-  ++ weaponFmt _range _type _weaponStrength _AP _damage (if _special /= "-" then "*" else _special)
+  ++ weaponFmt _range _type _weaponStrength _AP _damage (if _special `notElem` ["-", "" ," "] then "*" else "-")
 
 abilityString :: Ability -> String
 abilityString Ability{..} = _abilityName
