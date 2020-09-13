@@ -1,6 +1,6 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE OverloadedStrings     #-}
-
+{-# LANGUAGE FlexibleInstances     #-}
 
 import Test.Hspec
 import Types
@@ -12,10 +12,23 @@ import           Data.Aeson
 import           Data.Data
 import           Data.Generics
 import           Text.XML.HXT.Core
+import           Safe
 
 
 {-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 {-# ANN module ("HLint: ignore Reduce duplication" :: String) #-}
+
+class WeaponDescriptor a where
+  getWepName  :: a -> String
+  getWepCount :: a -> Weapon -> Int
+
+instance WeaponDescriptor [Char] where
+  getWepName s = s
+  getWepCount s = _count
+
+instance WeaponDescriptor ([Char], Int) where
+  getWepName (s,i) = s
+  getWepCount (s,i) w = i
 
 unzipRoster :: String -> IO String
 unzipRoster fileName = do
@@ -52,19 +65,27 @@ hasStat unit statGetter val = do
       Just stats -> statGetter stats `shouldBe` val
       Nothing -> expectationFailure "Model should have stats"
 
-hasWeaponNamed :: ModelGroup -> String -> IO ()
+hasWeaponNamed :: WeaponDescriptor a => ModelGroup -> a -> IO ()
 hasWeaponNamed unit weaponName = do
-    fmap (stringToLower . _weaponName) (_weapons unit) `shouldContain` [stringToLower weaponName]
+    fmap (stringToLower . _weaponName) (_weapons unit) `shouldContain` [stringToLower (getWepName weaponName)]
+    let foundWeapon = head $ filter (\x -> (stringToLower . _weaponName) x == stringToLower (getWepName weaponName)) (_weapons unit)
+    _count foundWeapon `shouldBe` getWepCount weaponName foundWeapon
 
 hasAbilityNamed :: ModelGroup -> String -> IO ()
 hasAbilityNamed unit abilityName = do
     fmap (stringToLower . _abilityName) (_abilities unit) `shouldContain` [stringToLower abilityName]
 
-hasWeapons :: ModelGroup -> [String] -> IO ()
-hasWeapons unit weapons = do
+hasWeaponsWD :: WeaponDescriptor a => ModelGroup -> [a] -> IO ()
+hasWeaponsWD unit weapons = do
   print $ fmap (stringToLower . _weaponName)  (_weapons unit)
   mapM_ (hasWeaponNamed unit) weapons
   length (_weapons unit) `shouldBe` length weapons
+
+hasWeapons :: ModelGroup -> [String] -> IO ()
+hasWeapons = hasWeaponsWD
+
+hasWeaponsC :: ModelGroup -> [(String, Int)] -> IO ()
+hasWeaponsC = hasWeaponsWD
 
 isEquivalent :: ModelGroup -> ModelGroup -> IO ()
 isEquivalent m1 m2 = do
@@ -389,3 +410,7 @@ main = hspec $ do
       it "creates GK correctly" $ do
         units <- processUnits "GreyKnights" 2
         printUnits units
+      it "creates StormRaven correctly" $ do
+        unit <- processUnit "StormRaven"
+        let [stormraven] = _subGroups unit
+        stormraven `hasWeaponsC` [("Stormstrike missile launcher",2),("Twin heavy bolter",1),("Twin assault cannon",1),("Hurricane bolter", 2)]

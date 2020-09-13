@@ -38,6 +38,6 @@ test-suite tests
     hs-source-dirs:      test
     default-language:    Haskell2010
     build-depends:       base >= 4.7 && < 5, battlescribe-roster-parser-lib, hspec, zip-archive,
-                         bytestring, aeson, syb, hxt
+                         bytestring, aeson, syb, hxt, safe
 
 

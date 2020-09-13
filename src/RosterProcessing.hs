@@ -149,7 +149,8 @@ isSpecialCaseSelection options = deep $ isElem >>> hasName "selection" >>> hasAt
     "Plague Champion",
     "Plague Marine w/ melee weapons",
     "Plague Marine w/ boltgun",
-    "Plague Marine w/ Special Weapon"
+    "Plague Marine w/ Special Weapon",
+    "Stormraven Gunship"
     ] ++ maybe [] (map T.unpack . T.splitOn "\n" . T.pack) (modelsToConsolidate options)
 
 isSpecialCaseSubGroup :: ArrowXml a => ScriptOptions -> a XmlTree XmlTree
