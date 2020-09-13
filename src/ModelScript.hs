@@ -51,9 +51,14 @@ createScript ui uniqueId = [NI.text|
     self.setVar("$descriptionId", desc())
     self.setVar("isMaster", true)
     for k,v in pairs(getAllObjects()) do
-      if v.getVar("$descriptionId") == desc() and v.getVar("isMaster") and v.getPosition().x > 9999 and v.getPosition().z > 9999 then
-        print("Destroying previous master for this unit: " .. desc())
-        v.destruct()
+      if v.getVar("$descriptionId") == desc() and v.getVar("isMaster") and v.getGUID() ~= self.getGUID() then
+        if v.getPosition().x > 9999 and v.getPosition().z > 9999 then
+          log("Destroying previous master for this unit: " .. desc())
+          v.destruct()
+        else
+          log("Usurping previous master for this unit: " .. desc())
+          v.setVar("isMaster", false)
+        end
       end
     end
   end
@@ -140,12 +145,13 @@ createScript ui uniqueId = [NI.text|
    local baseMap = Global.getTable("bs2tts-saved-bases")
    local meshFile = model.getCustomObject().mesh
    if baseMap[meshFile] == nil then
-    print("Initing base map")
+    log("Initing base map")
     baseMap[meshFile] = 0
    end
    local index = baseMap[meshFile]
-   local newIndex = math.min(math.max(1, index + inc), #validBaseMillis)
-   print("Base map index is now: " .. tostring(newIndex))
+   local newIndex = (index + inc) % #validBaseMillis
+   log("Base map index is now: " .. tostring(newIndex))
+   log("Base millis are: " .. tostring(validBaseMillis[newIndex+1]["x"]) .. " " .. tostring(validBaseMillis[newIndex+1]["z"]))
    baseMap[meshFile] = newIndex
    Global.setTable("bs2tts-saved-bases", baseMap)
   end
@@ -155,7 +161,7 @@ createScript ui uniqueId = [NI.text|
     local milliToInch = 0.0393701
     
     if Global.getTable("bs2tts-saved-bases") and Global.getTable("bs2tts-saved-bases")[model.getCustomObject().mesh] then
-      chosenBase = validBaseMillis[Global.getTable("bs2tts-saved-bases")[model.getCustomObject().mesh]]
+      chosenBase = validBaseMillis[Global.getTable("bs2tts-saved-bases")[model.getCustomObject().mesh] + 1]
       chosenBase = {x = (chosenBase.x * milliToInch)/2, z = (chosenBase.z * milliToInch)/2}
     else
       local bounds = model.getBoundsNormalized()
@@ -191,7 +197,7 @@ createScript ui uniqueId = [NI.text|
   function onScriptingButtonDown(index, peekerColor)
     local player = Player[peekerColor]
     local name = createName(peekerColor)
-    if (player.getHoverObject() and player.getHoverObject().getVar("$descriptionId") == desc()) or
+    if (self.getVar("isMaster") and player.getHoverObject() and player.getHoverObject().getVar("$descriptionId") == desc()) or
         (#player.getSelectedObjects() > 0 and player.getSelectedObjects()[1].getVar("$descriptionId") == desc()) then
       local target = player.getHoverObject() or  player.getSelectedObjects()[1]
       if index == 1 then
@@ -210,18 +216,15 @@ createScript ui uniqueId = [NI.text|
         target.setName(newName)
       end
       if index == 4 or index == 5 or index == 8 then
-        log("Creating circle")
         local inc = index == 4 and 1 or -1
         if index == 8 then
           inc = 0
         end
         if target.getVar("bs2tts-aura-circle") == nil then
-          log("Initing radius")
           target.setVar("bs2tts-aura-circle", 0)
         end
         local newRadius = math.max(target.getVar("bs2tts-aura-circle") + inc,0)
         target.setVar("bs2tts-aura-circle", newRadius)
-        log("Circle radius is " .. tostring(newRadius))
         local circ = {}
         local base = {}
         local baseRadiuses = determineBase(target)
@@ -229,7 +232,6 @@ createScript ui uniqueId = [NI.text|
           circ = getCircleVectorPoints(newRadius, baseRadiuses.x, baseRadiuses.z, target)
           base = getCircleVectorPoints(0, baseRadiuses.x, baseRadiuses.z, target)
         end
-        log("Set")
 
         target.setVectorLines({
           {
@@ -442,7 +444,6 @@ createScript ui uniqueId = [NI.text|
       local rotationDegrees =  obj.getRotation().y
       local steps = 64
       local degrees,sin,cos,toRads = 360/steps, math.sin, math.cos, math.rad
-      log("Circ1")
       for i = 0,steps do
           table.insert(result,{
               x = cos(toRads(degrees*i))*((radius+baseX)*scaleFactor),
@@ -450,7 +451,6 @@ createScript ui uniqueId = [NI.text|
               y = 1
           })
       end
-      log("Result has " .. tostring(#result) .. " sections")
       return result
   end
 
