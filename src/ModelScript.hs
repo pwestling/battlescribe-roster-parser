@@ -293,14 +293,23 @@ createScript ui uniqueId = [NI.text|
   end
 
   unitModels = nil
+  unitModelCount = 0
+  unitUprightModelCount = 0
 
   function collectUnitModels()
     unitModels = {}
+    unitModelCount = 0
+    unitUprightModelCount = 0
     for k,v in pairs(getAllObjects()) do
       if v.getVar("$descriptionId") == desc() then
         table.insert(unitModels, v)
+        unitModelCount = unitModelCount + 1
+        if not v.is_face_down then
+          unitUprightModelCount = unitUprightModelCount + 1
+        end
       end
     end
+    log("Collected " .. tostring(unitUprightModelCount) .. " upright models for this unit")
   end
 
   function operateOnModels(fn)
@@ -360,16 +369,34 @@ createScript ui uniqueId = [NI.text|
     return longest/2
   end
 
+  function arrToS(a)
+    result = "[] "
+    for i, k in pairs(a) do
+      result = result .. tostring(k) .. ","
+    end
+    result = result .. " ]"
+    return result
+  end
+
   function searchModels(origin, seen, fn)
+    local modelsInRange = 0
+    local rangeModelGUIDS = {}
+    seen[origin.getGUID()] = true
     for k, model in pairs(unitModels) do
-      if not model.is_face_down and not seen[model.getGUID()] then
+      if not model.is_face_down and model.getGUID() ~= origin.getGUID() then
         local originCenterDist = getCenterDist(origin)
         local modelCenterDist = getCenterDist(model)
         local dist = distance2D(origin.getPosition(), model.getPosition())
         if dist < (2.05 + originCenterDist + modelCenterDist) then
-          seen[model.getGUID()] = true
-          fn(model)
-          searchModels(model, seen, fn)
+          modelsInRange = modelsInRange + 1
+          table.insert(rangeModelGUIDS, model.getGUID())
+          if (unitUprightModelCount >= 6 and modelsInRange == 2) or (unitUprightModelCount < 6 and modelsInRange == 1) then
+            log("Model " .. tostring(origin.getGUID()) .. " is in range of " .. tostring(modelsInRange) .. " models, namely: " .. arrToS(rangeModelGUIDS))
+            fn(origin)
+          end
+          if not seen[model.getGUID()] then
+            searchModels(model, seen, fn, modelCount)
+          end
         end
       end
     end

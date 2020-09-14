@@ -524,9 +524,9 @@ makeUnit options rosterId = proc el -> do
   let weaponFinder = if selectionId `elem` groupSelectionIds then arr (const []) else getWeaponsShallow groupSelectionIds 1
   weapons <- weaponFinder >>> da "Unit Level Weapons: " >>> arr (excludeWeapons options) -<< el
   let finalModelGroups = (filter (\u -> _modelCount u > 0) . addWargear abilities . addUnitWeapons weapons) modelGroups
-  let nonWargearAbilites = filter (not . isWargear) abilities
+  let nonWargearAbilities = filter (not . isWargear) abilities
   script <- scriptFromXml options rosterId name selectionId -<< el
-  returnA -< \forceName -> Unit selectionId name forceName stats finalModelGroups nonWargearAbilites weapons script
+  returnA -< \forceName -> Unit selectionId name forceName stats finalModelGroups nonWargearAbilities weapons script
 
 asRoster :: [Value] -> Value
 asRoster values = object ["ObjectStates" .= values]
