@@ -414,3 +414,15 @@ main = hspec $ do
         unit <- processUnit "StormRaven"
         let [stormraven] = _subGroups unit
         stormraven `hasWeaponsC` [("Stormstrike missile launcher",2),("Twin heavy bolter",1),("Twin assault cannon",1),("Hurricane bolter", 2)]
+      it "assigns Tesla Carbines to all Immortals" $ do
+        unit <- processUnit "ImmortalsTeslaCarbine"
+        printUnits [unit]
+        let [immortal] = _subGroups unit
+        immortal `hasCount` 5
+        immortal `hasWeapons` ["Tesla Carbine"]
+      it "assigns Gauss Blasters to all Immortals" $ do
+        unit <- processUnit "ImmortalsGaussBlaster"
+        printUnits [unit]
+        let [immortal] = _subGroups unit
+        immortal `hasCount` 5
+        immortal `hasWeapons` ["Gauss Blaster"]
