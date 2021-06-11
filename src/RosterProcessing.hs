@@ -455,7 +455,11 @@ copiableWeapons = ["Stalker Bolt Rifle",
                    "Particle Caster",
                    "Krak Grenade",
                    "Frag Grenade",
-                   "Psyk-out Grenade"]
+                   "Psyk-out Grenade",
+                   "Tesla Carbine",
+                   "Gauss Blaster",
+                   "Warscythe",
+                   "Hyperphase Sword"]
 
 weaponShouldBeCopied :: Weapon -> Bool
 weaponShouldBeCopied w = _weaponName w `caseInsensitiveElem` copiableWeapons
